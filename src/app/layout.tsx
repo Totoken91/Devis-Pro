@@ -3,8 +3,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'DevisPro — Devis professionnels pour freelances',
-    template: '%s | DevisPro',
+    default: 'Deviso — Devis professionnels pour freelances',
+    template: '%s | Deviso',
   },
   description:
     'Créez, envoyez et faites signer vos devis professionnels en quelques minutes. Suivi d\'ouverture, relances automatiques et signature électronique.',

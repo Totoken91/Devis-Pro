@@ -8,7 +8,7 @@ export default function HomePage() {
           En construction
         </p>
         <h1 className="text-6xl font-bold mb-4">
-          Devis<span className="text-[#7EC8E3]">Pro</span>
+          Devi<span className="text-[#7EC8E3]">so</span>
         </h1>
         <p className="text-xl text-white/80 mb-8">
           Créez, envoyez et faites signer vos devis professionnels en quelques minutes.
