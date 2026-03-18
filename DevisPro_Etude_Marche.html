@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevisPro — Étude de Marché</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #f0f4f8; color: #1a2332; font-size: 14px; line-height: 1.6; }
+  .page { max-width: 980px; margin: 0 auto; background: white; box-shadow: 0 4px 40px rgba(0,0,0,0.12); }
+
+  /* COVER */
+  .cover { background: linear-gradient(135deg, #0F2540 0%, #1E3A5F 50%, #2E86C1 100%); padding: 80px 60px; color: white; position: relative; overflow: hidden; }
+  .cover::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .cover::after { content: ''; position: absolute; bottom: -80px; left: 40%; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.03); }
+  .cover-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+  .cover h1 { font-family: 'Playfair Display', serif; font-size: 58px; line-height: 1.1; margin-bottom: 12px; position: relative; z-index: 1; }
+  .cover h1 span { color: #7EC8E3; }
+  .cover-subtitle { font-size: 20px; color: rgba(255,255,255,0.8); font-weight: 400; margin-top: 16px; }
+  .cover-desc { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+  .cover-tags { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cover-tag { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .cover-date { margin-top: 48px; font-size: 12px; color: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+
+  /* LAYOUT */
+  .content { padding: 60px; }
+  .section { margin-bottom: 72px; }
+
+  /* HEADINGS */
+  h2.section-title { font-size: 20px; font-weight: 800; color: #1E3A5F; padding-bottom: 12px; border-bottom: 3px solid #2E86C1; margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+  h2.section-title .num { background: #2E86C1; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  h3.sub { font-size: 14px; font-weight: 700; color: #2E86C1; margin: 28px 0 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  p { color: #374151; margin-bottom: 12px; font-size: 14px; line-height: 1.7; }
+  p strong { color: #1E3A5F; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  th { background: #1E3A5F; color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.3px; }
+  td { padding: 9px 14px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; line-height: 1.5; }
+  tr:nth-child(even) td { background: #F9FAFB; }
+  tr:last-child td { border-bottom: none; }
+  td.num-big { font-size: 18px; font-weight: 800; color: #1E3A5F; }
+  td.green { color: #1A7A4A; font-weight: 700; }
+  td.red { color: #C0392B; font-weight: 700; }
+  td.orange { color: #D97706; font-weight: 700; }
+  td.target-row { background: #F0FDF4 !important; color: #1A7A4A; font-weight: 700; }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .kpi-card { background: linear-gradient(135deg, #1E3A5F, #2E86C1); border-radius: 10px; padding: 20px 14px; text-align: center; }
+  .kpi-card .val { font-size: 24px; font-weight: 800; color: white; margin-bottom: 4px; }
+  .kpi-card .lbl { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .kpi-card .src { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 6px; font-style: italic; }
+
+  .kpi-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  .kpi-alt { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 18px 14px; text-align: center; border-top: 3px solid #2E86C1; }
+  .kpi-alt .val { font-size: 24px; font-weight: 800; color: #1E3A5F; margin-bottom: 4px; }
+  .kpi-alt .lbl { font-size: 12px; color: #6B7280; line-height: 1.4; }
+  .kpi-alt .src { font-size: 10px; color: #9CA3AF; margin-top: 6px; font-style: italic; }
+
+  /* HIGHLIGHT BOXES */
+  .hl { background: #EBF5FB; border-left: 4px solid #2E86C1; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #1E3A5F; line-height: 1.6; }
+  .hl-green { background: #F0FDF4; border-left: 4px solid #1A7A4A; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #14532D; line-height: 1.6; }
+  .hl-red { background: #FEF2F2; border-left: 4px solid #C0392B; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #7F1D1D; line-height: 1.6; }
+  .hl-orange { background: #FFFBEB; border-left: 4px solid #D97706; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #78350F; line-height: 1.6; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 24px; }
+  .col-dark { background: #1E3A5F; padding: 28px; }
+  .col-mid { background: #2E86C1; padding: 28px; }
+  .col-dark h4, .col-mid h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; color: white; }
+  .col-dark p, .col-mid p { color: rgba(255,255,255,0.85); font-size: 13px; margin-bottom: 8px; line-height: 1.6; }
+  .col-dark p:last-child, .col-mid p:last-child { margin-bottom: 0; }
+
+  /* PERSONA CARDS */
+  .persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 28px; }
+  .persona { border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
+  .persona-header { background: #1E3A5F; color: white; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+  .persona-emoji { font-size: 24px; }
+  .persona-name { font-weight: 700; font-size: 14px; }
+  .persona-role { font-size: 11px; opacity: 0.65; }
+  .persona-body { padding: 16px 18px; }
+  .persona-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+  .persona-label { font-weight: 700; color: #6B7280; min-width: 100px; flex-shrink: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; padding-top: 1px; }
+  .persona-val { color: #374151; line-height: 1.5; }
+  .persona-pain { background: #FEF2F2; border-left: 3px solid #C0392B; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 10px; font-size: 12px; color: #7F1D1D; font-style: italic; }
+
+  /* COMPETITION MATRIX */
+  .matrix { overflow-x: auto; margin-bottom: 20px; }
+  .matrix table { min-width: 700px; }
+  .check { color: #1A7A4A; font-weight: 700; font-size: 15px; }
+  .cross { color: #C0392B; font-weight: 700; font-size: 15px; }
+  .partial { color: #D97706; font-weight: 700; font-size: 15px; }
+  td.devispro-col { background: #F0FDF4 !important; font-weight: 700; color: #1A7A4A; }
+
+  /* FUNNEL */
+  .funnel { display: flex; flex-direction: column; gap: 4px; margin-bottom: 28px; }
+  .funnel-step { border-radius: 6px; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .funnel-label { font-weight: 700; color: white; font-size: 13px; }
+  .funnel-num { color: rgba(255,255,255,0.9); font-size: 20px; font-weight: 800; }
+  .funnel-sub { color: rgba(255,255,255,0.65); font-size: 11px; }
+
+  /* FINANCIAL SCENARIOS */
+  .scenarios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .scenario-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .scenario-header { padding: 18px; text-align: center; color: white; }
+  .scenario-header .scenario-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 4px; }
+  .scenario-header .scenario-title { font-size: 18px; font-weight: 800; }
+  .scenario-body { padding: 16px; background: white; border: 1px solid #E5E7EB; border-top: none; }
+  .scenario-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
+  .scenario-row:last-child { border-bottom: none; font-weight: 700; }
+  .scenario-row .s-label { color: #6B7280; }
+  .scenario-row .s-val { font-weight: 600; color: #1E3A5F; }
+
+  /* RISK TABLE */
+  .risk-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .risk-high { background: #FEE2E2; color: #991B1B; }
+  .risk-med { background: #FEF3C7; color: #92400E; }
+  .risk-low { background: #D1FAE5; color: #065F46; }
+
+  /* ACQUISITION TABLE */
+  .acq-icon { font-size: 18px; }
+
+  /* SEPARATOR */
+  .sep { height: 1px; background: linear-gradient(90deg, #2E86C1, transparent); margin: 40px 0; }
+
+  /* SOURCES */
+  .sources { background: #F9FAFB; border-radius: 10px; padding: 24px; margin-top: 48px; }
+  .sources h4 { font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .sources ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+  .sources li { font-size: 12px; color: #9CA3AF; padding: 3px 0; border-bottom: 1px solid #F3F4F6; }
+  .sources li::before { content: '→ '; color: #2E86C1; font-weight: 700; }
+
+  @media print { body { background: white; } .page { box-shadow: none; } }
+  @media (max-width: 700px) {
+    .content { padding: 30px 20px; }
+    .cover { padding: 50px 30px; }
+    .cover h1 { font-size: 38px; }
+    .kpi-grid, .kpi-grid-3, .persona-grid, .scenarios { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">Document 2 / 2 — Étude de marché complète</div>
+    <h1>Devis<span>Pro</span><br>Étude de marché</h1>
+    <div class="cover-subtitle">Marché cible · Personas · Concurrence · Financier · Acquisition</div>
+    <div class="cover-desc">Analyse rigoureuse et sourcée pour valider la viabilité du projet</div>
+    <div class="cover-tags">
+      <span class="cover-tag">Freelances France</span>
+      <span class="cover-tag">1,2M d'indépendants</span>
+      <span class="cover-tag">Micro-SaaS B2B</span>
+      <span class="cover-tag">Solo Founder</span>
+    </div>
+    <div class="cover-date">Mars 2026 · Sources : Malt, INSEE, Coface, Banque de France, Freemius, Recurly, Stripe</div>
+  </div>
+
+  <div class="content">
+
+    <!-- 1. TAILLE DU MARCHÉ -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">1</span> Taille du marché & tendances structurelles</h2>
+
+      <h3 class="sub">1.1 Le marché freelance en France</h3>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="val">1,2M</div>
+          <div class="lbl">Freelances en France en 2024</div>
+          <div class="src">Malt / Eurostat 2024</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">+92%</div>
+          <div class="lbl">Croissance sur 10 ans en France</div>
+          <div class="src">INSEE</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">1,54M</div>
+          <div class="lbl">Projection freelances France 2030</div>
+          <div class="src">INSEE / Malt</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">6M+</div>
+          <div class="lbl">Freelances qualifiés en Europe</div>
+          <div class="src">Eurostat</div>
+        </div>
+      </div>
+
+      <p>La tendance est structurelle et non conjoncturelle. <strong>Depuis la création du statut de micro-entrepreneur en 2009</strong>, le nombre d'indépendants en France n'a jamais cessé de croître. La crise Covid a encore accéléré ce mouvement (+37,1% de créations de micro-entreprises entre mai 2020 et mai 2021 selon l'INSEE).</p>
+
+      <h3 class="sub">1.2 Profil sociologique du cœur de cible</h3>
+      <table>
+        <tr><th>Critère</th><th>Données</th><th>Source</th></tr>
+        <tr><td>Tranche d'âge dominante</td><td>25–39 ans (55% des freelances)</td><td>Malt 2024</td></tr>
+        <tr><td>Niveau d'études</td><td>92% Bac+3 minimum · 54% Bac+5</td><td>Malt / Eurostat</td></tr>
+        <tr><td>Statut juridique majoritaire</td><td>76% micro-entrepreneurs</td><td>INSEE 2024</td></tr>
+        <tr><td>Localisation</td><td>55% en Île-de-France · 59% travaillent depuis chez eux</td><td>Malt 2024</td></tr>
+        <tr><td>Expérience salariée préalable</td><td>9 ans en moyenne avant de passer freelance</td><td>Eurostat</td></tr>
+        <tr><td>Équipement numérique</td><td>70% utilisent des plateformes en ligne (Upwork, Malt…)</td><td>Eurostat</td></tr>
+        <tr><td>Rapport au digital</td><td>Maîtrise des outils web, réticence à l'administratif</td><td>Malt Survey 2024</td></tr>
+      </table>
+
+      <h3 class="sub">1.3 Répartition par secteur — le cœur de cible DevisPro</h3>
+      <table>
+        <tr><th>Secteur</th><th>Part des freelances FR</th><th>TJM moyen</th><th>Pertinence DevisPro</th></tr>
+        <tr><td><strong>Design / Graphisme / Photo</strong></td><td>29%</td><td>390 €/jour</td><td class="green">⭐⭐⭐ Cœur de cible</td></tr>
+        <tr><td><strong>Communication / SEO / Marketing</strong></td><td>23%</td><td>388 €/jour</td><td class="green">⭐⭐⭐ Cœur de cible</td></tr>
+        <tr><td><strong>Rédaction / Traduction</strong></td><td>~12%</td><td>~300 €/jour</td><td class="green">⭐⭐⭐ Cœur de cible</td></tr>
+        <tr><td><strong>Consulting / Formation</strong></td><td>~10%</td><td>600–1200 €/jour</td><td class="green">⭐⭐⭐ Cœur de cible</td></tr>
+        <tr><td>Développement web / IT</td><td>29%</td><td>550 €/jour</td><td class="orange">⭐⭐ Cible secondaire</td></tr>
+      </table>
+      <p><strong>Marché adressable primaire estimé :</strong> ~370 000 à 500 000 freelances non-tech en France directement concernés par le problème du devis (graphistes, communicants, rédacteurs, consultants). À l'échelle EU : 2,5–3M de profils similaires.</p>
+
+      <h3 class="sub">1.4 Le marché des logiciels de facturation / devis</h3>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="val">446 M$</div>
+          <div class="lbl">Marché logiciels facturation freelances (2025)</div>
+          <div class="src">Research.com</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">5,43 Md$</div>
+          <div class="lbl">Marché global facturation / billing (2025)</div>
+          <div class="src">Straits Research</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">12,5%</div>
+          <div class="lbl">CAGR du marché 2025–2033</div>
+          <div class="src">Straits Research</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">21,97 Md$</div>
+          <div class="lbl">Marché plateformes freelance mondial 2031</div>
+          <div class="src">Research and Markets</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. LE PROBLÈME -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">2</span> Le problème — Pourquoi les freelances souffrent</h2>
+
+      <h3 class="sub">2.1 La douleur centrale : l'administratif tue la productivité</h3>
+      <p>Les freelances consacrent en moyenne <strong>4 à 6 heures par semaine à des tâches administratives</strong>, dont la création et le suivi des devis représentent une part majeure. Ces outils permettent un <strong>gain de productivité moyen de 12,5 heures par mois</strong> selon une étude 2025, soit l'équivalent d'1,5 jour de facturation supplémentaire.</p>
+
+      <div class="two-col">
+        <div class="col-dark">
+          <h4>Ce que fait le freelance aujourd'hui</h4>
+          <p>Ouvre Word ou Google Docs, copie un vieux template, remet à jour manuellement ses coordonnées et celles du client.</p>
+          <p>Calcule la TVA sur une calculatrice ou dans un onglet Excel séparé.</p>
+          <p>Exporte en PDF, envoie par email, attend. Sans aucun moyen de savoir si le client a ouvert le document.</p>
+          <p>Relance à la main quelques jours plus tard, si il y pense.</p>
+          <p>Archive dans un dossier "devis_clients_2025_v3_FINAL.pdf".</p>
+        </div>
+        <div class="col-mid">
+          <h4>Ce que ça coûte réellement</h4>
+          <p><strong>Temps perdu :</strong> 30–60 min par devis en moyenne (création + PDF + email + suivi manuel).</p>
+          <p><strong>Devis perdus :</strong> sans suivi d'ouverture ni relance automatique, certains devis "tombent dans le vide" simplement parce que le client a oublié.</p>
+          <p><strong>Image non professionnelle :</strong> un PDF Word générique ne rassure pas un nouveau client.</p>
+          <p><strong>Retards de paiement :</strong> sans signature électronique, les délais de validation s'allongent inutilement.</p>
+        </div>
+      </div>
+
+      <h3 class="sub">2.2 Le problème des retards de paiement en France — contexte légal et statistiques</h3>
+      <p>Le retard de paiement est une problématique structurelle en France, directement liée à l'absence d'un process de devis solide. Un devis mal formalisé = une mission mal cadrée = un paiement plus lent.</p>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="val">86%</div>
+          <div class="lbl">des entreprises FR confrontées à des retards de paiement en 2025</div>
+          <div class="src">Coface 2025</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">+12 j</div>
+          <div class="lbl">de retard moyen après l'échéance légale en France</div>
+          <div class="src">Banque de France 2024</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">25%</div>
+          <div class="lbl">des défaillances d'entreprises causées par des problèmes de trésorerie</div>
+          <div class="src">Banque de France</div>
+        </div>
+        <div class="kpi-card">
+          <div class="val">49,7 j</div>
+          <div class="lbl">délai moyen de paiement en France (vs 32j en Allemagne)</div>
+          <div class="src">Coface 2025</div>
+        </div>
+      </div>
+
+      <h3 class="sub">2.3 Cadre légal des devis et paiements en France</h3>
+      <p>Comprendre le cadre légal permet de dimensionner la valeur ajoutée de DevisPro, notamment pour sa feature de signature électronique et de mentions légales automatiques.</p>
+      <table>
+        <tr><th>Règle</th><th>Détail</th><th>Impact pour DevisPro</th></tr>
+        <tr><td>Délai de paiement par défaut</td><td>30 jours après prestation (art. L441-10 Code de commerce)</td><td>Le devis doit mentionner clairement les conditions de paiement</td></tr>
+        <tr><td>Délai maximum</td><td>60 jours à compter de la date de facturation (accord écrit)</td><td>Champ "délai de paiement" dans le formulaire DevisPro</td></tr>
+        <tr><td>Pénalités de retard (2025)</td><td>Taux BCE + 10 pts = 12,15–13,15%/an + indemnité forfaitaire 40 €</td><td>Bloc CGV optionnel avec mention automatique des pénalités</td></tr>
+        <tr><td>Facture électronique obligatoire</td><td>Émission PME/micro-entrepreneurs : 1er septembre 2027</td><td>Positionnement anticipé sur la conformité numérique</td></tr>
+        <tr><td>Signature électronique</td><td>Valeur juridique reconnue par le règlement eIDAS (UE)</td><td>La signature dans DevisPro a une valeur légale réelle</td></tr>
+      </table>
+
+      <div class="hl-green">
+        <strong>Opportunité de timing :</strong> l'obligation de facturation électronique pour les micro-entrepreneurs arrive en septembre 2027. DevisPro peut se positionner comme "déjà conforme" dès aujourd'hui, ce qui sera un argument commercial fort à partir de 2026.
+      </div>
+    </div>
+
+    <!-- 3. PERSONAS -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">3</span> Personas — Qui sont les utilisateurs</h2>
+      <p>Quatre profils représentatifs du cœur de cible. Chacun a une douleur légèrement différente, mais tous partagent le même problème fondamental.</p>
+
+      <div class="persona-grid">
+
+        <div class="persona">
+          <div class="persona-header">
+            <div class="persona-emoji">🎨</div>
+            <div>
+              <div class="persona-name">Camille, 29 ans</div>
+              <div class="persona-role">Graphiste freelance · Paris · Micro-entreprise</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-row"><div class="persona-label">TJM</div><div class="persona-val">350–450 €/jour</div></div>
+            <div class="persona-row"><div class="persona-label">CA annuel</div><div class="persona-val">~35 000 €</div></div>
+            <div class="persona-row"><div class="persona-label">Clients</div><div class="persona-val">8–15 clients actifs simultanément, mix TPE/agences/particuliers</div></div>
+            <div class="persona-row"><div class="persona-label">Outil actuel</div><div class="persona-val">Template Word envoyé en PDF par email. Suivi dans Excel.</div></div>
+            <div class="persona-row"><div class="persona-label">Fréquence devis</div><div class="persona-val">3 à 6 devis par mois</div></div>
+            <div class="persona-pain">"Je passe plus de temps à formater mes devis qu'à créer. Et je sais même pas si le client l'a lu avant de le relancer."</div>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="persona-header" style="background:#2E86C1">
+            <div class="persona-emoji">📸</div>
+            <div>
+              <div class="persona-name">Marc, 34 ans</div>
+              <div class="persona-role">Photographe freelance · Lyon · Micro-entreprise</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-row"><div class="persona-label">TJM</div><div class="persona-val">400–600 €/jour</div></div>
+            <div class="persona-row"><div class="persona-label">CA annuel</div><div class="persona-val">~40 000 €</div></div>
+            <div class="persona-row"><div class="persona-label">Clients</div><div class="persona-val">Surtout B2B : agences, entreprises, mariages haut de gamme</div></div>
+            <div class="persona-row"><div class="persona-label">Outil actuel</div><div class="persona-val">Notion pour lister, Word pour les devis, email pour envoyer</div></div>
+            <div class="persona-row"><div class="persona-label">Fréquence devis</div><div class="persona-val">4 à 8 devis par mois, avec plusieurs options de prestations</div></div>
+            <div class="persona-pain">"Des clients me disent 'j'ai pas reçu le devis' alors que je l'ai envoyé il y a 2 semaines. J'aurais besoin de savoir s'ils l'ont ouvert."</div>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="persona-header" style="background:#1A7A4A">
+            <div class="persona-emoji">✍️</div>
+            <div>
+              <div class="persona-name">Sofia, 31 ans</div>
+              <div class="persona-role">Rédactrice / Traductrice · Remote · Micro-entreprise</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-row"><div class="persona-label">TJM</div><div class="persona-val">250–400 €/jour</div></div>
+            <div class="persona-row"><div class="persona-label">CA annuel</div><div class="persona-val">~28 000 €</div></div>
+            <div class="persona-row"><div class="persona-label">Clients</div><div class="persona-val">10–20 clients, beaucoup de petites missions récurrentes</div></div>
+            <div class="persona-row"><div class="persona-label">Outil actuel</div><div class="persona-val">Google Docs pour les devis, Gmail pour l'envoi</div></div>
+            <div class="persona-row"><div class="persona-label">Fréquence devis</div><div class="persona-val">6 à 12 devis/mois — forte répétition des mêmes prestations</div></div>
+            <div class="persona-pain">"Je refais les mêmes lignes de devis à chaque fois. 'Traduction FR→EN, 0,10€/mot'. Ça prend 20 min pour un devis de 3 lignes."</div>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="persona-header" style="background:#6C3483">
+            <div class="persona-emoji">🎯</div>
+            <div>
+              <div class="persona-name">Thomas, 42 ans</div>
+              <div class="persona-role">Consultant marketing · Bordeaux · SASU</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-row"><div class="persona-label">TJM</div><div class="persona-val">700–1000 €/jour</div></div>
+            <div class="persona-row"><div class="persona-label">CA annuel</div><div class="persona-val">~90 000 €</div></div>
+            <div class="persona-row"><div class="persona-label">Clients</div><div class="persona-val">5–8 clients actifs, grosses missions de 3–6 mois</div></div>
+            <div class="persona-row"><div class="persona-label">Outil actuel</div><td class="persona-val">FreshBooks — mais il trouve ça trop complexe pour ses besoins</div></div>
+            <div class="persona-row"><div class="persona-label">Fréquence devis</div><div class="persona-val">2 à 4 devis/mois mais à enjeux élevés (5 000–20 000 €)</div></div>
+            <div class="persona-pain">"Je paie FreshBooks 30€/mois pour faire des devis. Je n'utilise que 10% des fonctionnalités. Je cherche quelque chose de simple et pro."</div>
+          </div>
+        </div>
+
+      </div>
+
+      <h3 class="sub">3.1 Ce que tous ces profils ont en commun</h3>
+      <table>
+        <tr><th>Besoin commun</th><th>Niveau de priorité</th><th>Feature DevisPro associée</th></tr>
+        <tr><td>Créer un devis professionnel rapidement</td><td class="green">🔴 Critique</td><td>Formulaire + templates visuels</td></tr>
+        <tr><td>Savoir si le client a ouvert le devis</td><td class="green">🔴 Critique</td><td>Pixel tracking + notification temps réel</td></tr>
+        <tr><td>Relancer automatiquement sans gêne</td><td class="green">🔴 Critique</td><td>Relances automatiques J+3 / J+7</td></tr>
+        <tr><td>Avoir une signature électronique valide</td><td class="orange">🟠 Important</td><td>Bouton "Accepter" côté client + horodatage</td></tr>
+        <tr><td>Réutiliser les mêmes prestations</td><td class="orange">🟠 Important</td><td>Catalogue de services sauvegardés (phase 3)</td></tr>
+        <tr><td>Avoir un historique propre des devis</td><td class="orange">🟠 Important</td><td>Dashboard + statuts + filtre client</td></tr>
+        <tr><td>Export PDF professionnel</td><td class="orange">🟠 Important</td><td>Génération PDF serveur</td></tr>
+        <tr><td>Conformité TVA et mentions légales</td><td>🟡 Utile</td><td>Calcul auto TVA + bloc CGV optionnel</td></tr>
+      </table>
+    </div>
+
+    <!-- 4. ANALYSE CONCURRENTIELLE -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">4</span> Analyse concurrentielle détaillée</h2>
+
+      <h3 class="sub">4.1 Matrice des fonctionnalités</h3>
+      <div class="matrix">
+        <table>
+          <tr>
+            <th>Fonctionnalité</th>
+            <th>Word/Excel</th>
+            <th>Wave</th>
+            <th>Zoho Invoice</th>
+            <th>Bonsai</th>
+            <th>FreshBooks</th>
+            <th>HoneyBook</th>
+            <th style="background:#1A7A4A">DevisPro</th>
+          </tr>
+          <tr>
+            <td>Création devis rapide</td>
+            <td><span class="partial">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Suivi d'ouverture client</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Relances automatiques</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Signature électronique</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Templates visuels pro</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Lien de partage public</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Adapté marché FR/EU</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Prix accessible (&lt;20€/mois)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>UX simple, courbe d'apprentissage basse</td>
+            <td><span class="partial">~</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Focalisé devis uniquement</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="devispro-col"><span class="check">✓</span></td>
+          </tr>
+        </table>
+      </div>
+      <p style="font-size:12px;color:#9CA3AF;">✓ = Oui · ✗ = Non · ~ = Partiel ou limité</p>
+
+      <h3 class="sub">4.2 Fiche détaillée des concurrents directs</h3>
+      <table>
+        <tr><th>Concurrent</th><th>Prix</th><th>Points forts</th><th>Faiblesses critiques</th><th>Churn signal</th></tr>
+        <tr>
+          <td><strong>FreshBooks</strong></td>
+          <td>21–70 €/mois</td>
+          <td>Facturation robuste, time tracking, bonne UX</td>
+          <td>Limité à 5 clients sur le plan Lite. Pas de signature. Pas axé devis. Prix escalade vite.</td>
+          <td class="orange">Modéré — les freelances cherchent moins cher</td>
+        </tr>
+        <tr>
+          <td><strong>HoneyBook</strong></td>
+          <td>36 €/mois</td>
+          <td>Contrats + signature + CRM léger</td>
+          <td>+89% de hausse de prix en fév. 2025. UX confuse. Difficile d'exporter ses données. Orienté US.</td>
+          <td class="red">Élevé — exode massif depuis la hausse des prix</td>
+        </tr>
+        <tr>
+          <td><strong>Bonsai</strong></td>
+          <td>9–19 €/mois</td>
+          <td>Contrats + devis + time tracking</td>
+          <td>Très orienté marché US. Interface en anglais. Peu connu en France. Pas de relances auto.</td>
+          <td class="orange">Modéré — produit correct mais mauvais fit FR</td>
+        </tr>
+        <tr>
+          <td><strong>Wave</strong></td>
+          <td>Gratuit</td>
+          <td>Gratuit, facturation basique</td>
+          <td>Pas de suivi d'ouverture. Pas de relances. Pas de signature. Interface vieillissante. Publicités.</td>
+          <td class="orange">Modéré — frustration de la gratuité limitée</td>
+        </tr>
+        <tr>
+          <td><strong>Zoho Invoice</strong></td>
+          <td>Gratuit</td>
+          <td>Gratuit, intégré à l'écosystème Zoho</td>
+          <td>Courbe d'apprentissage très élevée. Pas conçu pour les freelances. Impression de "logiciel d'entreprise".</td>
+          <td class="orange">Modéré — frustration de la complexité</td>
+        </tr>
+        <tr>
+          <td><strong>Word / Excel</strong></td>
+          <td>0 (déjà payé)</td>
+          <td>Connu, flexible, sans abonnement supplémentaire</td>
+          <td>Aucun suivi, aucune relance, image pas professionnelle, risque de perte de fichier.</td>
+          <td class="green">Très élevé — prêt à payer pour mieux faire</td>
+        </tr>
+      </table>
+
+      <h3 class="sub">4.3 Positionnement DevisPro — le gap non adressé</h3>
+      <div class="hl">
+        <strong>Insight clé :</strong> aucun acteur ne fait "uniquement devis" avec une UX excellente, un prix accessible, et une adaptation au marché français. FreshBooks et HoneyBook ont les fonctionnalités mais sont trop chers et trop complexes. Wave et Zoho sont gratuits mais inutilisables pour un usage professionnel sérieux. Word/Excel est toujours le "choix par défaut" faute de mieux.
+      </div>
+
+      <p>Le positionnement clair de DevisPro sur une seule dimension — <strong>le devis, de la création à la signature, le plus simplement possible</strong> — est à la fois sa force et son avantage défensif. Un grand acteur ne peut pas simplifier un produit déjà complexe pour concurrencer sur ce terrain sans cannibaliser son offre existante.</p>
+    </div>
+
+    <!-- 5. MÉTRIQUES SaaS -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">5</span> Benchmarks SaaS — Les métriques réelles</h2>
+      <p>Voici les données de référence du secteur pour calibrer des projections honnêtes et éviter l'optimisme naïf.</p>
+
+      <h3 class="sub">5.1 Conversion freemium → payant</h3>
+      <div class="kpi-grid-3">
+        <div class="kpi-alt">
+          <div class="val">2–5%</div>
+          <div class="lbl">Taux de conversion freemium → payant (moyenne industrie)</div>
+          <div class="src">First Page Sage / Freemius 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">3,7%</div>
+          <div class="lbl">Taux médian freemium B2B tous secteurs</div>
+          <div class="src">Freemius State of Micro-SaaS 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">15–30%</div>
+          <div class="lbl">Conversion free trial à durée limitée → payant (B2B)</div>
+          <div class="src">Recurly / First Page Sage 2025</div>
+        </div>
+      </div>
+      <div class="hl-orange">
+        <strong>Note importante :</strong> les projections DevisPro utilisent un taux de conversion de 3–5%, aligné avec les benchmarks freemium. Une limite stricte à 3 devis/mois sur le plan gratuit crée une friction suffisante pour pousser à l'upgrade sans frustrer l'utilisateur dès le départ.
+      </div>
+
+      <h3 class="sub">5.2 Churn — rétention des abonnés</h3>
+      <div class="kpi-grid-3">
+        <div class="kpi-alt">
+          <div class="val">3,5%</div>
+          <div class="lbl">Churn mensuel moyen B2B SaaS 2025</div>
+          <div class="src">Recurly Churn Report 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">5–8%</div>
+          <div class="lbl">Churn annuel "bon" pour SaaS SMB (objectif)</div>
+          <div class="src">Paddle Q2 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">30%</div>
+          <div class="lbl">Réduction du churn avec abonnement annuel</div>
+          <div class="src">Freemius 2025</div>
+        </div>
+      </div>
+      <p>Les projections DevisPro utilisent un churn mensuel de <strong>5%</strong>, légèrement au-dessus de la médiane B2B, ce qui est prudent pour un produit B2B SMB ciblant des micro-entrepreneurs (contrats courts, faible switching cost initial). L'objectif phase 3 est de descendre sous 3%/mois grâce au catalogue services et au CRM léger qui créent des switching costs progressifs.</p>
+
+      <h3 class="sub">5.3 Réalité économique des micro-SaaS solo</h3>
+      <div class="kpi-grid-3">
+        <div class="kpi-alt">
+          <div class="val">70%</div>
+          <div class="lbl">des micro-SaaS génèrent moins de 1 000 €/mois</div>
+          <div class="src">Rocking Web / 1 000 Micro-SaaS Analysed 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">18%</div>
+          <div class="lbl">atteignent la "zone de durabilité" (1 000–5 000 €/mois)</div>
+          <div class="src">Rocking Web 2025</div>
+        </div>
+        <div class="kpi-alt">
+          <div class="val">95%</div>
+          <div class="lbl">des micro-SaaS atteignent la rentabilité dans les 12 premiers mois</div>
+          <div class="src">MicroConf Survey 2025</div>
+        </div>
+      </div>
+      <div class="hl-red">
+        <strong>Réalisme nécessaire :</strong> 70% des micro-SaaS restent sous 1 000 €/mois. L'objectif de DevisPro (1 500–3 000 € MRR) est dans le top 30%, pas dans la moyenne. C'est atteignable mais pas garanti. La clé : ne pas compter sur les revenus de DevisPro pour vivre avant le mois 12–18.
+      </div>
+      <div class="hl-green">
+        <strong>Point positif :</strong> la médiane des micro-SaaS profitables est de 4 200 €/mois (Freemius 2025). L'objectif 1 500–3 000 € est donc conservateur et réaliste, pas optimiste.
+      </div>
+    </div>
+
+    <!-- 6. PROJECTIONS FINANCIÈRES -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">6</span> Projections financières — 3 scénarios</h2>
+      <p>Trois scénarios basés sur les benchmarks réels du secteur. Hypothèses communes : plan Pro à 15 €/mois, taux de conversion freemium 3–5%, churn 5%/mois.</p>
+
+      <div class="scenarios">
+        <div class="scenario-card">
+          <div class="scenario-header" style="background:#C0392B">
+            <div class="scenario-name">Scénario pessimiste</div>
+            <div class="scenario-title">Croissance lente</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-row"><span class="s-label">Mois 6</span><span class="s-val">10 abonnés · 150 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 12</span><span class="s-val">40 abonnés · 600 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 18</span><span class="s-val">100 abonnés · 1 500 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 24</span><span class="s-val">180 abonnés · 2 700 €</span></div>
+            <div class="scenario-row"><span class="s-label">Rentabilité</span><span class="s-val">Mois 18–20</span></div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-header" style="background:#2E86C1">
+            <div class="scenario-name">Scénario de base</div>
+            <div class="scenario-title">Croissance régulière</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-row"><span class="s-label">Mois 6</span><span class="s-val">20 abonnés · 300 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 12</span><span class="s-val">80 abonnés · 1 200 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 18</span><span class="s-val">200 abonnés · 3 000 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 24</span><span class="s-val">400 abonnés · 6 000 €</span></div>
+            <div class="scenario-row"><span class="s-label">Rentabilité</span><span class="s-val">Mois 12–15</span></div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-header" style="background:#1A7A4A">
+            <div class="scenario-name">Scénario optimiste</div>
+            <div class="scenario-title">Viral + SEO fort</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-row"><span class="s-label">Mois 6</span><span class="s-val">50 abonnés · 750 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 12</span><span class="s-val">150 abonnés · 2 250 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 18</span><span class="s-val">400 abonnés · 6 000 €</span></div>
+            <div class="scenario-row"><span class="s-label">Mois 24</span><span class="s-val">800 abonnés · 12 000 €</span></div>
+            <div class="scenario-row"><span class="s-label">Rentabilité</span><span class="s-val">Mois 8–10</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">6.1 Structure des coûts (solo founder)</h3>
+      <table>
+        <tr><th>Poste de coût</th><th>Coût mensuel estimé</th><th>Notes</th></tr>
+        <tr><td>Vercel (hébergement)</td><td>0 → 20 $ dès Cron Jobs (phase 2)</td><td>Hobby gratuit pour le MVP</td></tr>
+        <tr><td>Supabase (BDD + auth)</td><td>0 → 25 $ au-delà de 500 MB</td><td>Gratuit très longtemps</td></tr>
+        <tr><td>Stripe (paiements)</td><td>1,5% + 0,25 € par transaction</td><td>Variable, ~6–12% du MRR sur petits volumes</td></tr>
+        <tr><td>Resend (emails)</td><td>0 → 20 $ au-delà de 100 emails/jour</td><td>Gratuit pour MVP, ~20$/mois dès 50k emails</td></tr>
+        <tr><td>Domaine</td><td>~1 €/mois</td><td>12–15 €/an</td></tr>
+        <tr><td>Sentry (monitoring)</td><td>0 jusqu'à 5k erreurs/mois</td><td>Gratuit très longtemps</td></tr>
+        <tr><td><strong>Total coûts fixes (M1–M6)</strong></td><td class="green"><strong>~20–50 €/mois</strong></td><td>MVP + phase 1 entièrement viable</td></tr>
+        <tr><td><strong>Total coûts fixes (M7–M24)</strong></td><td class="orange"><strong>~70–120 €/mois</strong></td><td>Vercel Pro + Supabase Pro + Resend</td></tr>
+      </table>
+
+      <div class="hl-green">
+        <strong>Seuil de rentabilité réel :</strong> 8 abonnés à 15 €/mois = 120 € MRR pour couvrir les coûts en phase 1. 12 abonnés en phase 2. <strong>Le projet est rentable très tôt, même en scénario pessimiste.</strong>
+      </div>
+    </div>
+
+    <!-- 7. ACQUISITION -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">7</span> Stratégie d'acquisition — Canaux et priorités</h2>
+      <p>Pour un solo founder sans budget marketing, l'acquisition doit être <strong>organique, ciblée, et scalable sans effort humain croissant</strong>. Voici les canaux par ordre de priorité réelle.</p>
+
+      <h3 class="sub">7.1 Canal 1 — Effet viral produit (priorité maximale, coût zéro)</h3>
+      <p>Chaque devis envoyé à un client contient en bas de page "Créé avec DevisPro" avec un lien. Le client du freelance devient un canal d'acquisition passif. C'est le modèle Calendly, Notion, Canva.</p>
+      <table>
+        <tr><th>Métrique</th><th>Estimation</th></tr>
+        <tr><td>Devis moyen envoyé par utilisateur actif / mois</td><td>4 à 6</td></tr>
+        <tr><td>Nombre de "nouveaux yeux" sur DevisPro par utilisateur / mois</td><td>4 à 6 personnes (les clients des freelances)</td></tr>
+        <tr><td>Taux de conversion visiteur → inscription depuis ce canal</td><td>0,5–2% (audience moins ciblée)</td></tr>
+        <tr><td>Désactivable sur le plan Pro</td><td>Oui — ce qui crée un incitatif supplémentaire à upgrader</td></tr>
+      </table>
+
+      <h3 class="sub">7.2 Canal 2 — SEO / Contenu (priorité haute, résultats à 3–6 mois)</h3>
+      <p>Les freelances cherchent activement des solutions à leurs problèmes sur Google. La stratégie SEO est simple : répondre à des requêtes longue traîne très ciblées.</p>
+      <table>
+        <tr><th>Requête cible</th><th>Volume estimé (FR)</th><th>Intention</th></tr>
+        <tr><td>"modèle devis graphiste freelance"</td><td>400–800/mois</td><td>Recherche d'outil</td></tr>
+        <tr><td>"logiciel devis freelance gratuit"</td><td>600–1 200/mois</td><td>Intention commerciale forte</td></tr>
+        <tr><td>"comment faire un devis professionnel"</td><td>1 500–3 000/mois</td><td>Éducation + découverte</td></tr>
+        <tr><td>"devis photographe freelance exemple"</td><td>300–600/mois</td><td>Recherche de template</td></tr>
+        <tr><td>"application devis micro entrepreneur"</td><td>200–500/mois</td><td>Intention commerciale forte</td></tr>
+        <tr><td>"suivi devis client outil"</td><td>150–300/mois</td><td>Intention commerciale forte</td></tr>
+      </table>
+
+      <h3 class="sub">7.3 Canal 3 — Communautés (priorité haute, résultats immédiats)</h3>
+      <table>
+        <tr><th>Communauté</th><th>Plateforme</th><th>Approche</th></tr>
+        <tr><td>r/freelance_fr</td><td>Reddit</td><td>Post de lancement honnête + partage d'apprentissages</td></tr>
+        <tr><td>Forum Malt</td><td>Web</td><td>Répondre aux questions sur l'administratif en mentionnant le produit</td></tr>
+        <tr><td>Groupes Facebook (graphistes indépendants, freelances créatifs)</td><td>Facebook</td><td>30–50k membres chacun, présence genuinement utile</td></tr>
+        <tr><td>LinkedIn (créateurs de contenu freelance)</td><td>LinkedIn</td><td>Posts "Build in Public" — partager la construction du produit</td></tr>
+        <tr><td>ProductHunt</td><td>Web</td><td>Lancement officiel — cibler top 5 du jour pour un pic de trafic</td></tr>
+      </table>
+
+      <h3 class="sub">7.4 Canal 4 — "Build in Public" (différenciateur long terme)</h3>
+      <p>Partager publiquement la construction de DevisPro (MRR, chiffres, décisions produit) sur LinkedIn et X attire naturellement les early adopters, les feedbacks, et des retombées presse. Le contenu devient lui-même un canal d'acquisition.</p>
+      <div class="hl">
+        <strong>Benchmark :</strong> les meilleurs micro-SaaS organiques ont un CAC (coût d'acquisition client) inférieur à 50 €. Avec une approche 100% organique (SEO + communautés + viral produit), le CAC de DevisPro devrait être quasi nul en phase 1, puis rester sous 20 € par abonné payant.
+      </div>
+
+      <h3 class="sub">7.5 Tunnel d'acquisition complet</h3>
+      <div class="funnel">
+        <div class="funnel-step" style="background:#1E3A5F; width:100%">
+          <div><div class="funnel-label">Visiteurs site</div><div class="funnel-sub">SEO · Viral devis · Communautés · ProductHunt</div></div>
+          <div class="funnel-num">100%</div>
+        </div>
+        <div class="funnel-step" style="background:#1a4f7a; width:90%; margin: 0 auto">
+          <div><div class="funnel-label">Inscriptions gratuites</div><div class="funnel-sub">Taux visiteur → inscription : 2–5%</div></div>
+          <div class="funnel-num">2–5%</div>
+        </div>
+        <div class="funnel-step" style="background:#2471a3; width:75%; margin: 0 auto">
+          <div><div class="funnel-label">Utilisateurs actifs (≥1 devis créé)</div><div class="funnel-sub">Taux d'activation : ~50–60% des inscrits</div></div>
+          <div class="funnel-num">~50%</div>
+        </div>
+        <div class="funnel-step" style="background:#2E86C1; width:60%; margin: 0 auto">
+          <div><div class="funnel-label">Atteignent la limite gratuite (3 devis/mois)</div><div class="funnel-sub">Moment de décision : upgrade ou abandon</div></div>
+          <div class="funnel-num">~40%</div>
+        </div>
+        <div class="funnel-step" style="background:#1A7A4A; width:45%; margin: 0 auto">
+          <div><div class="funnel-label">Conversion freemium → Pro (15€/mois)</div><div class="funnel-sub">Benchmark : 3–5% des inscrits totaux</div></div>
+          <div class="funnel-num">3–5%</div>
+        </div>
+        <div class="funnel-step" style="background:#166534; width:30%; margin: 0 auto">
+          <div><div class="funnel-label">Abonnés retenus à M+3</div><div class="funnel-sub">Après churn des 3 premiers mois (~15%)</div></div>
+          <div class="funnel-num">~85%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. RISQUES -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">8</span> Analyse des risques</h2>
+
+      <table>
+        <tr><th>Risque</th><th>Probabilité</th><th>Impact</th><th>Niveau</th><th>Mitigation concrète</th></tr>
+        <tr>
+          <td><strong>Taux de conversion freemium trop bas (&lt;2%)</strong></td>
+          <td>Moyen</td><td>Élevé</td>
+          <td><span class="risk-badge risk-high">Élevé</span></td>
+          <td>Tester différentes frictions (2 devis/mois vs 3 vs 5). Ajouter un reverse trial (accès Pro 7 jours pour les nouveaux inscrits).</td>
+        </tr>
+        <tr>
+          <td><strong>Churn élevé après M1 (>8%/mois)</strong></td>
+          <td>Moyen</td><td>Élevé</td>
+          <td><span class="risk-badge risk-high">Élevé</span></td>
+          <td>Email d'onboarding J+1, J+7, J+30. Feedback exit systématique. Réduire time-to-value (premier devis créé &lt;3 min).</td>
+        </tr>
+        <tr>
+          <td><strong>Acquisition trop lente (&lt;50 inscrits en 3 mois)</strong></td>
+          <td>Moyen</td><td>Moyen</td>
+          <td><span class="risk-badge risk-med">Moyen</span></td>
+          <td>Démarrer SEO dès la S1 (pas attendre le lancement). Présence communautaire dès M1, pas M3.</td>
+        </tr>
+        <tr>
+          <td><strong>Entrée d'un acteur établi sur le même créneau</strong></td>
+          <td>Faible</td><td>Élevé</td>
+          <td><span class="risk-badge risk-med">Moyen</span></td>
+          <td>La spécialisation FR/EU et la simplicité sont difficiles à copier pour un grand acteur sans cannibaliser son produit. Construire une communauté et du contenu SEO crée un moat durable.</td>
+        </tr>
+        <tr>
+          <td><strong>Bug critique en production (perte de devis client)</strong></td>
+          <td>Faible</td><td>Très élevé</td>
+          <td><span class="risk-badge risk-med">Moyen</span></td>
+          <td>Sentry dès le jour 1. Sauvegardes Supabase automatiques. Tests sur les routes critiques (création devis, envoi, webhook Stripe).</td>
+        </tr>
+        <tr>
+          <td><strong>Réglementation RGPD non respectée</strong></td>
+          <td>Faible</td><td>Moyen</td>
+          <td><span class="risk-badge risk-low">Faible</span></td>
+          <td>Supabase région EU. Politique de confidentialité claire. DPA avec Stripe et Resend. Pas de trackers tiers.</td>
+        </tr>
+        <tr>
+          <td><strong>Découragement du fondateur avant M6</strong></td>
+          <td>Réel</td><td>Critique</td>
+          <td><span class="risk-badge risk-high">Élevé</span></td>
+          <td>Définir des métriques hebdomadaires de progrès (pas juste le MRR). Fixer une date de "go/no-go" à M6. Partager publiquement pour créer une accountability externe.</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 9. VERDICT -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">9</span> Verdict — Est-ce que DevisPro est viable ?</h2>
+
+      <h3 class="sub">9.1 Les 5 conditions d'un micro-SaaS viable selon Rob Walling (MicroConf)</h3>
+      <table>
+        <tr><th>Critère</th><th>Question</th><th>Réponse DevisPro</th><th>Verdict</th></tr>
+        <tr>
+          <td><strong>Produit</strong></td>
+          <td>Peut-on le construire seul ?</td>
+          <td>Next.js + Supabase + Stripe est une stack bien documentée, réalisable par un développeur solo en 3 mois.</td>
+          <td class="green">✓ Oui</td>
+        </tr>
+        <tr>
+          <td><strong>Prix</strong></td>
+          <td>Les clients paieront-ils assez ?</td>
+          <td>15 €/mois est un prix justifié (moins cher que les concurrents). Un abonné = 180 €/an. CAC cible &lt;20 € = LTV/CAC &gt; 9.</td>
+          <td class="green">✓ Oui</td>
+        </tr>
+        <tr>
+          <td><strong>Marché</strong></td>
+          <td>Y a-t-il assez de demande ?</td>
+          <td>370 000–500 000 freelances non-tech en France. Même 0,05% = 185–250 abonnés. L'objectif de 100–200 abonnés est &lt;0,05% du marché.</td>
+          <td class="green">✓ Oui</td>
+        </tr>
+        <tr>
+          <td><strong>Canaux</strong></td>
+          <td>Comment atteindre les clients ?</td>
+          <td>SEO longue traîne + communautés freelance + viral produit. Trois canaux organiques identifiés, testables, gratuits.</td>
+          <td class="green">✓ Oui</td>
+        </tr>
+        <tr>
+          <td><strong>Monétisation</strong></td>
+          <td>Le modèle économique tient-il ?</td>
+          <td>Freemium + 15 €/mois Pro. Seuil de rentabilité à 8 abonnés. Coûts fixes &lt;120 €/mois. Marges &gt;80%.</td>
+          <td class="green">✓ Oui</td>
+        </tr>
+      </table>
+
+      <div class="hl-green" style="margin-top:28px">
+        <strong>Verdict final : DevisPro répond aux 5 critères d'un micro-SaaS viable.</strong> Le marché est réel, le problème est documenté, la concurrence est mal positionnée, les canaux d'acquisition sont identifiés et gratuits, et le modèle économique tient dès 8 abonnés payants. L'objectif de 100–200 abonnés représente moins de 0,05% du marché adressable primaire.
+      </div>
+
+      <p>La seule inconnue non contrôlable : le temps que prendra l'acquisition. C'est pour ça que <strong>le SEO doit démarrer dès la semaine 1, pas au lancement</strong>, et que la présence dans les communautés freelance doit être continue et authentique.</p>
+    </div>
+
+    <!-- SOURCES -->
+    <div class="sources">
+      <h4>Sources utilisées dans ce document</h4>
+      <ul>
+        <li>Malt — Rapport Freelancing in Europe 2024</li>
+        <li>INSEE — Statistiques micro-entrepreneurs 2024</li>
+        <li>Eurostat — Indépendants en Europe 2024</li>
+        <li>Coface — Enquête de paiement France 2025</li>
+        <li>Banque de France — Observatoire des délais de paiement 2024</li>
+        <li>Research.com — Freelancer Invoicing Software Market 2025</li>
+        <li>Straits Research — Billing & Invoicing Software Market 2025</li>
+        <li>Research and Markets — Freelance Platforms Market 2026</li>
+        <li>Freemius — State of Micro-SaaS 2025</li>
+        <li>Recurly — SaaS Churn Benchmarks Report 2025</li>
+        <li>First Page Sage — SaaS Freemium Conversion Rate Report 2025</li>
+        <li>Rocking Web — 1 000 Micro-SaaS Analysed 2025</li>
+        <li>Paddle — Q1 & Q2 2025 SaaS Market Reports</li>
+        <li>Service-Public.fr — Délais de paiement entre professionnels</li>
+        <li>DGFiP — Ordonnance facturation électronique 2024</li>
+        <li>Rob Walling (MicroConf) — Framework d'évaluation micro-SaaS</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevisPro — Roadmap Solo Founder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f4f8;
+    color: #1a2332;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+  }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2E86C1 100%);
+    padding: 80px 60px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .cover-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover h1 span { color: #7EC8E3; }
+  .cover-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-top: 16px;
+    margin-right: 8px;
+  }
+  .cover-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 20px;
+    font-weight: 400;
+  }
+  .cover-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+  }
+  .cover-date {
+    margin-top: 48px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 24px;
+  }
+
+  /* CONTENT */
+  .content { padding: 60px; }
+
+  .section { margin-bottom: 64px; }
+
+  h2.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1E3A5F;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #2E86C1;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2.section-title .num {
+    background: #2E86C1;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  h3.sub-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2E86C1;
+    margin: 28px 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  p { color: #374151; margin-bottom: 12px; font-size: 14px; }
+
+  /* SUMMARY BOXES */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 28px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .box-blue { background: #1E3A5F; color: white; padding: 28px; }
+  .box-accent { background: #2E86C1; color: white; padding: 28px; }
+  .box-blue h4, .box-accent h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; opacity: 0.7; }
+  .box-blue p, .box-accent p { color: rgba(255,255,255,0.85); font-size: 13px; margin: 0; line-height: 1.7; }
+
+  /* CONCRETE EXAMPLE */
+  .scenario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 28px;
+  }
+  .scenario-bad { background: #FEF2F2; padding: 28px; border-left: 4px solid #C0392B; }
+  .scenario-good { background: #F0FDF4; padding: 28px; border-left: 4px solid #1A7A4A; }
+  .scenario h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .scenario-bad h4 { color: #C0392B; }
+  .scenario-good h4 { color: #1A7A4A; }
+  .scenario ol, .scenario ul { padding-left: 18px; }
+  .scenario li { font-size: 13px; color: #374151; margin-bottom: 7px; line-height: 1.5; }
+  .scenario-bad li { color: #7F1D1D; }
+  .scenario-good li { color: #14532D; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  th { background: #1E3A5F; color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.3px; }
+  td { padding: 9px 14px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
+  tr:nth-child(even) td { background: #F9FAFB; }
+  tr:last-child td { border-bottom: none; }
+  td.ok { color: #1A7A4A; font-weight: 700; }
+  td.bad { color: #C0392B; font-weight: 700; }
+  td.med { color: #D68910; font-weight: 700; }
+  td.target { color: #1A7A4A; font-weight: 700; background: #F0FDF4 !important; }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .kpi-card {
+    background: linear-gradient(135deg, #1E3A5F, #2E86C1);
+    border-radius: 10px;
+    padding: 20px 14px;
+    color: white;
+    text-align: center;
+  }
+  .kpi-card .val { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .kpi-card .lbl { font-size: 11px; opacity: 0.7; line-height: 1.3; }
+
+  /* PHASE BLOCKS */
+  .phase { border-radius: 10px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .phase-header { padding: 16px 24px; color: white; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .phase-header .badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 600; }
+  .phase-row { display: grid; grid-template-columns: 160px 1fr; border-bottom: 1px solid #E5E7EB; }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-row:nth-child(even) { background: #F9FAFB; }
+  .phase-key { padding: 11px 16px; font-weight: 700; font-size: 12px; color: #6B7280; display: flex; align-items: flex-start; padding-top: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .phase-val { padding: 11px 16px; font-size: 13px; color: #374151; border-left: 1px solid #E5E7EB; line-height: 1.6; }
+  .phase-val strong { color: #1E3A5F; }
+  .phase-val code { background: #F3F4F6; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Courier New', monospace; color: #1E3A5F; }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 28px; }
+  .pricing-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .pricing-card .plan-header { padding: 20px; text-align: center; }
+  .pricing-card .plan-name { font-weight: 800; font-size: 15px; }
+  .pricing-card .plan-price { font-size: 28px; font-weight: 800; margin: 6px 0 4px; }
+  .pricing-card .plan-desc { font-size: 11px; opacity: 0.7; }
+  .plan-free .plan-header { background: #F3F4F6; color: #374151; }
+  .plan-pro .plan-header { background: linear-gradient(135deg, #1E3A5F, #2E86C1); color: white; }
+  .pricing-card ul { list-style: none; padding: 18px; }
+  .pricing-card li { padding: 7px 0; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; display: flex; align-items: flex-start; gap: 8px; }
+  .pricing-card li:last-child { border-bottom: none; }
+  .pricing-card li .icon { flex-shrink: 0; margin-top: 1px; }
+  .plan-free { border: 1px solid #E5E7EB; }
+  .plan-pro { border: 2px solid #2E86C1; }
+  .plan-pro ul { background: #EBF5FB; }
+
+  /* TECH STACK */
+  .tech-section { margin-bottom: 32px; }
+  .tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+  .tech-card {
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 18px;
+    background: white;
+  }
+  .tech-card .tech-name { font-weight: 700; font-size: 13px; color: #1E3A5F; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .tech-card .tech-role { font-size: 11px; font-weight: 600; color: #2E86C1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .tech-card .tech-desc { font-size: 12px; color: #6B7280; line-height: 1.5; }
+  .tech-card .tech-cost { font-size: 11px; font-weight: 700; color: #1A7A4A; margin-top: 8px; }
+
+  .tech-badge {
+    display: inline-block;
+    background: #EEF2FF;
+    color: #3730A3;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* DB TABLE */
+  .db-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .db-card { border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; }
+  .db-card .db-header { background: #1E3A5F; color: white; padding: 8px 12px; font-weight: 700; font-size: 12px; font-family: 'Courier New', monospace; }
+  .db-card .db-col { padding: 5px 12px; font-size: 12px; border-bottom: 1px solid #F3F4F6; display: flex; justify-content: space-between; gap: 8px; }
+  .db-card .db-col:last-child { border-bottom: none; }
+  .db-col-name { font-family: 'Courier New', monospace; color: #1E3A5F; font-weight: 600; }
+  .db-col-type { color: #9CA3AF; font-size: 11px; }
+  .db-col-pk { color: #D97706; font-size: 10px; font-weight: 700; }
+  .db-col-fk { color: #7C3AED; font-size: 10px; font-weight: 700; }
+
+  /* FLOW */
+  .flow { display: flex; align-items: stretch; gap: 0; margin-bottom: 28px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .flow-step { flex: 1; padding: 20px 16px; text-align: center; position: relative; }
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    z-index: 1;
+  }
+  .flow-num { font-size: 11px; font-weight: 700; opacity: 0.7; margin-bottom: 6px; }
+  .flow-label { font-size: 12px; font-weight: 700; color: white; }
+  .flow-sub { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+  /* HIGHLIGHT */
+  .highlight { background: #EBF5FB; border-left: 4px solid #2E86C1; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #1E3A5F; }
+  .highlight-green { background: #F0FDF4; border-left: 4px solid #1A7A4A; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #14532D; }
+  .highlight-orange { background: #FFF7ED; border-left: 4px solid #EA580C; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: #7C2D12; }
+
+  /* ACTION PLAN */
+  .action-grid { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .action-row { display: grid; grid-template-columns: 90px 1fr; }
+  .action-week { background: #1E3A5F; color: white; padding: 12px 16px; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .action-desc { padding: 12px 16px; font-size: 13px; color: #374151; border-bottom: 1px solid #E5E7EB; border-left: 1px solid #E5E7EB; line-height: 1.5; }
+  .action-row:nth-child(even) .action-desc { background: #F9FAFB; }
+  .action-row:last-child .action-week, .action-row:last-child .action-desc { border-bottom: none; }
+
+  /* CONCLUSION */
+  .conclusion { background: linear-gradient(135deg, #1E3A5F, #2E86C1); border-radius: 12px; padding: 40px; color: white; }
+  .conclusion h3 { font-size: 20px; font-weight: 800; margin-bottom: 24px; text-align: center; }
+  .conclusion-item { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+  .conclusion-num { background: rgba(255,255,255,0.2); border-radius: 50%; width: 28px; height: 28px; min-width: 28px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+  .conclusion-item p { color: rgba(255,255,255,0.88); font-size: 14px; margin: 0; line-height: 1.6; }
+
+  @media print { body { background: white; } .page { box-shadow: none; } }
+  @media (max-width: 700px) {
+    .content { padding: 30px 20px; }
+    .cover { padding: 50px 30px; }
+    .cover h1 { font-size: 48px; }
+    .kpi-grid, .tech-grid, .db-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col, .scenario, .pricing-grid { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-label">Roadmap Produit · Version Solo Founder</div>
+    <h1>Devis<span>Pro</span></h1>
+    <div>
+      <span class="cover-tag">Solo founder</span>
+      <span class="cover-tag">Next.js + Supabase + Stripe</span>
+      <span class="cover-tag">Phases 1→3 uniquement</span>
+    </div>
+    <div class="cover-sub">Générateur de devis pour freelances non-tech</div>
+    <div class="cover-desc">Simple à lancer seul · Gérable seul · Rentable seul</div>
+    <div class="cover-date">Mars 2026 — Document de référence pour Claude Code</div>
+  </div>
+
+  <div class="content">
+
+    <!-- 1. C'EST QUOI CONCRÈTEMENT -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">1</span> Ce que fait le site, concrètement</h2>
+
+      <p>DevisPro est un outil web qui permet aux freelances de créer, envoyer et suivre leurs devis en quelques minutes — sans Word, sans Excel, sans PDF envoyé par email.</p>
+
+      <div class="scenario">
+        <div class="scenario-bad">
+          <h4>❌ Sans DevisPro</h4>
+          <ol>
+            <li>Ouvrir Word, recopier l'entête à la main</li>
+            <li>Taper les lignes de prestation une par une</li>
+            <li>Calculer la TVA sur une calculette</li>
+            <li>Exporter en PDF, l'envoyer par email</li>
+            <li>Attendre… sans savoir si le client l'a ouvert</li>
+            <li>Relancer à la main 1 semaine plus tard</li>
+            <li>Chercher dans sa boite mail "où est le devis signé"</li>
+          </ol>
+        </div>
+        <div class="scenario-good">
+          <h4>✅ Avec DevisPro</h4>
+          <ol>
+            <li>Se connecter, sélectionner le client</li>
+            <li>Ajouter les lignes de prestation (ou piocher dans le catalogue sauvegardé)</li>
+            <li>TVA calculée automatiquement</li>
+            <li>Cliquer "Envoyer" → le client reçoit un lien</li>
+            <li>Notif dès que le client ouvre la page</li>
+            <li>Relance automatique à J+3 et J+7 si pas de réponse</li>
+            <li>Le client signe directement depuis son navigateur</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Ce que le site NE fait PAS</h3>
+      <p>DevisPro n'est pas un logiciel de comptabilité, pas un CRM, pas un outil de gestion de projet. Il fait une seule chose : <strong>le devis, de la création à la signature</strong>. C'est sa force.</p>
+    </div>
+
+    <!-- 2. MARCHÉ -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">2</span> Pourquoi c'est viable</h2>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="val">1,2M</div><div class="lbl">Freelances en France (2024)</div></div>
+        <div class="kpi-card"><div class="val">+92%</div><div class="lbl">Croissance sur 10 ans en France</div></div>
+        <div class="kpi-card"><div class="val">6M+</div><div class="lbl">Freelances qualifiés en Europe</div></div>
+        <div class="kpi-card"><div class="val">1,54M</div><div class="lbl">Projection France 2030</div></div>
+      </div>
+
+      <h3 class="sub-title">Le gap concurrentiel</h3>
+      <table>
+        <tr><th>Outil</th><th>Prix</th><th>Problème</th></tr>
+        <tr><td>FreshBooks</td><td>21 €/mois</td><td>Limité à 5 clients sur le plan d'entrée, trop orienté comptabilité</td></tr>
+        <tr><td>HoneyBook</td><td>36 €/mois</td><td>+89% de hausse de prix en 2025, UX confuse</td></tr>
+        <tr><td>Wave / Zoho</td><td>Gratuit</td><td>Pas de suivi d'ouverture, pas de relance, trop complexe</td></tr>
+        <tr><td>Word / Excel</td><td>0</td><td>Aucun suivi, image non professionnelle</td></tr>
+        <tr><td class="target">DevisPro</td><td class="target">0 / 15 €/mois</td><td class="target">Simple, rapide, avec suivi — rien d'autre</td></tr>
+      </table>
+
+      <h3 class="sub-title">Objectif solo founder réaliste</h3>
+      <div class="highlight-green">
+        <strong>Cible : 100 à 200 abonnés à 15 €/mois = 1 500 à 3 000 € MRR.</strong> Gérable entièrement seul, sans équipe, sans VC. C'est un vrai succès pour un premier projet SaaS.
+      </div>
+    </div>
+
+    <!-- 3. MODÈLE DE PRIX -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">3</span> Modèle de prix</h2>
+
+      <div class="pricing-grid">
+        <div class="pricing-card plan-free">
+          <div class="plan-header">
+            <div class="plan-name">Gratuit</div>
+            <div class="plan-price">0 €</div>
+            <div class="plan-desc">Pour découvrir</div>
+          </div>
+          <ul>
+            <li><span class="icon">✓</span> 3 devis par mois maximum</li>
+            <li><span class="icon">✓</span> 3 templates visuels inclus</li>
+            <li><span class="icon">✓</span> Lien de partage public</li>
+            <li><span class="icon">✓</span> Export PDF</li>
+            <li><span class="icon">✗</span> <span style="color:#9CA3AF">Suivi ouverture client</span></li>
+            <li><span class="icon">✗</span> <span style="color:#9CA3AF">Relances automatiques</span></li>
+            <li><span class="icon">✗</span> <span style="color:#9CA3AF">Signature électronique</span></li>
+          </ul>
+        </div>
+        <div class="pricing-card plan-pro">
+          <div class="plan-header">
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">15 €</div>
+            <div class="plan-desc">par mois · tout inclus</div>
+          </div>
+          <ul>
+            <li><span class="icon">✓</span> Devis illimités</li>
+            <li><span class="icon">✓</span> Suivi d'ouverture en temps réel</li>
+            <li><span class="icon">✓</span> Relances automatiques (J+3, J+7)</li>
+            <li><span class="icon">✓</span> Signature électronique client</li>
+            <li><span class="icon">✓</span> Catalogue de prestations sauvegardées</li>
+            <li><span class="icon">✓</span> CRM client léger</li>
+            <li><span class="icon">✓</span> Templates premium</li>
+          </ul>
+        </div>
+      </div>
+
+      <p><strong>Stratégie freemium :</strong> le plan gratuit est volontairement limité à 3 devis/mois — assez pour tester, insuffisant pour travailler vraiment. Le passage en Pro doit être une évidence, pas une frustration.</p>
+    </div>
+
+    <!-- 4. ROADMAP -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">4</span> Roadmap — 3 Phases</h2>
+      <p>Pas de phase 4, pas de mobile, pas d'équipe. <strong>3 phases, un seul fondateur, un produit qui tourne.</strong></p>
+
+      <!-- Phase 1 -->
+      <div class="phase" style="margin-top:24px">
+        <div class="phase-header" style="background:#1E3A5F">
+          PHASE 1 — MVP (Mois 1 à 3)
+          <span class="badge">Objectif : 50 utilisateurs actifs</span>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Ce qu'on apprend</div>
+          <div class="phase-val"><strong>Créer un compte utilisateur, protéger des routes, lier des données à un user.</strong> C'est le cœur de tout SaaS.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Auth</div>
+          <div class="phase-val">
+            Inscription email + mot de passe via <code>Supabase Auth</code>. Vérification email automatique. Connexion OAuth Google (bouton "Continuer avec Google"). Sessions gérées côté serveur via <code>@supabase/ssr</code>.
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Profil</div>
+          <div class="phase-val">Nom, prénom, nom d'entreprise, email, téléphone, adresse, SIRET (optionnel), logo uploadé. Ces infos s'affichent automatiquement sur tous les devis.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Clients</div>
+          <div class="phase-val">Carnet d'adresses simple : créer un client (nom, email, entreprise, adresse). Chaque client est lié au <code>user_id</code> — invisible des autres utilisateurs.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Créateur de devis</div>
+          <div class="phase-val">Sélectionner un client, ajouter des lignes (label, quantité, prix unitaire, TVA). Calcul automatique HT / TVA / TTC. Champ remise optionnel. Numérotation auto (ex: DEV-2026-001).</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Templates</div>
+          <div class="phase-val">3 designs visuels (minimaliste, classique, moderne). Couleur de marque personnalisable. Logo inclus automatiquement.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Partage</div>
+          <div class="phase-val">Lien unique public <code>/q/[token]</code> — le client ouvre la page dans son navigateur sans compte. Page responsive, propre, professionnelle.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Export PDF</div>
+          <div class="phase-val">Génération PDF serveur via <code>@react-pdf/renderer</code> ou <code>puppeteer</code>. Téléchargement direct, même template que la page web.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Dashboard</div>
+          <div class="phase-val">Liste des devis avec statut (brouillon / envoyé / accepté / refusé / expiré), montant, client, date. Filtres de base.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Feedback</div>
+          <div class="phase-val">Un simple bouton "Envoyer un retour" dans l'interface. Pas de tests utilisateurs organisés — les retours arrivent naturellement.</div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase">
+        <div class="phase-header" style="background:#2E86C1">
+          PHASE 2 — Monétisation (Mois 4 à 6)
+          <span class="badge">Objectif : 30 abonnés payants</span>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Ce qu'on apprend</div>
+          <div class="phase-val"><strong>Intégrer Stripe, gérer les webhooks, restreindre des features selon le plan.</strong> La vraie mécanique d'un SaaS.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Stripe</div>
+          <div class="phase-val"><code>Stripe Checkout</code> pour le paiement. <code>Stripe Customer Portal</code> pour que l'utilisateur gère lui-même son abonnement (annulation, changement de CB). Webhooks pour synchroniser le statut en base (<code>customer.subscription.created</code>, <code>invoice.paid</code>, <code>customer.subscription.deleted</code>).</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Limitation plan</div>
+          <div class="phase-val">Vérification du plan à chaque création de devis. Si gratuit et déjà 3 devis ce mois-ci → modale d'upgrade claire et non-agressive. Compteur visible dans le dashboard.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Suivi ouverture</div>
+          <div class="phase-val">Pixel de tracking 1×1 sur la page client. À l'ouverture → event enregistré en base (<code>quote_events</code>), statut du devis passe à "vu", notification email envoyée au freelance via <code>Resend</code>.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Relances auto</div>
+          <div class="phase-val">Job planifié (<code>Vercel Cron Jobs</code>) : chaque nuit, cherche les devis envoyés sans réponse. Envoie un rappel au client à J+3 et J+7. Désactivable par le freelance. Log de toutes les relances.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Signature</div>
+          <div class="phase-val">Bouton "Accepter ce devis" sur la page client. Collecte nom + date + IP. Stocké en base. Statut passe à "accepté". Email de confirmation envoyé aux deux parties.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Emails</div>
+          <div class="phase-val">Via <code>Resend</code> + templates <code>react-email</code> : confirmation inscription, devis envoyé au client, devis ouvert par le client, devis signé, relance, confirmation paiement Stripe.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Page pricing</div>
+          <div class="phase-val">Landing page dédiée avec les deux plans, FAQ, toggle mensuel / annuel (−20%). Call to action vers Stripe Checkout.</div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase">
+        <div class="phase-header" style="background:#1A7A4A">
+          PHASE 3 — Rétention (Mois 7 à 12)
+          <span class="badge">Objectif : 100–200 abonnés · MRR 1 500–3 000 €</span>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Ce qu'on apprend</div>
+          <div class="phase-val"><strong>Réduire le churn, augmenter la valeur perçue, faire revenir les utilisateurs.</strong> Le vrai défi d'un SaaS mature.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Catalogue services</div>
+          <div class="phase-val">Sauvegarder ses prestations fréquentes (label, prix, TVA). Les réutiliser en 1 clic lors de la création d'un devis. Gain de temps immédiat, rétention naturelle.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">CRM léger</div>
+          <div class="phase-val">Fiche client enrichie : historique des devis, montant total facturé, taux d'acceptation, dernière interaction. Rien de plus.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Stats dashboard</div>
+          <div class="phase-val">Taux d'acceptation global, montant moyen d'un devis, temps moyen avant réponse, revenus estimés du mois. Graphique simple.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Referral</div>
+          <div class="phase-val">Code de parrainage unique par utilisateur. Si un ami s'inscrit via le lien et souscrit : 1 mois offert à chacun. Géré via Stripe coupons.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Mentions légales</div>
+          <div class="phase-val">Bloc CGV optionnel à ajouter en bas de chaque devis. Template type micro-entrepreneur pré-rempli, personnalisable.</div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-key">Fin de roadmap</div>
+          <div class="phase-val"><strong>Pas de phase 4. Pas d'équipe. Pas d'API publique. Pas de mobile natif.</strong> Si le produit fonctionne, les prochaines directions seront dictées par les vrais utilisateurs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ARCHITECTURE TECHNIQUE COMPLÈTE -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">5</span> Architecture Technique Complète</h2>
+      <p>Voici l'intégralité de la stack, brique par brique. <strong>Chaque choix est justifié et rien n'est oublié.</strong></p>
+
+      <h3 class="sub-title">5.1 Vue d'ensemble du flux</h3>
+      <div class="flow">
+        <div class="flow-step" style="background:#1E3A5F">
+          <div class="flow-num">NAVIGATEUR</div>
+          <div class="flow-label">Next.js App</div>
+          <div class="flow-sub">React · Tailwind CSS</div>
+        </div>
+        <div class="flow-step" style="background:#1a5276">
+          <div class="flow-num">API ROUTES</div>
+          <div class="flow-label">Next.js Server</div>
+          <div class="flow-sub">Route Handlers · Server Actions</div>
+        </div>
+        <div class="flow-step" style="background:#2471a3">
+          <div class="flow-num">BASE DE DONNÉES</div>
+          <div class="flow-label">Supabase</div>
+          <div class="flow-sub">PostgreSQL · Auth · Storage</div>
+        </div>
+        <div class="flow-step" style="background:#2E86C1">
+          <div class="flow-num">SERVICES TIERS</div>
+          <div class="flow-label">Stripe · Resend</div>
+          <div class="flow-sub">Paiements · Emails</div>
+        </div>
+        <div class="flow-step" style="background:#1a9ed4">
+          <div class="flow-num">DEPLOY</div>
+          <div class="flow-label">Vercel</div>
+          <div class="flow-sub">Edge · Cron · CDN</div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">5.2 Chaque brique en détail</h3>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-role">Frontend + Backend</div>
+          <div class="tech-name">⚡ Next.js 14 (App Router)</div>
+          <div class="tech-desc">Framework React full-stack. Un seul repo pour le front et l'API. <code>Server Components</code> pour les pages, <code>Route Handlers</code> pour les webhooks Stripe, <code>Server Actions</code> pour les mutations de données. Deploy natif sur Vercel.</div>
+          <div class="tech-cost">✓ Gratuit · npm create next-app</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Authentification + BDD + Fichiers</div>
+          <div class="tech-name">🟢 Supabase</div>
+          <div class="tech-desc">Fournit tout-en-un : <strong>Auth</strong> (email/password + OAuth Google via <code>@supabase/ssr</code>), <strong>PostgreSQL</strong> managé avec Row Level Security (RLS) pour isoler les données par utilisateur, <strong>Storage</strong> pour les logos uploadés.</div>
+          <div class="tech-cost">✓ Gratuit jusqu'à 500 MB · Pro à 25$/mois si besoin</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Paiements + Abonnements</div>
+          <div class="tech-name">💳 Stripe</div>
+          <div class="tech-desc"><code>Stripe Checkout</code> pour la page de paiement hébergée. <code>Stripe Customer Portal</code> pour la gestion self-service. <code>Webhooks</code> pour synchroniser les événements en base (subscription créée, payée, annulée). <code>stripe</code> npm package côté serveur uniquement.</div>
+          <div class="tech-cost">✓ 0 € fixe · 1,5% + 0,25€ par transaction (EU)</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Emails transactionnels</div>
+          <div class="tech-name">📧 Resend + React Email</div>
+          <div class="tech-desc">API email simple avec SDK TypeScript. Templates écrits en React via <code>react-email</code> — mêmes composants que l'app. Emails envoyés : inscription, devis client, notification ouverture, relances, confirmation paiement.</div>
+          <div class="tech-cost">✓ 100 emails/jour gratuit · 20$/mois pour 50k emails</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Génération PDF</div>
+          <div class="tech-name">📄 @react-pdf/renderer</div>
+          <div class="tech-desc">Génère des PDF côté serveur via une Route Handler Next.js. Même structure que les templates web. Renvoie un <code>application/pdf</code> directement téléchargeable. Alternative : Puppeteer (plus lourd, meilleur rendu).</div>
+          <div class="tech-cost">✓ Open source · Gratuit</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Jobs planifiés</div>
+          <div class="tech-name">⏰ Vercel Cron Jobs</div>
+          <div class="tech-desc">Tâches planifiées via <code>vercel.json</code>. Utilisé pour : envoyer les relances automatiques chaque nuit (J+3, J+7), expirer les devis sans réponse au bout de 30 jours. Déclenche une Route Handler sécurisée par un secret header.</div>
+          <div class="tech-cost">✓ Inclus dans Vercel Pro · 20$/mois</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Styling</div>
+          <div class="tech-name">🎨 Tailwind CSS + shadcn/ui</div>
+          <div class="tech-desc">Tailwind pour le style utilitaire. <code>shadcn/ui</code> pour les composants UI (modales, boutons, formulaires, toasts) — copiés directement dans le projet, pas de dépendance externe fragile.</div>
+          <div class="tech-cost">✓ Gratuit · Open source</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Deploy + Hébergement</div>
+          <div class="tech-name">▲ Vercel</div>
+          <div class="tech-desc">Deploy automatique à chaque push Git. Preview URLs pour chaque PR. Edge Network CDN mondial. Analytics inclus. Variables d'environnement sécurisées. Cron Jobs (Pro). Logs en temps réel.</div>
+          <div class="tech-cost">✓ Gratuit (Hobby) → Pro 20$/mois dès Cron nécessaire</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Monitoring erreurs</div>
+          <div class="tech-name">🐛 Sentry</div>
+          <div class="tech-desc">Capture automatique des erreurs front et back. Stack traces, contexte utilisateur, alertes email. Intégration Next.js native via <code>@sentry/nextjs</code>. Indispensable dès qu'il y a des utilisateurs réels.</div>
+          <div class="tech-cost">✓ Gratuit jusqu'à 5k erreurs/mois</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Typage + Qualité code</div>
+          <div class="tech-name">🔷 TypeScript + Zod</div>
+          <div class="tech-desc"><code>TypeScript</code> partout pour éviter les bugs à l'exécution. <code>Zod</code> pour valider les données entrantes (formulaires, webhooks Stripe, params d'URL). Types Supabase auto-générés depuis le schéma DB.</div>
+          <div class="tech-cost">✓ Gratuit · Inclus dans Next.js</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Gestion de l'état</div>
+          <div class="tech-name">🔄 React Query (TanStack)</div>
+          <div class="tech-desc">Fetching, caching et invalidation des données côté client. Utilisé pour les listes de devis, clients, prestations. Évite la gestion manuelle des états de chargement / erreur.</div>
+          <div class="tech-cost">✓ Gratuit · Open source</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-role">Variables d'environnement</div>
+          <div class="tech-name">🔐 .env.local</div>
+          <div class="tech-desc">Toutes les clés sensibles dans des variables d'environnement, jamais dans le code. Clés nécessaires : <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code>, <code>SUPABASE_SERVICE_ROLE_KEY</code>, <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>RESEND_API_KEY</code>, <code>CRON_SECRET</code>.</div>
+          <div class="tech-cost">✓ Géré par Vercel en production</div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">5.3 Schéma de base de données complet</h3>
+      <p>Row Level Security (RLS) activé sur toutes les tables — chaque utilisateur ne voit que ses propres données, même si la clé publique Supabase est exposée côté client.</p>
+      <div class="db-grid">
+        <div class="db-card">
+          <div class="db-header">users (profiles)</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">email</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">full_name</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">company_name</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">logo_url</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">address</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">siret</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">plan</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">stripe_customer_id</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">timestamptz</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">clients</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">user_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">name</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">email</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">company</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">address</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">timestamptz</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">quotes</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">user_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">client_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">number</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">status</span><span class="db-col-type">enum</span></div>
+          <div class="db-col"><span class="db-col-name">template</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">total_ht</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">total_tva</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">total_ttc</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">discount</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">share_token</span><span class="db-col-type">text unique</span></div>
+          <div class="db-col"><span class="db-col-name">sent_at</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">opened_at</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">signed_at</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">signed_by</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">expires_at</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">notes</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">timestamptz</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">quote_items</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">quote_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">label</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">description</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">quantity</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">unit_price</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">tva_rate</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">sort_order</span><span class="db-col-type">int</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">subscriptions</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">user_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">stripe_sub_id</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">stripe_price_id</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">status</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">period_end</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">cancel_at</span><span class="db-col-type">timestamptz</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">services (catalogue)</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">user_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">label</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">description</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">unit_price</span><span class="db-col-type">numeric</span></div>
+          <div class="db-col"><span class="db-col-name">tva_rate</span><span class="db-col-type">numeric</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">quote_events</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">quote_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">event_type</span><span class="db-col-type">text</span></div>
+          <div class="db-col"><span class="db-col-name">metadata</span><span class="db-col-type">jsonb</span></div>
+          <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">timestamptz</span></div>
+        </div>
+        <div class="db-card">
+          <div class="db-header">reminders</div>
+          <div class="db-col"><span class="db-col-name">id</span><span><span class="db-col-pk">PK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">quote_id</span><span><span class="db-col-fk">FK</span> <span class="db-col-type">uuid</span></span></div>
+          <div class="db-col"><span class="db-col-name">sent_at</span><span class="db-col-type">timestamptz</span></div>
+          <div class="db-col"><span class="db-col-name">reminder_number</span><span class="db-col-type">int</span></div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">5.4 Variables d'environnement requises</h3>
+      <table>
+        <tr><th>Variable</th><th>Valeur</th><th>Usage</th></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>URL du projet Supabase</td><td>Client-side, accès à la BDD</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Clé publique Supabase</td><td>Client-side, requêtes avec RLS</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Clé secrète Supabase</td><td>Server-side uniquement, webhooks, cron</td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>sk_live_... ou sk_test_...</td><td>Serveur uniquement, créer sessions Stripe</td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>whsec_...</td><td>Vérifier les webhooks Stripe entrants</td></tr>
+        <tr><td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td><td>pk_live_...</td><td>Client-side Stripe.js</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td>re_...</td><td>Envoi d'emails transactionnels</td></tr>
+        <tr><td><code>CRON_SECRET</code></td><td>Token aléatoire fort</td><td>Sécuriser les routes Cron Vercel</td></tr>
+        <tr><td><code>NEXT_PUBLIC_APP_URL</code></td><td>https://devispro.fr</td><td>Construire les liens publics (devis, emails)</td></tr>
+      </table>
+
+      <h3 class="sub-title">5.5 Structure des dossiers du projet</h3>
+      <table>
+        <tr><th>Dossier / Fichier</th><th>Contenu</th></tr>
+        <tr><td><code>app/(auth)/</code></td><td>Pages login, signup, callback OAuth, reset password</td></tr>
+        <tr><td><code>app/(dashboard)/</code></td><td>Pages protégées : dashboard, devis, clients, profil, settings</td></tr>
+        <tr><td><code>app/q/[token]/</code></td><td>Page publique de visualisation du devis par le client</td></tr>
+        <tr><td><code>app/api/stripe/webhook/</code></td><td>Route Handler pour les webhooks Stripe</td></tr>
+        <tr><td><code>app/api/cron/reminders/</code></td><td>Route Handler pour les relances automatiques (appelée par Vercel Cron)</td></tr>
+        <tr><td><code>app/api/quotes/[id]/pdf/</code></td><td>Route Handler qui génère et renvoie le PDF</td></tr>
+        <tr><td><code>app/api/track/[token]/</code></td><td>Route Handler du pixel de tracking d'ouverture</td></tr>
+        <tr><td><code>components/</code></td><td>Composants UI réutilisables (shadcn/ui + custom)</td></tr>
+        <tr><td><code>lib/supabase/</code></td><td>Clients Supabase (browser, server, middleware)</td></tr>
+        <tr><td><code>lib/stripe/</code></td><td>Instance Stripe, helpers checkout et portal</td></tr>
+        <tr><td><code>lib/resend/</code></td><td>Instance Resend, fonctions d'envoi d'emails</td></tr>
+        <tr><td><code>emails/</code></td><td>Templates react-email (confirmation, devis, relance…)</td></tr>
+        <tr><td><code>supabase/migrations/</code></td><td>Fichiers SQL de migration de la BDD</td></tr>
+        <tr><td><code>middleware.ts</code></td><td>Protection des routes auth (redirige si non connecté)</td></tr>
+        <tr><td><code>vercel.json</code></td><td>Configuration des Cron Jobs</td></tr>
+      </table>
+    </div>
+
+    <!-- 6. PLAN D'ACTION -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">6</span> Plan d'action — 12 semaines</h2>
+      <div class="action-grid">
+        <div class="action-row">
+          <div class="action-week">S1</div>
+          <div class="action-desc"><strong>Setup :</strong> créer le repo GitHub, initialiser Next.js 14 + TypeScript + Tailwind + shadcn/ui, créer le projet Supabase, configurer Vercel, acheter le domaine, configurer les variables d'environnement.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S2</div>
+          <div class="action-desc"><strong>Auth :</strong> pages inscription / connexion / reset password avec Supabase Auth. OAuth Google. Middleware de protection des routes. Première session utilisateur fonctionnelle.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S3</div>
+          <div class="action-desc"><strong>Profil + Clients :</strong> page profil (nom, logo, coordonnées). Migrations SQL pour <code>profiles</code> et <code>clients</code>. CRUD clients avec RLS activé.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S4</div>
+          <div class="action-desc"><strong>Créateur de devis :</strong> formulaire multi-lignes, calcul TVA automatique, sauvegarde en base. Tables <code>quotes</code> + <code>quote_items</code>. Numérotation automatique.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S5</div>
+          <div class="action-desc"><strong>Templates + Partage :</strong> 3 designs visuels. Génération du <code>share_token</code>. Page publique <code>/q/[token]</code> sans authentification. Export PDF via react-pdf.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S6</div>
+          <div class="action-desc"><strong>Dashboard :</strong> liste des devis avec statuts, filtres, tri. UI propre et utilisable. Premiers emails transactionnels via Resend (inscription, devis envoyé).</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S7</div>
+          <div class="action-desc"><strong>Stripe :</strong> intégration Checkout + Customer Portal + webhooks. Table <code>subscriptions</code>. Limitation à 3 devis/mois pour le plan gratuit. Page pricing.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S8</div>
+          <div class="action-desc"><strong>Tracking + Signature :</strong> pixel de tracking ouverture. Notification email au freelance. Bouton signature côté client. Confirmation aux deux parties.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S9</div>
+          <div class="action-desc"><strong>Relances auto :</strong> Vercel Cron Job nocturne. Logique J+3 / J+7. Table <code>reminders</code>. Emails de relance via Resend. Toggle d'activation par devis.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S10</div>
+          <div class="action-desc"><strong>Polish + Sentry :</strong> intégration Sentry, gestion des edge cases (devis expiré, webhook Stripe échoué, email bounced), états de chargement, messages d'erreur clairs.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S11</div>
+          <div class="action-desc"><strong>Landing page :</strong> page d'accueil publique avec démo visuelle, pricing, FAQ, CTA. SEO de base (meta tags, sitemap). Bouton feedback dans l'app.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-week">S12</div>
+          <div class="action-desc"><strong>Lancement :</strong> ProductHunt, Reddit r/freelance_fr, groupes Facebook freelances. Objectif : 50 inscrits. Observer les comportements réels et itérer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. CONCLUSION -->
+    <div class="section">
+      <h2 class="section-title"><span class="num">7</span> En résumé</h2>
+      <div class="conclusion">
+        <h3>Ce projet, c'est quoi exactement</h3>
+        <div class="conclusion-item"><div class="conclusion-num">1</div><p><strong>Un vrai produit, pas un exercice.</strong> DevisPro résout un vrai problème pour un vrai marché. 1,2 million de freelances en France, une concurrence mal positionnée, un gap clair.</p></div>
+        <div class="conclusion-item"><div class="conclusion-num">2</div><p><strong>Gérable seul de A à Z.</strong> 3 phases, pas d'équipe, pas de VC. Objectif : 100–200 abonnés à 15 €/mois. C'est un vrai business solo, pas une startup.</p></div>
+        <div class="conclusion-item"><div class="conclusion-num">3</div><p><strong>La meilleure école de développement web.</strong> Auth, BDD, paiements, webhooks, cron jobs, emails, PDF, RLS, deploy — tout y est. Chaque brique apprend quelque chose de fondamental.</p></div>
+        <div class="conclusion-item"><div class="conclusion-num">4</div><p><strong>Stack moderne et bien documentée.</strong> Next.js + Supabase + Stripe + Resend + Vercel. Des milliers de tutoriels, une communauté active, pas de choix exotiques.</p></div>
+        <div class="conclusion-item"><div class="conclusion-num">5</div><p><strong>Pas de tests utilisateurs organisés.</strong> Observer les vrais comportements dans l'app, lire les feedbacks spontanés, itérer. Simple et efficace.</p></div>
+      </div>
+      <p style="margin-top:24px;font-weight:700;color:#1E3A5F;font-size:15px">→ Prochaine étape avec Claude Code : <code>npx create-next-app@latest devispro</code> et configurer Supabase.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
