@@ -43,6 +43,7 @@ export type Database = {
           stripe_subscription_id?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       clients: {
         Row: {
@@ -70,6 +71,7 @@ export type Database = {
           company?: string | null
           address?: string | null
         }
+        Relationships: []
       }
       devis: {
         Row: {
@@ -133,6 +135,7 @@ export type Database = {
           derniere_relance?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
     }
     Views: Record<string, never>
