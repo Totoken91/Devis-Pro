@@ -43,5 +43,17 @@ export async function POST(
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Notifier le freelancer (fire-and-forget)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  fetch(`${appUrl}/api/notify-owner`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: params.token,
+      event: action,
+      ...(action === 'accepte' && nom_signataire ? { nomSignataire: nom_signataire } : {}),
+    }),
+  }).catch(() => { /* silencieux si notification échoue */ })
+
   return NextResponse.json({ success: true })
 }

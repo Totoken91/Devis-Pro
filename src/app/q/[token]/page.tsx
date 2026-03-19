@@ -77,12 +77,19 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const emetteur = d.profiles
   const destinataire = d.clients
 
-  // Marquer comme ouvert si envoye (première consultation)
+  // Marquer comme ouvert si envoye (première consultation) + notifier le freelancer
   if (d.statut === 'envoye') {
     await supabase
       .from('devis')
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
       .eq('id', d.id)
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+    fetch(`${appUrl}/api/notify-owner`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: params.token, event: 'ouvert' }),
+    }).catch(() => { /* silencieux si notification échoue */ })
   }
 
   return (
