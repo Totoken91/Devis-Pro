@@ -129,14 +129,14 @@ CREATE OR REPLACE TRIGGER devis_set_updated_at
 -- TABLE: notifications
 -- ============================================================
 CREATE TABLE IF NOT EXISTS public.notifications (
-  id           UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
-  created_at   TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-  user_id      UUID        REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  devis_id     UUID        REFERENCES public.devis(id) ON DELETE CASCADE,
-  event        TEXT        NOT NULL CHECK (event IN ('ouvert', 'accepte', 'refuse')),
-  devis_numero TEXT        NOT NULL,
-  client_name  TEXT        NOT NULL,
-  read         BOOLEAN     NOT NULL DEFAULT FALSE
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id      UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  devis_id     UUID REFERENCES public.devis(id) ON DELETE CASCADE,
+  event        TEXT NOT NULL,
+  devis_numero TEXT NOT NULL,
+  client_name  TEXT NOT NULL,
+  is_read      BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;

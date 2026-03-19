@@ -35,10 +35,10 @@ export function NotificationBell() {
   const supabase = createClient()
 
   const markAllRead = useCallback(async (list: Notification[]) => {
-    const ids = list.filter((n) => !n.read).map((n) => n.id)
+    const ids = list.filter((n) => !n.is_read).map((n) => n.id)
     if (ids.length === 0) return
-    await supabase.from('notifications').update({ read: true }).in('id', ids)
-    setNotifs((prev) => prev.map((n) => ({ ...n, read: true })))
+    await supabase.from('notifications').update({ is_read: true }).in('id', ids)
+    setNotifs((prev) => prev.map((n) => ({ ...n, is_read: true })))
   }, [supabase])
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const unreadCount = notifs.filter((n) => !n.read).length
+  const unreadCount = notifs.filter((n) => !n.is_read).length
 
   const handleToggle = () => {
     const next = !open
@@ -129,7 +129,7 @@ export function NotificationBell() {
               notifs.map((n) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 ${!n.read ? 'bg-blue-50/60' : ''}`}
+                  className={`px-4 py-3 ${!n.is_read ? 'bg-blue-50/60' : ''}`}
                 >
                   <div className="flex items-start gap-3">
                     <span className="text-base mt-0.5 shrink-0">{EVENT_ICON[n.event]}</span>
@@ -142,7 +142,7 @@ export function NotificationBell() {
                         {n.devis_numero} · {timeAgo(n.created_at)}
                       </p>
                     </div>
-                    {!n.read && (
+                    {!n.is_read && (
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 shrink-0" />
                     )}
                   </div>

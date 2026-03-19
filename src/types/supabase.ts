@@ -82,7 +82,7 @@ export type Database = {
           event: 'ouvert' | 'accepte' | 'refuse'
           devis_numero: string
           client_name: string
-          read: boolean
+          is_read: boolean
         }
         Insert: {
           user_id: string
@@ -90,10 +90,10 @@ export type Database = {
           event: 'ouvert' | 'accepte' | 'refuse'
           devis_numero: string
           client_name: string
-          read?: boolean
+          is_read?: boolean
         }
         Update: {
-          read?: boolean
+          is_read?: boolean
         }
         Relationships: []
       }
