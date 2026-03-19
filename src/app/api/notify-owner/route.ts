@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
 </html>`
 
   const { error } = await resend.emails.send({
-    from: 'Deviso <notifications@deviso.fr>',
+    from: 'Deviso <notifications@deviso.app>',
     to: profile.email,
     subject: config.subject(clientName, devisRow.titre),
     html,

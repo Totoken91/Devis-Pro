@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 `
 
   const { error } = await resend.emails.send({
-    from: 'Deviso <notifications@deviso.fr>',
+    from: 'Deviso <notifications@deviso.app>',
     to: body.to,
     subject: `Devis ${body.numero} — ${body.titre} (${montantFormate})`,
     html,
