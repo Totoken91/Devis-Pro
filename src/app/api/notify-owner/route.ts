@@ -52,14 +52,22 @@ export async function POST(req: NextRequest) {
   const admin = createAdminClient()
 
   // Récupérer le devis + client + profil du freelancer
-  const { data: devisRow } = await admin
+  const { data: devisRaw } = await admin
     .from('devis')
     .select('numero, titre, montant_ttc, user_id, clients(name, company)')
     .eq('token_public', token)
     .single()
 
-  if (!devisRow) {
+  if (!devisRaw) {
     return NextResponse.json({ error: 'Devis introuvable' }, { status: 404 })
+  }
+
+  const devisRow = devisRaw as {
+    numero: string
+    titre: string
+    montant_ttc: number
+    user_id: string
+    clients: { name: string; company: string | null } | null
   }
 
   const { data: profile } = await admin
@@ -72,8 +80,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Profil freelancer introuvable' }, { status: 404 })
   }
 
-  const row = devisRow as typeof devisRow & { clients: { name: string; company: string | null } | null }
-  const clientName = row.clients?.company || row.clients?.name || 'Votre client'
+  const clientName = devisRow.clients?.company || devisRow.clients?.name || 'Votre client'
   const config = EVENT_CONFIG[event]
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const lienDashboard = `${appUrl}/devis`
