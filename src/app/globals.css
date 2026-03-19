@@ -27,6 +27,23 @@
   }
 }
 
+@media print {
+  body { background: white !important; }
+  .print\:hidden { display: none !important; }
+
+  /* Page publique devis : fond gris → blanc, shadow off */
+  .min-h-screen { background: white !important; padding: 0 !important; }
+  .max-w-3xl { max-width: 100% !important; }
+  .shadow-sm { box-shadow: none !important; }
+  .rounded-2xl { border-radius: 0 !important; }
+
+  /* Forcer les couleurs d'arrière-plan à l'impression */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
 @layer components {
   .btn-primary {
     background-color: #2E86C1;

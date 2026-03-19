@@ -3,7 +3,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
 import { DevisActions } from './DevisActions'
-import { Download } from 'lucide-react'
+import { PrintButton } from './PrintButton'
 
 type DevisPublic = Devis & {
   profiles: {
@@ -89,14 +89,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
             Devi<span className="text-[#2E86C1]">so</span>
           </a>
           <div className="flex items-center gap-3">
-            <a
-              href={`/api/devis/${params.token}/pdf`}
-              download
-              className="flex items-center gap-1.5 text-sm font-medium text-[#2E86C1] hover:text-[#1E3A5F] border border-[#2E86C1] hover:border-[#1E3A5F] px-3 py-1.5 rounded-xl transition-colors"
-            >
-              <Download size={14} />
-              PDF
-            </a>
+            <PrintButton />
             <span className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${STATUT_STYLE[d.statut]}`}>
               {STATUT_LABEL[d.statut]}
             </span>
