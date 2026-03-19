@@ -49,15 +49,18 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const { data: { user } } = await supabase.auth.getUser()
 
   // Lecture via admin pour bypasser les RLS (page publique)
-  const { data: devis } = await admin
+  const { data: devis, error: devisError } = await admin
     .from('devis')
     .select('*, profiles(full_name, company_name, email, phone, address, siret), clients(name, company, email, phone, address)')
     .eq('token_public', params.token)
     .single()
 
-  const d = devis as unknown as DevisPublic
+  if (devisError || !devis) {
+    console.error('[q/token] token:', params.token, 'error:', devisError?.message ?? 'null data', 'service_role set:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    notFound()
+  }
 
-  if (!d) notFound()
+  const d = devis as unknown as DevisPublic
 
   // Brouillon : seul le propriétaire peut prévisualiser
   const isOwner = user?.id === d.user_id
