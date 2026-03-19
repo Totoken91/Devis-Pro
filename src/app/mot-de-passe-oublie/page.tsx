@@ -9,9 +9,8 @@ export default function MotDePasseOubliePage() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
-  const supabase = createClient()
-
   const handleReset = async (e: React.FormEvent) => {
+    const supabase = createClient()
     e.preventDefault()
     setLoading(true)
     setError('')

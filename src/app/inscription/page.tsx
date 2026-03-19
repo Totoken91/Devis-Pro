@@ -11,9 +11,8 @@ export default function InscriptionPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const supabase = createClient()
-
   const handleSignUp = async (e: React.FormEvent) => {
+    const supabase = createClient()
     e.preventDefault()
     setLoading(true)
     setError('')
@@ -46,6 +45,7 @@ export default function InscriptionPage() {
   }
 
   const handleGoogleSignUp = async () => {
+    const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

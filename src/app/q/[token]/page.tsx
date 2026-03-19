@@ -3,6 +3,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
 import { DevisActions } from './DevisActions'
+import { PrintButton } from './PrintButton'
 
 type DevisPublic = Devis & {
   profiles: {
@@ -87,9 +88,12 @@ export default async function DevisPublicPage({ params }: { params: { token: str
           <a href="/" className="text-2xl font-bold text-[#1E3A5F]">
             Devi<span className="text-[#2E86C1]">so</span>
           </a>
-          <span className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${STATUT_STYLE[d.statut]}`}>
-            {STATUT_LABEL[d.statut]}
-          </span>
+          <div className="flex items-center gap-3">
+            <PrintButton />
+            <span className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${STATUT_STYLE[d.statut]}`}>
+              {STATUT_LABEL[d.statut]}
+            </span>
+          </div>
         </div>
 
         {/* Devis */}

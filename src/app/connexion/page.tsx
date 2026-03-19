@@ -13,11 +13,10 @@ function ConnexionForm() {
   const [error, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClient()
-
   const urlError = searchParams.get('error')
 
   const handleEmailLogin = async (e: React.FormEvent) => {
+    const supabase = createClient()
     e.preventDefault()
     setLoading(true)
     setError('')
@@ -38,6 +37,7 @@ function ConnexionForm() {
   }
 
   const handleGoogleLogin = async () => {
+    const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
