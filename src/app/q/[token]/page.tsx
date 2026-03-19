@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
@@ -43,10 +44,12 @@ const STATUT_LABEL: Record<Devis['statut'], string> = {
 
 export default async function DevisPublicPage({ params }: { params: { token: string } }) {
   const supabase = createClient()
+  const admin = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: devis } = await supabase
+  // Lecture via admin pour bypasser les RLS (page publique)
+  const { data: devis } = await admin
     .from('devis')
     .select('*, profiles(full_name, company_name, email, phone, address, siret), clients(name, company, email, phone, address)')
     .eq('token_public', params.token)
