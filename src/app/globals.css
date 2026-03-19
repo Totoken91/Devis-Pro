@@ -1,66 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #2E86C1;
-  --color-brand-dark: #1E3A5F;
-  --color-brand-light: #7EC8E3;
-  --font-sans: "Inter", sans-serif;
+  /* Brand — vert pomme */
+  --color-brand:       #6CC531;
+  --color-brand-dark:  #4FA31E;
+  --color-brand-light: #E4F7D0;
+
+  /* Neutrals */
+  --color-surface: #FFFFFF;
+  --color-canvas:  #F7F8F5;
+
+  /* Typography */
+  --font-sans:    var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 15%;
+  body {
+    background-color: #F7F8F5;
+    color: #1A1E17;
+    font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   * {
-    border-color: theme(colors.gray.200);
+    border-color: #EAECE7;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: #6CC531;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.625rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background-color 0.15s, box-shadow 0.15s;
+    box-shadow: 0 1px 4px 0 rgb(108 197 49 / 0.25);
+  }
+  .btn-primary:hover {
+    background-color: #4FA31E;
   }
 
-  body {
-    background-color: theme(colors.gray.50);
-    color: theme(colors.gray.900);
-    font-family: "Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
+  .card {
+    background-color: white;
+    border-radius: 1rem;
+    border: 1px solid #EAECE7;
   }
 }
 
 @media print {
   body { background: white !important; }
   .print\:hidden { display: none !important; }
-
-  /* Page publique devis : fond gris → blanc, shadow off */
   .min-h-screen { background: white !important; padding: 0 !important; }
   .max-w-3xl { max-width: 100% !important; }
   .shadow-sm { box-shadow: none !important; }
   .rounded-2xl { border-radius: 0 !important; }
-
-  /* Forcer les couleurs d'arrière-plan à l'impression */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-}
-
-@layer components {
-  .btn-primary {
-    background-color: #2E86C1;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: background-color 0.15s;
-  }
-  .btn-primary:hover {
-    background-color: #1E3A5F;
-  }
-
-  .card {
-    background-color: white;
-    border-radius: 0.75rem;
-    border: 1px solid theme(colors.gray.200);
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 }

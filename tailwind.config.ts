@@ -11,13 +11,14 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#2E86C1',
-          dark: '#1E3A5F',
-          light: '#7EC8E3',
+          DEFAULT: '#6CC531',
+          dark:    '#4FA31E',
+          light:   '#E4F7D0',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans:    ['var(--font-dm-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-sora)',    'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },
