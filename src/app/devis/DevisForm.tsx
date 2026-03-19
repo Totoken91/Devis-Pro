@@ -146,7 +146,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
           <button
             onClick={() => handleSave('brouillon')}
             disabled={!!loading}
-            className="flex items-center gap-2 border border-gray-300 text-gray-700 font-medium rounded-xl px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 border border-gray-300 text-gray-700 font-medium rounded-xl px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save size={15} />
             {loading === 'draft' ? 'Sauvegarde...' : 'Brouillon'}
@@ -154,7 +154,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
           <button
             onClick={() => handleSave('envoye')}
             disabled={!!loading}
-            className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send size={15} />
             {loading === 'send' ? 'Envoi...' : 'Finaliser & envoyer'}

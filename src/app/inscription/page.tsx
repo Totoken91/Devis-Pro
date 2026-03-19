@@ -104,7 +104,7 @@ export default function InscriptionPage() {
           <button
             onClick={handleGoogleSignUp}
             type="button"
-            className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 px-4 text-gray-700 font-medium hover:bg-gray-50 transition-colors mb-4"
+            className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 px-4 text-gray-700 font-medium hover:bg-gray-50 transition-colors mb-4 cursor-pointer"
           >
             <GoogleIcon />
             Continuer avec Google
@@ -127,7 +127,7 @@ export default function InscriptionPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                placeholder="Marie Dupont"
+                placeholder=""
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent transition"
               />
             </div>
@@ -141,7 +141,7 @@ export default function InscriptionPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="vous@exemple.fr"
+                placeholder=""
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent transition"
               />
             </div>
@@ -169,7 +169,7 @@ export default function InscriptionPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl py-3 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl py-3 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? 'Création...' : 'Créer mon compte'}
             </button>

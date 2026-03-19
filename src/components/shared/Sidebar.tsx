@@ -64,7 +64,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
         </div>
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <LogOut size={18} />
           Déconnexion

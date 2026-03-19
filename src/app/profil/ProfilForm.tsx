@@ -61,11 +61,11 @@ export function ProfilForm({ profile }: ProfilFormProps) {
           Informations personnelles
         </h2>
 
-        <Field label="Prénom et nom" name="full_name" value={form.full_name} onChange={handleChange} placeholder="Marie Dupont" />
-        <Field label="Nom de l'entreprise" name="company_name" value={form.company_name} onChange={handleChange} placeholder="Dupont Studio" />
-        <Field label="Email" name="email" value={form.email} onChange={handleChange} placeholder="vous@exemple.fr" disabled />
-        <Field label="Téléphone" name="phone" value={form.phone} onChange={handleChange} placeholder="+33 6 12 34 56 78" />
-        <Field label="SIRET" name="siret" value={form.siret} onChange={handleChange} placeholder="123 456 789 00010" />
+        <Field label="Prénom et nom" name="full_name" value={form.full_name} onChange={handleChange} />
+        <Field label="Nom de l'entreprise" name="company_name" value={form.company_name} onChange={handleChange} />
+        <Field label="Email" name="email" value={form.email} onChange={handleChange} disabled />
+        <Field label="Téléphone" name="phone" value={form.phone} onChange={handleChange} />
+        <Field label="SIRET" name="siret" value={form.siret} onChange={handleChange} />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
@@ -74,7 +74,7 @@ export function ProfilForm({ profile }: ProfilFormProps) {
             value={form.address}
             onChange={handleChange}
             rows={3}
-            placeholder={"12 rue de la Paix\n75001 Paris"}
+            placeholder=""
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent transition resize-none"
           />
         </div>
@@ -90,7 +90,7 @@ export function ProfilForm({ profile }: ProfilFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-6 py-3 transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-6 py-3 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <Save size={16} />
           {loading ? 'Sauvegarde...' : 'Sauvegarder'}

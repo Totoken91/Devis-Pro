@@ -129,7 +129,7 @@ export function DevisList({ initialDevis }: DevisListProps) {
                       </a>
                       <button
                         onClick={() => navigator.clipboard.writeText(`${window.location.origin}/q/${d.token_public}`)}
-                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                         title="Copier le lien"
                       >
                         <Copy size={15} />
@@ -142,7 +142,7 @@ export function DevisList({ initialDevis }: DevisListProps) {
                       </Link>
                       <button
                         onClick={() => setDeleteId(d.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 size={15} />
                       </button>
@@ -167,13 +167,13 @@ export function DevisList({ initialDevis }: DevisListProps) {
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteId(null)}
-                className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm"
+                className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
               >
                 Annuler
               </button>
               <button
                 onClick={() => handleDelete(deleteId)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm"
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm cursor-pointer"
               >
                 Supprimer
               </button>

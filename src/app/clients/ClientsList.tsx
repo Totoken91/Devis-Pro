@@ -96,7 +96,7 @@ export function ClientsList({ initialClients, userId }: ClientsListProps) {
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-colors"
+          className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-colors cursor-pointer"
         >
           <Plus size={16} />
           Ajouter un client
@@ -151,13 +151,13 @@ export function ClientsList({ initialClients, userId }: ClientsListProps) {
                     <div className="flex items-center gap-2 justify-end">
                       <button
                         onClick={() => openEdit(client)}
-                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                       >
                         <Pencil size={15} />
                       </button>
                       <button
                         onClick={() => setDeleteId(client.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 size={15} />
                       </button>
@@ -178,30 +178,30 @@ export function ClientsList({ initialClients, userId }: ClientsListProps) {
               <h2 className="text-base font-semibold text-gray-900">
                 {modal === 'add' ? 'Ajouter un client' : 'Modifier le client'}
               </h2>
-              <button onClick={closeModal} className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors">
+              <button onClick={closeModal} className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors cursor-pointer">
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleSave} className="px-6 py-5 space-y-4">
-              <ModalField label="Nom *" name="name" value={form.name} onChange={handleChange} required placeholder="Marie Dupont" />
-              <ModalField label="Entreprise" name="company" value={form.company} onChange={handleChange} placeholder="Dupont Studio" />
-              <ModalField label="Email" name="email" value={form.email} onChange={handleChange} placeholder="marie@exemple.fr" />
-              <ModalField label="Téléphone" name="phone" value={form.phone} onChange={handleChange} placeholder="+33 6 12 34 56 78" />
-              <ModalField label="Adresse" name="address" value={form.address} onChange={handleChange} placeholder="12 rue de la Paix, 75001 Paris" />
+              <ModalField label="Nom *" name="name" value={form.name} onChange={handleChange} required />
+              <ModalField label="Entreprise" name="company" value={form.company} onChange={handleChange} />
+              <ModalField label="Email" name="email" value={form.email} onChange={handleChange} />
+              <ModalField label="Téléphone" name="phone" value={form.phone} onChange={handleChange} />
+              <ModalField label="Adresse" name="address" value={form.address} onChange={handleChange} />
 
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm"
+                  className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !form.name.trim()}
-                  className="flex-1 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl py-2.5 transition-colors disabled:opacity-60 text-sm"
+                  className="flex-1 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl py-2.5 transition-colors disabled:opacity-60 text-sm cursor-pointer disabled:cursor-not-allowed"
                 >
                   {loading ? 'Sauvegarde...' : modal === 'add' ? 'Ajouter' : 'Sauvegarder'}
                 </button>
@@ -223,13 +223,13 @@ export function ClientsList({ initialClients, userId }: ClientsListProps) {
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteId(null)}
-                className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm"
+                className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
               >
                 Annuler
               </button>
               <button
                 onClick={() => handleDelete(deleteId)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm"
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm cursor-pointer"
               >
                 Supprimer
               </button>
