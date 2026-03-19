@@ -60,11 +60,14 @@ export default async function DevisPublicPage({ params }: { params: { token: str
     notFound()
   }
 
-  const [{ data: profileRow }] = await Promise.all([
-    admin.from('profiles').select('full_name, company_name, email, phone, address, siret').eq('id', devisRow.user_id).single(),
-  ])
+  const row = devisRow as Record<string, unknown> & { user_id: string }
+  const { data: profileRow } = await admin
+    .from('profiles')
+    .select('full_name, company_name, email, phone, address, siret')
+    .eq('id', row.user_id)
+    .single()
 
-  const d = { ...devisRow, profiles: profileRow, clients: devisRow.clients } as unknown as DevisPublic
+  const d = { ...row, profiles: profileRow } as unknown as DevisPublic
 
   // Brouillon : seul le propriétaire peut prévisualiser
   const isOwner = user?.id === d.user_id
