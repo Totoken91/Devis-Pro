@@ -43,6 +43,8 @@ const STATUT_LABEL: Record<Devis['statut'], string> = {
 export default async function DevisPublicPage({ params }: { params: { token: string } }) {
   const supabase = createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+
   const { data: devis } = await supabase
     .from('devis')
     .select('*, profiles(full_name, company_name, email, phone, address, siret), clients(name, company, email, phone, address)')
@@ -51,7 +53,13 @@ export default async function DevisPublicPage({ params }: { params: { token: str
 
   const d = devis as unknown as DevisPublic
 
-  if (!d || d.statut === 'brouillon') notFound()
+  if (!d) notFound()
+
+  // Brouillon : seul le propriétaire peut prévisualiser
+  const isOwner = user?.id === d.user_id
+  if (d.statut === 'brouillon' && !isOwner) notFound()
+
+  const isPreview = d.statut === 'brouillon'
   const emetteur = d.profiles
   const destinataire = d.clients
 
@@ -66,6 +74,14 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-3xl mx-auto">
+        {/* Bannière prévisualisation */}
+        {isPreview && (
+          <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
+            <span className="font-semibold">Prévisualisation brouillon</span>
+            <span className="text-amber-600">— Ce devis n&apos;a pas encore été envoyé au client.</span>
+          </div>
+        )}
+
         {/* Bandeau statut */}
         <div className="flex items-center justify-between mb-6">
           <a href="/" className="text-2xl font-bold text-[#1E3A5F]">
@@ -184,7 +200,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
             )}
 
             {/* Actions client : Accepter / Refuser / Signé */}
-            {(d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
+            {!isPreview && (d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
               <DevisActions
                 token={params.token}
                 statut={d.statut}

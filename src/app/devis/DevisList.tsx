@@ -118,17 +118,15 @@ export function DevisList({ initialDevis }: DevisListProps) {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1 justify-end">
-                      {d.statut !== 'brouillon' && (
-                        <a
-                          href={`/q/${d.token_public}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Voir la page publique"
-                        >
-                          <Eye size={15} />
-                        </a>
-                      )}
+                      <a
+                        href={`/q/${d.token_public}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
+                        title={d.statut === 'brouillon' ? 'Prévisualiser' : 'Voir la page publique'}
+                      >
+                        <Eye size={15} />
+                      </a>
                       <button
                         onClick={() => navigator.clipboard.writeText(`${window.location.origin}/q/${d.token_public}`)}
                         className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
