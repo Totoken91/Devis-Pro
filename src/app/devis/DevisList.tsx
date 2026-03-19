@@ -45,7 +45,7 @@ export function DevisList({ initialDevis }: DevisListProps) {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -78,8 +78,8 @@ export function DevisList({ initialDevis }: DevisListProps) {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50">
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Numéro</th>

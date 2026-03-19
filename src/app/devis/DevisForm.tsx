@@ -121,14 +121,17 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
       }
     }
 
-    if (savedOk) router.push('/devis')
+    if (savedOk) {
+      router.refresh()
+      router.push('/devis')
+    }
     setLoading(null)
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div className="flex items-center gap-4">
           <Link href="/devis" className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
             <ArrowLeft size={20} />
@@ -220,8 +223,8 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-5">Lignes de devis</h2>
 
-          {/* En-tête table */}
-          <div className="grid grid-cols-[1fr_80px_120px_100px_36px] gap-3 mb-2 px-1">
+          {/* En-tête table — masqué sur mobile */}
+          <div className="hidden md:grid grid-cols-[1fr_80px_120px_100px_36px] gap-3 mb-2 px-1">
             <span className="text-xs font-medium text-gray-500">Description</span>
             <span className="text-xs font-medium text-gray-500 text-center">Qté</span>
             <span className="text-xs font-medium text-gray-500 text-right">Prix unitaire</span>
@@ -229,9 +232,9 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             <span />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {lignes.map((ligne, i) => (
-              <div key={ligne.id} className="grid grid-cols-[1fr_80px_120px_100px_36px] gap-3 items-center">
+              <div key={ligne.id} className="flex flex-col gap-2 md:grid md:grid-cols-[1fr_80px_120px_100px_36px] md:items-center border border-gray-100 rounded-xl p-3 md:border-0 md:rounded-none md:p-0">
                 <input
                   type="text"
                   value={ligne.description}
@@ -239,29 +242,40 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                   placeholder={`Prestation ${i + 1}`}
                   className="border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent"
                 />
-                <input
-                  type="number"
-                  min="0"
-                  step="0.5"
-                  value={ligne.quantite}
-                  onChange={(e) => updateLigne(ligne.id, 'quantite', e.target.value)}
-                  className="border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent"
-                />
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={ligne.prix_unitaire}
-                  onChange={(e) => updateLigne(ligne.id, 'prix_unitaire', e.target.value)}
-                  className="border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-right focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent"
-                />
-                <p className="text-sm font-medium text-gray-700 text-right pr-1">
-                  {formatCurrency(ligne.total)}
-                </p>
+                <div className="grid grid-cols-3 gap-2 md:contents">
+                  <div className="flex flex-col gap-1 md:contents">
+                    <span className="text-xs text-gray-400 md:hidden">Qté</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      value={ligne.quantite}
+                      onChange={(e) => updateLigne(ligne.id, 'quantite', e.target.value)}
+                      className="border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1 md:contents">
+                    <span className="text-xs text-gray-400 md:hidden">Prix unit.</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={ligne.prix_unitaire}
+                      onChange={(e) => updateLigne(ligne.id, 'prix_unitaire', e.target.value)}
+                      className="border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-right focus:outline-none focus:ring-2 focus:ring-[#2E86C1] focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1 md:contents">
+                    <span className="text-xs text-gray-400 md:hidden">Total HT</span>
+                    <p className="text-sm font-medium text-gray-700 text-right pr-1 py-2.5">
+                      {formatCurrency(ligne.total)}
+                    </p>
+                  </div>
+                </div>
                 <button
                   onClick={() => removeLigne(ligne.id)}
                   disabled={lignes.length === 1}
-                  className="p-2 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-30"
+                  className="self-end md:self-auto p-2 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-30"
                 >
                   <Trash2 size={14} />
                 </button>

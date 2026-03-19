@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { sendOwnerNotification } from '@/lib/notify'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(
@@ -44,16 +45,11 @@ export async function POST(
   }
 
   // Notifier le freelancer (fire-and-forget)
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  fetch(`${appUrl}/api/notify-owner`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      token: params.token,
-      event: action,
-      ...(action === 'accepte' && nom_signataire ? { nomSignataire: nom_signataire } : {}),
-    }),
-  }).catch(() => { /* silencieux si notification échoue */ })
+  sendOwnerNotification(
+    params.token,
+    action as 'accepte' | 'refuse',
+    action === 'accepte' ? nom_signataire : undefined
+  ).catch(() => { /* silencieux si notification échoue */ })
 
   return NextResponse.json({ success: true })
 }
