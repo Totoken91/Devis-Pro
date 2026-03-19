@@ -153,8 +153,8 @@ CREATE POLICY "notifications_insert_service"
   ON public.notifications FOR INSERT
   WITH CHECK (true);
 
--- Activer le realtime pour les notifications live
-ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
+-- NOTE: Pour activer le Realtime, aller dans Supabase Dashboard
+-- → Database → Replication → cocher "notifications" dans Source Tables
 
 -- ============================================================
 -- TRIGGER: créer le profil automatiquement à l'inscription
