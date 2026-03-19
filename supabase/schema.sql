@@ -78,6 +78,54 @@ CREATE OR REPLACE TRIGGER profiles_set_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- ============================================================
+-- TABLE: devis
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.devis (
+  id               UUID          DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at       TIMESTAMPTZ   DEFAULT NOW() NOT NULL,
+  updated_at       TIMESTAMPTZ   DEFAULT NOW() NOT NULL,
+  user_id          UUID          REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  client_id        UUID          REFERENCES public.clients(id) ON DELETE SET NULL,
+  numero           TEXT          NOT NULL,
+  titre            TEXT          NOT NULL DEFAULT 'Devis',
+  statut           TEXT          NOT NULL DEFAULT 'brouillon'
+                                 CHECK (statut IN ('brouillon','envoye','ouvert','accepte','refuse','expire')),
+  lignes           JSONB         NOT NULL DEFAULT '[]',
+  tva_taux         NUMERIC(5,2)  NOT NULL DEFAULT 20,
+  montant_ht       NUMERIC(10,2) NOT NULL DEFAULT 0,
+  montant_tva      NUMERIC(10,2) NOT NULL DEFAULT 0,
+  montant_ttc      NUMERIC(10,2) NOT NULL DEFAULT 0,
+  notes            TEXT,
+  conditions       TEXT,
+  date_validite    DATE,
+  token_public     TEXT          NOT NULL DEFAULT encode(gen_random_bytes(6), 'hex'),
+  template         TEXT          NOT NULL DEFAULT 'classique'
+                                 CHECK (template IN ('classique','moderne','minimaliste')),
+  ouvert_le        TIMESTAMPTZ,
+  signe_le         TIMESTAMPTZ,
+  relance_active   BOOLEAN       NOT NULL DEFAULT FALSE,
+  derniere_relance TIMESTAMPTZ
+);
+
+-- RLS: devis
+ALTER TABLE public.devis ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "devis_all_own"
+  ON public.devis FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Lecture anonyme via token public (page /q/[token])
+CREATE POLICY "devis_anon_read_by_token"
+  ON public.devis FOR SELECT
+  TO anon
+  USING (statut IN ('envoye', 'ouvert', 'accepte'));
+
+CREATE OR REPLACE TRIGGER devis_set_updated_at
+  BEFORE UPDATE ON public.devis
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+-- ============================================================
 -- TRIGGER: créer le profil automatiquement à l'inscription
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
