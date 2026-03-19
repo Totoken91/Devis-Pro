@@ -2,6 +2,7 @@ import { AppLayout } from '@/components/shared/AppLayout'
 import { createClient } from '@/lib/supabase/server'
 import { FileText, Users, TrendingUp, Plus } from 'lucide-react'
 import Link from 'next/link'
+import { formatCurrency } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -13,10 +14,16 @@ export default async function DashboardPage() {
     .eq('id', user!.id)
     .single()
 
-  const { count: clientsCount } = await supabase
-    .from('clients')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user!.id)
+  const now = new Date()
+  const debutMois = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+
+  const [{ count: clientsCount }, { count: devisMoisCount }, { data: devisCA }] = await Promise.all([
+    supabase.from('clients').select('*', { count: 'exact', head: true }).eq('user_id', user!.id),
+    supabase.from('devis').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).gte('created_at', debutMois),
+    supabase.from('devis').select('montant_ttc').eq('user_id', user!.id).eq('statut', 'accepte'),
+  ])
+
+  const chiffreAffaires = devisCA?.reduce((sum, d) => sum + (d.montant_ttc ?? 0), 0) ?? 0
 
   const prenom = profile?.full_name?.split(' ')[0] ?? 'toi'
 
@@ -34,8 +41,8 @@ export default async function DashboardPage() {
           <StatCard
             icon={<FileText size={22} className="text-[#2E86C1]" />}
             label="Devis ce mois"
-            value="—"
-            sub="disponible en S4"
+            value={devisMoisCount ?? 0}
+            sub="créés ce mois-ci"
           />
           <StatCard
             icon={<Users size={22} className="text-[#2E86C1]" />}
@@ -46,8 +53,8 @@ export default async function DashboardPage() {
           <StatCard
             icon={<TrendingUp size={22} className="text-[#2E86C1]" />}
             label="Chiffre d'affaires"
-            value="—"
-            sub="disponible en S4"
+            value={formatCurrency(chiffreAffaires)}
+            sub="devis acceptés"
           />
         </div>
 
@@ -63,12 +70,11 @@ export default async function DashboardPage() {
               Ajouter un client
             </Link>
             <Link
-              href="/devis"
+              href="/devis/nouveau"
               className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               <Plus size={16} />
               Nouveau devis
-              <span className="text-xs bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded-md">S4</span>
             </Link>
           </div>
         </div>
