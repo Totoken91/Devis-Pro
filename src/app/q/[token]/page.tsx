@@ -49,18 +49,22 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const { data: { user } } = await supabase.auth.getUser()
 
   // Lecture via admin pour bypasser les RLS (page publique)
-  const { data: devis, error: devisError } = await admin
+  const { data: devisRow, error: devisError } = await admin
     .from('devis')
-    .select('*, profiles(full_name, company_name, email, phone, address, siret), clients(name, company, email, phone, address)')
+    .select('*, clients(name, company, email, phone, address)')
     .eq('token_public', params.token)
     .single()
 
-  if (devisError || !devis) {
-    console.error('[q/token] token:', params.token, 'error:', devisError?.message ?? 'null data', 'service_role set:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+  if (devisError || !devisRow) {
+    console.error('[q/token] token:', params.token, 'error:', devisError?.message ?? 'null data')
     notFound()
   }
 
-  const d = devis as unknown as DevisPublic
+  const [{ data: profileRow }] = await Promise.all([
+    admin.from('profiles').select('full_name, company_name, email, phone, address, siret').eq('id', devisRow.user_id).single(),
+  ])
+
+  const d = { ...devisRow, profiles: profileRow, clients: devisRow.clients } as unknown as DevisPublic
 
   // Brouillon : seul le propriétaire peut prévisualiser
   const isOwner = user?.id === d.user_id
