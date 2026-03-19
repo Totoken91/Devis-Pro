@@ -104,6 +104,8 @@ export async function POST(req: NextRequest) {
       </td>
     </tr>
   </table>
+  <!-- Pixel de tracking (lecture email) -->
+  <img src="${appUrl}/api/track/${body.token}" width="1" height="1" style="display:none;border:0;" alt="" />
 </body>
 </html>
 `

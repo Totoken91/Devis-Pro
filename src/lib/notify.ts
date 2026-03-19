@@ -40,7 +40,7 @@ export async function sendOwnerNotification(
 
   const { data: devisRaw } = await admin
     .from('devis')
-    .select('numero, titre, montant_ttc, user_id, clients(name, company)')
+    .select('id, numero, titre, montant_ttc, user_id, clients(name, company)')
     .eq('token_public', token)
     .single()
 
@@ -50,6 +50,7 @@ export async function sendOwnerNotification(
   }
 
   const devisRow = devisRaw as {
+    id: string
     numero: string
     titre: string
     montant_ttc: number
@@ -154,4 +155,13 @@ export async function sendOwnerNotification(
   if (error) {
     console.error('[notify-owner] Erreur Resend:', error)
   }
+
+  // Insérer la notification en base (pour la cloche sur le site)
+  await admin.from('notifications').insert({
+    user_id: devisRow.user_id,
+    devis_id: devisRow.id,
+    event,
+    devis_numero: devisRow.numero,
+    client_name: clientName,
+  })
 }

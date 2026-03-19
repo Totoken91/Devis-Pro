@@ -73,6 +73,30 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          id: string
+          created_at: string
+          user_id: string
+          devis_id: string | null
+          event: 'ouvert' | 'accepte' | 'refuse'
+          devis_numero: string
+          client_name: string
+          read: boolean
+        }
+        Insert: {
+          user_id: string
+          devis_id?: string | null
+          event: 'ouvert' | 'accepte' | 'refuse'
+          devis_numero: string
+          client_name: string
+          read?: boolean
+        }
+        Update: {
+          read?: boolean
+        }
+        Relationships: []
+      }
       devis: {
         Row: {
           id: string
@@ -160,3 +184,4 @@ export type Devis = Database['public']['Tables']['devis']['Row']
 export type DevisStatut = Devis['statut']
 export type DevisTemplate = Devis['template']
 export type Plan = Profile['plan']
+export type Notification = Database['public']['Tables']['notifications']['Row']

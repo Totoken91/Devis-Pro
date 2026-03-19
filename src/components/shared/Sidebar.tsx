@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { NotificationBell } from './NotificationBell'
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -62,8 +63,9 @@ export function Sidebar({ userEmail }: SidebarProps) {
       </nav>
 
       <div className="px-3 py-4 border-t border-white/10">
-        <div className="px-3 py-2 mb-1">
+        <div className="flex items-center justify-between px-3 py-2 mb-1">
           <p className="text-xs text-white/40 truncate">{userEmail}</p>
+          <NotificationBell />
         </div>
         <button
           onClick={handleSignOut}
@@ -83,9 +85,10 @@ export function Sidebar({ userEmail }: SidebarProps) {
         <button onClick={() => setMobileOpen(true)} className="text-white/70 hover:text-white">
           <Menu size={22} />
         </button>
-        <Link href="/dashboard" className="text-xl font-bold text-white">
+        <Link href="/dashboard" className="flex-1 text-xl font-bold text-white">
           Devi<span className="text-[#7EC8E3]">so</span>
         </Link>
+        <NotificationBell />
       </div>
 
       {/* Overlay mobile */}

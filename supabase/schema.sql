@@ -126,6 +126,37 @@ CREATE OR REPLACE TRIGGER devis_set_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- ============================================================
+-- TABLE: notifications
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.notifications (
+  id           UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at   TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  user_id      UUID        REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  devis_id     UUID        REFERENCES public.devis(id) ON DELETE CASCADE,
+  event        TEXT        NOT NULL CHECK (event IN ('ouvert', 'accepte', 'refuse')),
+  devis_numero TEXT        NOT NULL,
+  client_name  TEXT        NOT NULL,
+  read         BOOLEAN     NOT NULL DEFAULT FALSE
+);
+
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "notifications_select_own"
+  ON public.notifications FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "notifications_update_own"
+  ON public.notifications FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "notifications_insert_service"
+  ON public.notifications FOR INSERT
+  WITH CHECK (true);
+
+-- Activer le realtime pour les notifications live
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
+
+-- ============================================================
 -- TRIGGER: créer le profil automatiquement à l'inscription
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
