@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
+import { DevisActions } from './DevisActions'
 
 type DevisPublic = Devis & {
   profiles: {
@@ -182,17 +183,13 @@ export default async function DevisPublicPage({ params }: { params: { token: str
               </div>
             )}
 
-            {/* CTA Signature (S5) */}
-            {(d.statut === 'ouvert' || d.statut === 'envoye') && (
-              <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
-                <p className="text-sm font-medium text-gray-700 mb-1">
-                  Ce devis vous convient ?
-                </p>
-                <p className="text-xs text-gray-400 mb-4">La signature électronique sera disponible prochainement.</p>
-                <button disabled className="bg-[#2E86C1] text-white font-semibold rounded-xl px-6 py-3 text-sm opacity-50 cursor-not-allowed">
-                  Signer électroniquement — S5
-                </button>
-              </div>
+            {/* Actions client : Accepter / Refuser / Signé */}
+            {(d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
+              <DevisActions
+                token={params.token}
+                statut={d.statut}
+                signeL={d.signe_le}
+              />
             )}
           </div>
         </div>

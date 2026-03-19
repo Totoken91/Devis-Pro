@@ -67,6 +67,8 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
   const handleSave = async (statut: 'brouillon' | 'envoye') => {
     setLoading(statut === 'brouillon' ? 'draft' : 'send')
 
+    const token = mode === 'create' ? generateToken() : initialData!.token_public
+
     const payload = {
       client_id: clientId || null,
       titre,
@@ -82,19 +84,44 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
       template,
     }
 
+    let savedOk = false
+
     if (mode === 'create') {
       const { error } = await supabase.from('devis').insert({
         ...payload,
         user_id: profile.id,
         numero: nextNumero!,
-        token_public: generateToken(),
+        token_public: token,
       })
-      if (!error) router.push('/devis')
+      savedOk = !error
     } else {
       const { error } = await supabase.from('devis').update(payload).eq('id', initialData!.id)
-      if (!error) router.push('/devis')
+      savedOk = !error
     }
 
+    // Envoi email si statut = envoye et client a un email
+    if (savedOk && statut === 'envoye') {
+      const client = clients.find((c) => c.id === clientId)
+      if (client?.email) {
+        const emetteurName = profile.company_name || profile.full_name || profile.email
+        fetch('/api/send-devis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: client.email,
+            clientName: client.company || client.name,
+            emetteurName,
+            emetteurEmail: profile.email,
+            numero: mode === 'create' ? nextNumero! : initialData!.numero,
+            titre,
+            montantTTC,
+            token,
+          }),
+        }).catch(() => {/* silencieux si email échoue */})
+      }
+    }
+
+    if (savedOk) router.push('/devis')
     setLoading(null)
   }
 
