@@ -369,6 +369,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             <DevisPreview
               numero={mode === 'create' ? nextNumero! : initialData!.numero}
               titre={titre}
+              template={template}
               lignes={lignes}
               tvaTaux={tvaT}
               montantHT={montantHT}
