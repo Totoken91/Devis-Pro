@@ -1,6 +1,6 @@
 import { createClient }    from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { stripe, PRICE_IDS } from '@/lib/stripe'
+import { stripe, getPriceId } from '@/lib/stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -18,8 +18,9 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: 'Paramètres invalides' }, { status: 400 })
 
   const { interval } = parsed.data
-  const priceId = PRICE_IDS[interval]
-  if (!priceId) return NextResponse.json({ error: `Price ID ${interval} non configuré` }, { status: 500 })
+  let priceId: string
+  try { priceId = getPriceId(interval) }
+  catch { return NextResponse.json({ error: `Price ID ${interval} non configuré` }, { status: 500 }) }
 
   const admin = createAdminClient()
   const { data: profile } = await admin

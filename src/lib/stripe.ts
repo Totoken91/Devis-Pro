@@ -14,7 +14,10 @@ export const stripe = new Proxy({} as Stripe, {
   },
 })
 
-export const PRICE_IDS = {
-  monthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID ?? '',
-  yearly:  process.env.STRIPE_PRO_YEARLY_PRICE_ID  ?? '',
-} as const
+export function getPriceId(interval: 'monthly' | 'yearly'): string {
+  const value = interval === 'monthly'
+    ? process.env.STRIPE_PRO_MONTHLY_PRICE_ID
+    : process.env.STRIPE_PRO_YEARLY_PRICE_ID
+  if (!value) throw new Error(`Price ID ${interval} non configuré`)
+  return value
+}
