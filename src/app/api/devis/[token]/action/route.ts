@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendOwnerNotification } from '@/lib/notify'
+import { sendOwnerNotification, sendClientConfirmation } from '@/lib/notify'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -63,6 +63,12 @@ export async function POST(
     action as 'accepte' | 'refuse',
     action === 'accepte' ? nom_signataire : undefined
   ).catch(() => { /* silencieux si notification échoue */ })
+
+  // Confirmation de signature au client
+  if (action === 'accepte' && nom_signataire) {
+    await sendClientConfirmation(params.token, nom_signataire)
+      .catch(() => { /* silencieux si notification échoue */ })
+  }
 
   return NextResponse.json({ success: true })
 }
