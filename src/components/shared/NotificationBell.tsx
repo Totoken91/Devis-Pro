@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Bell } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Notification } from '@/types/supabase'
@@ -87,6 +87,18 @@ export function NotificationBell() {
 
   const unreadCount = notifs.filter((n) => !n.is_read).length
 
+  // Calcule si le dropdown doit s'ouvrir vers le haut ou le bas, et s'aligner à droite ou gauche
+  const dropdownCls = useMemo(() => {
+    if (!ref.current) return 'top-full mt-2 right-0'
+    const rect = ref.current.getBoundingClientRect()
+    const spaceBelow = window.innerHeight - rect.bottom
+    const spaceRight = window.innerWidth - rect.left
+    const vertical = spaceBelow < 340 ? 'bottom-full mb-2' : 'top-full mt-2'
+    const horizontal = spaceRight < 320 ? 'right-0' : 'left-0'
+    return `${vertical} ${horizontal}`
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   const handleToggle = () => {
     const next = !open
     setOpen(next)
@@ -109,7 +121,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-2 w-80 bg-[#0D1320] rounded-2xl shadow-2xl shadow-black/60 border border-white/10 z-50 overflow-hidden">
+        <div className={`absolute w-[min(320px,calc(100vw-1rem))] bg-[#0D1320] rounded-2xl shadow-2xl shadow-black/60 border border-white/10 z-50 overflow-hidden ${dropdownCls}`}>
           <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
