@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import type { Devis } from '@/types/supabase'
+import type { Devis, DevisStatut } from '@/types/supabase'
 import { Plus, FileText, Pencil, Trash2, Copy, Eye } from 'lucide-react'
 import Link from 'next/link'
 
@@ -11,31 +11,18 @@ type DevisWithClient = Devis & {
   clients: { name: string; company: string | null } | null
 }
 
-const STATUT_STYLE: Record<Devis['statut'], string> = {
-  brouillon: 'bg-gray-100 text-gray-600',
-  envoye:    'bg-blue-100 text-blue-700',
-  ouvert:    'bg-purple-100 text-purple-700',
-  accepte:   'bg-green-100 text-green-700',
-  refuse:    'bg-red-100 text-red-700',
-  expire:    'bg-orange-100 text-orange-700',
+const STATUT_CONFIG: Record<DevisStatut, { label: string; color: string; dot: string }> = {
+  brouillon: { label: 'Brouillon', color: 'bg-gray-100 text-gray-500',        dot: 'bg-gray-400'   },
+  envoye:    { label: 'Envoyé',    color: 'bg-blue-50 text-blue-600',         dot: 'bg-blue-500'   },
+  ouvert:    { label: 'Ouvert',    color: 'bg-amber-50 text-amber-600',       dot: 'bg-amber-400'  },
+  accepte:   { label: 'Accepté',   color: 'bg-brand-light text-brand-dark',   dot: 'bg-brand'      },
+  refuse:    { label: 'Refusé',    color: 'bg-red-50 text-red-500',           dot: 'bg-red-500'    },
+  expire:    { label: 'Expiré',    color: 'bg-orange-50 text-orange-500',     dot: 'bg-orange-400' },
 }
 
-const STATUT_LABEL: Record<Devis['statut'], string> = {
-  brouillon: 'Brouillon',
-  envoye:    'Envoyé',
-  ouvert:    'Ouvert',
-  accepte:   'Accepté',
-  refuse:    'Refusé',
-  expire:    'Expiré',
-}
-
-interface DevisListProps {
-  initialDevis: DevisWithClient[]
-}
-
-export function DevisList({ initialDevis }: DevisListProps) {
+export function DevisList({ initialDevis }: { initialDevis: DevisWithClient[] }) {
   const [devisList, setDevisList] = useState<DevisWithClient[]>(initialDevis)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteId,  setDeleteId]  = useState<string | null>(null)
   const supabase = createClient()
 
   const handleDelete = async (id: string) => {
@@ -46,128 +33,135 @@ export function DevisList({ initialDevis }: DevisListProps) {
 
   return (
     <div className="p-4 md:p-8">
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mes devis</h1>
-          <p className="text-gray-500 mt-1">{devisList.length} devis</p>
+          <h1 className="font-display text-2xl font-bold text-gray-900 tracking-tight">Mes devis</h1>
+          <p className="text-gray-400 mt-0.5 text-sm">{devisList.length} devis</p>
         </div>
         <Link
           href="/devis/nouveau"
-          className="flex items-center gap-2 bg-[#2E86C1] hover:bg-[#1E3A5F] text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-colors"
+          className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-all shadow-sm shadow-brand/25 hover:-translate-y-px"
         >
-          <Plus size={16} />
+          <Plus size={15} strokeWidth={2.5} />
           Nouveau devis
         </Link>
       </div>
 
-      {/* Vide */}
       {devisList.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-16 text-center">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText size={28} className="text-[#2E86C1]" />
+        /* ── Empty state ── */
+        <div className="bg-white rounded-2xl border border-gray-100 py-16 flex flex-col items-center text-center px-6">
+          <div className="w-12 h-12 bg-brand/8 rounded-2xl flex items-center justify-center mb-4">
+            <FileText size={20} className="text-brand/60" />
           </div>
-          <p className="text-gray-900 font-medium mb-1">Aucun devis pour l&apos;instant</p>
-          <p className="text-gray-400 text-sm mb-6">Crée ton premier devis en quelques clics.</p>
+          <p className="text-sm font-medium text-gray-900 mb-1">Aucun devis pour l&apos;instant</p>
+          <p className="text-xs text-gray-400 mb-6 max-w-xs">
+            Crée ton premier devis et envoie-le directement à ton client.
+          </p>
           <Link
             href="/devis/nouveau"
-            className="inline-flex items-center gap-2 bg-[#2E86C1] text-white font-semibold rounded-xl px-4 py-2.5 text-sm hover:bg-[#1E3A5F] transition-colors"
+            className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition-all shadow-sm shadow-brand/25 hover:-translate-y-px"
           >
-            <Plus size={16} />
-            Nouveau devis
+            <Plus size={14} />
+            Créer un devis
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden overflow-x-auto">
+        /* ── Table ── */
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[500px]">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Numéro</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Titre</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell">Client</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Statut</th>
-                <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3 hidden lg:table-cell">Montant TTC</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3 hidden xl:table-cell">Date</th>
-                <th className="px-6 py-3" />
+              <tr className="border-b border-gray-100 bg-gray-50/60">
+                <th className="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Numéro</th>
+                <th className="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Titre</th>
+                <th className="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Client</th>
+                <th className="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Statut</th>
+                <th className="text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden lg:table-cell">Montant TTC</th>
+                <th className="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden xl:table-cell">Date</th>
+                <th className="px-5 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
-              {devisList.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-mono text-gray-700">{d.numero}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm font-medium text-gray-900 truncate max-w-[200px]">{d.titre}</p>
-                  </td>
-                  <td className="px-6 py-4 hidden md:table-cell">
-                    <p className="text-sm text-gray-500">
-                      {d.clients?.name ?? <span className="text-gray-300">—</span>}
-                    </p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${STATUT_STYLE[d.statut]}`}>
-                      {STATUT_LABEL[d.statut]}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right hidden lg:table-cell">
-                    <span className="text-sm font-semibold text-gray-900">{formatCurrency(d.montant_ttc)}</span>
-                  </td>
-                  <td className="px-6 py-4 hidden xl:table-cell">
-                    <span className="text-sm text-gray-400">{formatDate(d.created_at)}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1 justify-end">
-                      <a
-                        href={`/q/${d.token_public}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
-                        title={d.statut === 'brouillon' ? 'Prévisualiser' : 'Voir la page publique'}
-                      >
-                        <Eye size={15} />
-                      </a>
-                      <button
-                        onClick={() => navigator.clipboard.writeText(`${window.location.origin}/q/${d.token_public}`)}
-                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                        title="Copier le lien"
-                      >
-                        <Copy size={15} />
-                      </button>
-                      <Link
-                        href={`/devis/${d.id}`}
-                        className="p-2 text-gray-400 hover:text-[#2E86C1] hover:bg-blue-50 rounded-lg transition-colors"
-                      >
-                        <Pencil size={15} />
-                      </Link>
-                      <button
-                        onClick={() => setDeleteId(d.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            <tbody className="divide-y divide-gray-50">
+              {devisList.map((d) => {
+                const cfg = STATUT_CONFIG[d.statut]
+                return (
+                  <tr key={d.id} className="hover:bg-gray-50/60 transition-colors group">
+                    <td className="px-5 py-3.5">
+                      <span className="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">{d.numero}</span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <p className="text-sm font-medium text-gray-900 truncate max-w-[200px]">{d.titre}</p>
+                    </td>
+                    <td className="px-5 py-3.5 hidden md:table-cell">
+                      <p className="text-sm text-gray-400">
+                        {d.clients?.name ?? <span className="text-gray-200">—</span>}
+                      </p>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${cfg.color}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+                        {cfg.label}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-right hidden lg:table-cell">
+                      <span className="text-sm font-semibold text-gray-900 tabular-nums">{formatCurrency(d.montant_ttc)}</span>
+                    </td>
+                    <td className="px-5 py-3.5 hidden xl:table-cell">
+                      <span className="text-sm text-gray-400">{formatDate(d.created_at)}</span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-0.5 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                        <a
+                          href={`/q/${d.token_public}`}
+                          target="_blank" rel="noreferrer"
+                          className="p-1.5 text-gray-400 hover:text-brand hover:bg-brand/8 rounded-lg transition-colors"
+                          title="Voir la page publique"
+                        >
+                          <Eye size={14} />
+                        </a>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(`${window.location.origin}/q/${d.token_public}`)}
+                          className="p-1.5 text-gray-400 hover:text-brand hover:bg-brand/8 rounded-lg transition-colors cursor-pointer"
+                          title="Copier le lien"
+                        >
+                          <Copy size={14} />
+                        </button>
+                        <Link
+                          href={`/devis/${d.id}`}
+                          className="p-1.5 text-gray-400 hover:text-brand hover:bg-brand/8 rounded-lg transition-colors"
+                        >
+                          <Pencil size={14} />
+                        </Link>
+                        <button
+                          onClick={() => setDeleteId(d.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* Confirmation suppression */}
+      {/* Modal suppression */}
       {deleteId && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Trash2 size={20} className="text-red-500" />
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center">
+            <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Trash2 size={18} className="text-red-500" />
             </div>
-            <h2 className="text-base font-semibold text-gray-900 mb-2">Supprimer ce devis ?</h2>
-            <p className="text-sm text-gray-500 mb-6">Cette action est irréversible.</p>
+            <h2 className="text-base font-semibold text-gray-900 mb-1">Supprimer ce devis ?</h2>
+            <p className="text-sm text-gray-400 mb-6">Cette action est irréversible.</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteId(null)}
-                className="flex-1 border border-gray-300 text-gray-700 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
+                className="flex-1 border border-gray-200 text-gray-600 font-medium rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm cursor-pointer"
               >
                 Annuler
               </button>

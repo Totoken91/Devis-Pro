@@ -6,9 +6,9 @@ export function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="flex items-center gap-1.5 text-sm font-medium text-[#2E86C1] hover:text-[#1E3A5F] border border-[#2E86C1] hover:border-[#1E3A5F] px-3 py-1.5 rounded-xl transition-colors print:hidden"
+      className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 border border-gray-200 hover:border-gray-300 bg-white px-3 py-1.5 rounded-lg transition-colors print:hidden cursor-pointer"
     >
-      <Download size={14} />
+      <Download size={13} />
       PDF
     </button>
   )

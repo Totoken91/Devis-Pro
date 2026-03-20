@@ -5,50 +5,41 @@ import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
 import { DevisActions } from './DevisActions'
 import { PrintButton } from './PrintButton'
+import { Calendar, MapPin, Phone, Mail, Building2 } from 'lucide-react'
 
 type DevisPublic = Devis & {
   profiles: {
-    full_name: string | null
+    full_name:    string | null
     company_name: string | null
-    email: string
-    phone: string | null
-    address: string | null
-    siret: string | null
+    email:        string
+    phone:        string | null
+    address:      string | null
+    siret:        string | null
   } | null
   clients: {
-    name: string
+    name:    string
     company: string | null
-    email: string | null
-    phone: string | null
+    email:   string | null
+    phone:   string | null
     address: string | null
   } | null
 }
 
-const STATUT_STYLE: Record<Devis['statut'], string> = {
-  brouillon: 'bg-gray-100 text-gray-600',
-  envoye:    'bg-blue-100 text-blue-700',
-  ouvert:    'bg-purple-100 text-purple-700',
-  accepte:   'bg-green-100 text-green-700',
-  refuse:    'bg-red-100 text-red-700',
-  expire:    'bg-orange-100 text-orange-700',
-}
-
-const STATUT_LABEL: Record<Devis['statut'], string> = {
-  brouillon: 'Brouillon',
-  envoye:    'Envoyé',
-  ouvert:    'Ouvert',
-  accepte:   'Accepté',
-  refuse:    'Refusé',
-  expire:    'Expiré',
-}
+const STATUT_CONFIG = {
+  brouillon: { label: 'Brouillon', color: 'bg-gray-100 text-gray-500',      dot: 'bg-gray-400'  },
+  envoye:    { label: 'Envoyé',    color: 'bg-blue-50 text-blue-600',       dot: 'bg-blue-500'  },
+  ouvert:    { label: 'Ouvert',    color: 'bg-amber-50 text-amber-600',     dot: 'bg-amber-400' },
+  accepte:   { label: 'Accepté',  color: 'bg-green-50 text-green-700',     dot: 'bg-green-500' },
+  refuse:    { label: 'Refusé',   color: 'bg-red-50 text-red-600',         dot: 'bg-red-500'   },
+  expire:    { label: 'Expiré',   color: 'bg-orange-50 text-orange-600',   dot: 'bg-orange-400'},
+} as const
 
 export default async function DevisPublicPage({ params }: { params: { token: string } }) {
   const supabase = createClient()
-  const admin = createAdminClient()
+  const admin    = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Lecture via admin pour bypasser les RLS (page publique)
   const { data: devisRow, error: devisError } = await admin
     .from('devis')
     .select('*, clients(name, company, email, phone, address)')
@@ -69,161 +60,206 @@ export default async function DevisPublicPage({ params }: { params: { token: str
 
   const d = { ...row, profiles: profileRow } as unknown as DevisPublic
 
-  // Brouillon : seul le propriétaire peut prévisualiser
-  const isOwner = user?.id === d.user_id
+  const isOwner  = user?.id === d.user_id
   if (d.statut === 'brouillon' && !isOwner) notFound()
 
-  const isPreview = d.statut === 'brouillon'
-  const emetteur = d.profiles
+  const isPreview  = d.statut === 'brouillon'
+  const emetteur   = d.profiles
   const destinataire = d.clients
+  const cfg        = STATUT_CONFIG[d.statut as keyof typeof STATUT_CONFIG]
 
-  // Marquer comme ouvert si envoye (première consultation) + notifier le freelancer
   if (d.statut === 'envoye') {
     await supabase
       .from('devis')
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
       .eq('id', d.id)
-
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     fetch(`${appUrl}/api/notify-owner`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: params.token, event: 'ouvert' }),
-    }).catch(() => { /* silencieux si notification échoue */ })
+    }).catch(() => {})
   }
 
+  const emetteurName = emetteur?.company_name || emetteur?.full_name || '—'
+
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-3xl mx-auto">
-        {/* Bannière prévisualisation */}
-        {isPreview && (
-          <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
-            <span className="font-semibold">Prévisualisation brouillon</span>
-            <span className="text-amber-600">— Ce devis n&apos;a pas encore été envoyé au client.</span>
-          </div>
-        )}
+    <div className="min-h-screen bg-[#F3F4F1]">
 
-        {/* Bandeau statut */}
-        <div className="flex items-center justify-between mb-6">
-          <a href="/" className="text-2xl font-bold text-[#1E3A5F]">
-            Devi<span className="text-[#2E86C1]">so</span>
-          </a>
-          <div className="flex items-center gap-3">
-            <PrintButton />
-            <span className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${STATUT_STYLE[d.statut]}`}>
-              {STATUT_LABEL[d.statut]}
-            </span>
+      {/* ── Sticky top bar ── */}
+      <header className="print:hidden sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-gray-100 h-14 flex items-center justify-between px-5 md:px-8">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 bg-[#6CC531] rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-[10px] font-sans">D</span>
           </div>
+          <span className="font-bold text-gray-900 text-sm tracking-tight">Deviso</span>
         </div>
+        <div className="flex items-center gap-3">
+          <PrintButton />
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold ${cfg.color}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+            {cfg.label}
+          </span>
+        </div>
+      </header>
 
-        {/* Devis */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          {/* En-tête */}
-          <div className="bg-[#1E3A5F] px-8 py-8 text-white">
-            <div className="flex items-start justify-between">
+      {/* ── Preview banner ── */}
+      {isPreview && (
+        <div className="print:hidden bg-amber-50 border-b border-amber-100 px-5 py-2.5 flex items-center justify-center gap-2 text-sm text-amber-700">
+          <span className="font-semibold">Mode prévisualisation</span>
+          <span className="text-amber-500">— Ce devis n&apos;a pas encore été envoyé au client.</span>
+        </div>
+      )}
+
+      {/* ── Document ── */}
+      <main className="max-w-2xl mx-auto px-4 py-8 md:py-12">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+
+          {/* Green accent strip */}
+          <div className="h-1 bg-[#6CC531]" />
+
+          <div className="px-8 py-8 md:px-10 md:py-10">
+
+            {/* ── Doc header ── */}
+            <div className="flex items-start justify-between gap-6 mb-8">
               <div>
-                <p className="text-white/60 text-sm font-medium uppercase tracking-wider mb-1">Devis</p>
-                <h1 className="text-3xl font-bold">{d.numero}</h1>
-                <p className="text-white/80 mt-1 text-lg">{d.titre}</p>
+                <p className="text-[11px] font-bold text-[#6CC531] uppercase tracking-widest mb-2">Devis</p>
+                <h1 className="text-3xl font-bold text-gray-900 tracking-tight leading-none mb-1.5" style={{ fontFamily: 'var(--font-sora, sans-serif)' }}>
+                  {d.numero}
+                </h1>
+                <p className="text-gray-500 text-base">{d.titre}</p>
               </div>
-              <div className="text-right text-sm">
-                <p className="text-white/60">Émis le</p>
-                <p className="font-semibold">{formatDate(d.created_at)}</p>
+              <div className="text-right shrink-0 space-y-2">
+                <div>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Émis le</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatDate(d.created_at)}</p>
+                </div>
                 {d.date_validite && (
-                  <>
-                    <p className="text-white/60 mt-2">Valide jusqu&apos;au</p>
-                    <p className="font-semibold">{formatDate(d.date_validite)}</p>
-                  </>
+                  <div>
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Valide jusqu&apos;au</p>
+                    <p className="text-sm font-semibold text-gray-900">{formatDate(d.date_validite)}</p>
+                  </div>
                 )}
               </div>
             </div>
-          </div>
 
-          <div className="px-8 py-8">
-            {/* Émetteur / Destinataire */}
-            <div className="grid grid-cols-2 gap-8 mb-8">
+            {/* ── Parties ── */}
+            <div className="grid grid-cols-2 gap-6 py-6 border-t border-b border-gray-100 mb-8">
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">De</p>
-                <p className="font-semibold text-gray-900">{emetteur?.company_name || emetteur?.full_name || '—'}</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">De</p>
+                <p className="font-semibold text-gray-900 text-sm">{emetteurName}</p>
                 {emetteur?.full_name && emetteur.company_name && (
                   <p className="text-sm text-gray-500">{emetteur.full_name}</p>
                 )}
-                {emetteur?.email && <p className="text-sm text-gray-500">{emetteur.email}</p>}
-                {emetteur?.phone && <p className="text-sm text-gray-500">{emetteur.phone}</p>}
-                {emetteur?.address && <p className="text-sm text-gray-500 whitespace-pre-line">{emetteur.address}</p>}
-                {emetteur?.siret && <p className="text-xs text-gray-400 mt-1">SIRET : {emetteur.siret}</p>}
+                {emetteur?.email && (
+                  <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                    <Mail size={10} className="shrink-0" />{emetteur.email}
+                  </p>
+                )}
+                {emetteur?.phone && (
+                  <p className="text-xs text-gray-400 flex items-center gap-1">
+                    <Phone size={10} className="shrink-0" />{emetteur.phone}
+                  </p>
+                )}
+                {emetteur?.address && (
+                  <p className="text-xs text-gray-400 flex items-start gap-1 mt-0.5 whitespace-pre-line">
+                    <MapPin size={10} className="shrink-0 mt-0.5" />{emetteur.address}
+                  </p>
+                )}
+                {emetteur?.siret && (
+                  <p className="text-[11px] text-gray-300 mt-1.5">SIRET : {emetteur.siret}</p>
+                )}
               </div>
               {destinataire && (
                 <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">À</p>
-                  <p className="font-semibold text-gray-900">{destinataire.company || destinataire.name}</p>
-                  {destinataire.company && <p className="text-sm text-gray-500">{destinataire.name}</p>}
-                  {destinataire.email && <p className="text-sm text-gray-500">{destinataire.email}</p>}
-                  {destinataire.phone && <p className="text-sm text-gray-500">{destinataire.phone}</p>}
-                  {destinataire.address && <p className="text-sm text-gray-500 whitespace-pre-line">{destinataire.address}</p>}
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">À</p>
+                  <p className="font-semibold text-gray-900 text-sm">
+                    {destinataire.company || destinataire.name}
+                  </p>
+                  {destinataire.company && (
+                    <p className="text-sm text-gray-500">{destinataire.name}</p>
+                  )}
+                  {destinataire.email && (
+                    <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                      <Mail size={10} className="shrink-0" />{destinataire.email}
+                    </p>
+                  )}
+                  {destinataire.phone && (
+                    <p className="text-xs text-gray-400 flex items-center gap-1">
+                      <Phone size={10} className="shrink-0" />{destinataire.phone}
+                    </p>
+                  )}
+                  {destinataire.address && (
+                    <p className="text-xs text-gray-400 flex items-start gap-1 mt-0.5 whitespace-pre-line">
+                      <MapPin size={10} className="shrink-0 mt-0.5" />{destinataire.address}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Lignes */}
+            {/* ── Lignes ── */}
             <table className="w-full mb-8">
               <thead>
-                <tr className="border-b-2 border-gray-100">
-                  <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider pb-3">Description</th>
-                  <th className="text-center text-xs font-semibold text-gray-400 uppercase tracking-wider pb-3 w-16">Qté</th>
-                  <th className="text-right text-xs font-semibold text-gray-400 uppercase tracking-wider pb-3 w-28">Prix unit.</th>
-                  <th className="text-right text-xs font-semibold text-gray-400 uppercase tracking-wider pb-3 w-28">Total HT</th>
+                <tr className="border-b border-gray-100">
+                  <th className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 pr-4">Description</th>
+                  <th className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-14">Qté</th>
+                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-28">Prix unit.</th>
+                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-28">Total HT</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
-                {(d.lignes as DevisLigne[]).map((ligne) => (
-                  <tr key={ligne.id}>
+              <tbody>
+                {(d.lignes as DevisLigne[]).map((ligne, i) => (
+                  <tr key={ligne.id} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
                     <td className="py-3 pr-4 text-sm text-gray-900">{ligne.description || '—'}</td>
-                    <td className="py-3 text-sm text-gray-500 text-center">{ligne.quantite}</td>
-                    <td className="py-3 text-sm text-gray-500 text-right">{formatCurrency(ligne.prix_unitaire)}</td>
-                    <td className="py-3 text-sm font-medium text-gray-900 text-right">{formatCurrency(ligne.total)}</td>
+                    <td className="py-3 text-sm text-gray-400 text-center tabular-nums">{ligne.quantite}</td>
+                    <td className="py-3 text-sm text-gray-400 text-right tabular-nums">{formatCurrency(ligne.prix_unitaire)}</td>
+                    <td className="py-3 text-sm font-medium text-gray-900 text-right tabular-nums">{formatCurrency(ligne.total)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            {/* Totaux */}
+            {/* ── Totaux ── */}
             <div className="flex justify-end mb-8">
-              <div className="w-64 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Montant HT</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(d.montant_ht)}</span>
+              <div className="w-64">
+                <div className="space-y-2 mb-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-400">Montant HT</span>
+                    <span className="font-medium text-gray-700 tabular-nums">{formatCurrency(d.montant_ht)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-400">TVA ({d.tva_taux}%)</span>
+                    <span className="font-medium text-gray-700 tabular-nums">{formatCurrency(d.montant_tva)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">TVA ({d.tva_taux}%)</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(d.montant_tva)}</span>
-                </div>
-                <div className="flex justify-between border-t border-gray-200 pt-2">
-                  <span className="font-bold text-gray-900">Total TTC</span>
-                  <span className="text-xl font-bold text-[#1E3A5F]">{formatCurrency(d.montant_ttc)}</span>
+                <div className="bg-gray-950 rounded-xl px-5 py-3.5 flex items-center justify-between">
+                  <span className="text-sm font-semibold text-white/60">Total TTC</span>
+                  <span className="text-xl font-bold text-white tabular-nums" style={{ fontFamily: 'var(--font-sora, sans-serif)' }}>
+                    {formatCurrency(d.montant_ttc)}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Notes & Conditions */}
+            {/* ── Notes & Conditions ── */}
             {(d.notes || d.conditions) && (
-              <div className="border-t border-gray-100 pt-6 space-y-4">
+              <div className="border-t border-gray-100 pt-6 space-y-4 mb-6">
                 {d.notes && (
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Notes</p>
-                    <p className="text-sm text-gray-600 whitespace-pre-line">{d.notes}</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Notes</p>
+                    <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{d.notes}</p>
                   </div>
                 )}
                 {d.conditions && (
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Conditions</p>
-                    <p className="text-sm text-gray-600 whitespace-pre-line">{d.conditions}</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Conditions</p>
+                    <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{d.conditions}</p>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Actions client : Accepter / Refuser / Signé */}
+            {/* ── Actions client ── */}
             {!isPreview && (d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
               <DevisActions
                 token={params.token}
@@ -231,13 +267,17 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                 signeL={d.signe_le}
               />
             )}
+
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
-          Propulsé par <span className="font-semibold text-[#1E3A5F]">Deviso</span>
+        {/* Footer */}
+        <p className="text-center text-xs text-gray-400 mt-6 print:hidden">
+          Propulsé par{' '}
+          <span className="font-semibold text-gray-500">Deviso</span>
+          {' '}— devis professionnels pour freelances
         </p>
-      </div>
+      </main>
     </div>
   )
 }
