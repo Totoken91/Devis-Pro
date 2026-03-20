@@ -217,7 +217,7 @@ export default async function DashboardPage() {
                 </div>
               </div>
               <Link
-                href="/#pricing"
+                href="/parametres/facturation"
                 className="shrink-0 inline-flex items-center gap-1.5 bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-4 py-2 rounded-xl transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px"
               >
                 <Zap size={13} />
