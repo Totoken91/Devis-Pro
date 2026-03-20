@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
 
         const email = invoice.customer_email
         if (email && resend) {
-          const portalUrl = `${appUrl}/dashboard/billing`
+          const portalUrl = `${appUrl}/parametres/facturation`
           const html = `
 <!DOCTYPE html>
 <html lang="fr">
