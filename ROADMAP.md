@@ -31,7 +31,7 @@
 - Validation du format token dans chaque route (`/api/track`, `/api/notify-owner`, `/api/devis/[token]/action`)
 
 ### Reste à faire avant lancement public
-- [ ] Limitation plan gratuit : max 3 devis/mois (sans Stripe, juste un compteur)
+- [x] Limitation plan gratuit : max 3 devis/mois — mur de blocage sur `/devis/nouveau`, barre de progression dans le dashboard
 - [ ] Export PDF réel (actuellement : impression navigateur uniquement)
 - [x] Relances automatiques — toggle dans le formulaire, cron Vercel `/api/cron/reminders` (expire + relance email tous les 7 jours)
 - [ ] Logo upload (champ `logo_url` en base, pas d'UI d'upload)
@@ -102,4 +102,4 @@ Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 
 ---
 
-_Dernière mise à jour : 2026-03-20_
+_Dernière mise à jour : 2026-03-20 — Phase 1 quasiment terminée, Phase 2 (Stripe) à venir_

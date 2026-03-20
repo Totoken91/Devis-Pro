@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/shared/AppLayout'
 import { createClient } from '@/lib/supabase/server'
 import {
-  FileText, Users, TrendingUp, Plus, ArrowRight,
+  FileText, Users, TrendingUp, Plus, ArrowRight, Zap,
 } from 'lucide-react'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
@@ -192,18 +192,37 @@ export default async function DashboardPage() {
           <div className="relative overflow-hidden bg-white/[0.03] border border-brand/15 rounded-2xl p-6 text-white">
             <div className="absolute -top-8 -right-8 w-40 h-40 bg-brand/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand/8 rounded-full blur-2xl pointer-events-none" />
-            <div className="relative flex items-center justify-between gap-4">
-              <div>
+            <div className="relative flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
                 <p className="font-display font-semibold text-base leading-snug mb-1">
-                  Tu es sur le plan gratuit
+                  Plan gratuit
                 </p>
-                <p className="text-sm text-white/45">
-                  Devis illimités, tracking d&apos;ouverture et relances automatiques en Pro.
+                <p className="text-sm text-white/45 mb-3">
+                  Devis illimités, relances automatiques et tracking avancé en Pro.
                 </p>
+                {/* Barre de progression usage mensuel */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min((devisMoisCount ?? 0) / 3 * 100, 100)}%`,
+                        backgroundColor: (devisMoisCount ?? 0) >= 3 ? '#ef4444' : '#6CC531',
+                      }}
+                    />
+                  </div>
+                  <span className={`text-xs font-medium tabular-nums shrink-0 ${(devisMoisCount ?? 0) >= 3 ? 'text-red-400' : 'text-white/40'}`}>
+                    {devisMoisCount ?? 0} / 3 ce mois
+                  </span>
+                </div>
               </div>
-              <button className="shrink-0 bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-4 py-2 rounded-xl transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px cursor-pointer">
+              <Link
+                href="/#pricing"
+                className="shrink-0 inline-flex items-center gap-1.5 bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-4 py-2 rounded-xl transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px"
+              >
+                <Zap size={13} />
                 Passer Pro
-              </button>
+              </Link>
             </div>
           </div>
         )}
