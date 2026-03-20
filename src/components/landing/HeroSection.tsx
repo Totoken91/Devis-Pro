@@ -98,21 +98,21 @@ export default function HeroSection() {
               <div className="flex items-start justify-between mb-6 gap-4">
                 <div className="min-w-0">
                   <p className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-1">Devis #2024-047</p>
-                  <h2 className="font-display text-white text-lg sm:text-2xl font-bold">Refonte site vitrine</h2>
-                  <p className="text-white/40 text-xs sm:text-sm mt-1 truncate">Pour Agence Lumière · Valable jusqu&apos;au 15 avril</p>
+                  <h2 className="font-display text-white text-lg sm:text-2xl font-bold">Identité visuelle — Studio Bloom</h2>
+                  <p className="text-white/40 text-xs sm:text-sm mt-1 truncate">Pour Studio Bloom · Valable jusqu&apos;au 30 avril</p>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-white/40 text-xs mb-1">Total TTC</p>
-                  <p className="font-display text-brand text-2xl sm:text-3xl font-bold">3 200 €</p>
+                  <p className="font-display text-brand text-2xl sm:text-3xl font-bold">2 400 €</p>
                 </div>
               </div>
 
               {/* Lignes de devis simulées */}
               <div className="space-y-2 mb-6">
                 {[
-                  { label: 'Design UX/UI', qty: '1', price: '1 200 €' },
-                  { label: 'Intégration Next.js', qty: '1', price: '1 500 €' },
-                  { label: 'SEO & mise en ligne', qty: '1', price: '500 €' },
+                  { label: 'Stratégie de marque', price: '600 €' },
+                  { label: 'Logo & charte graphique', price: '1 400 €' },
+                  { label: 'Kit réseaux sociaux', price: '400 €' },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center justify-between py-2 border-b border-white/5">
                     <span className="text-white/70 text-sm">{item.label}</span>
