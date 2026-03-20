@@ -8,7 +8,7 @@ const TRANSPARENT_GIF = Buffer.from(
   'base64'
 )
 
-const TOKEN_RE = /^[a-f0-9]{12,32}$/
+const TOKEN_RE = /^[a-z0-9]{12,32}$/
 
 export async function GET(
   _req: NextRequest,

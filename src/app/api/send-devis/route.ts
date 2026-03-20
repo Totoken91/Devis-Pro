@@ -12,7 +12,7 @@ const sendDevisSchema = z.object({
   numero:        z.string().min(1).max(50).trim(),
   titre:         z.string().min(1).max(300).trim(),
   montantTTC:    z.number().min(0).max(10_000_000),
-  token:         z.string().regex(/^[a-f0-9]{12,32}$/),
+  token:         z.string().regex(/^[a-z0-9]{12,32}$/),
 })
 
 export async function POST(req: NextRequest) {

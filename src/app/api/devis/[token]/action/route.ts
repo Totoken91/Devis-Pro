@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { sendOwnerNotification } from '@/lib/notify'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -8,7 +8,7 @@ const actionSchema = z.object({
   nom_signataire: z.string().min(1).max(200).trim().optional(),
 })
 
-const TOKEN_RE = /^[a-f0-9]{12,32}$/
+const TOKEN_RE = /^[a-z0-9]{12,32}$/
 
 export async function POST(
   req: NextRequest,
@@ -29,9 +29,10 @@ export async function POST(
     return NextResponse.json({ error: 'Nom requis pour signer' }, { status: 400 })
   }
 
-  const supabase = createClient()
+  // Admin client pour bypasser la RLS (l'update est fait par le client anonyme)
+  const admin = createAdminClient()
 
-  const { data: devis } = await supabase
+  const { data: devis } = await admin
     .from('devis')
     .select('id, statut')
     .eq('token_public', params.token)
@@ -50,7 +51,7 @@ export async function POST(
     update.signe_le = new Date().toISOString()
   }
 
-  const { error } = await supabase.from('devis').update(update).eq('id', devis.id)
+  const { error } = await admin.from('devis').update(update).eq('id', devis.id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

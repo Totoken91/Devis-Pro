@@ -38,7 +38,7 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
           onClick={() => setMobileOpen(false)}
           className="flex items-center gap-2.5 group"
         >
-          <span className="font-display font-bold text-white text-[17px] tracking-tight">
+          <span className="font-display font-bold text-white text-[20px] tracking-tight">
             Devi<span className="text-brand">so</span>
           </span>
         </Link>
@@ -112,7 +112,7 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
           <Menu size={20} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="font-display font-bold text-white text-[17px] tracking-tight">
+          <span className="font-display font-bold text-white text-[20px] tracking-tight">
             Devi<span className="text-brand">so</span>
           </span>
         </Link>

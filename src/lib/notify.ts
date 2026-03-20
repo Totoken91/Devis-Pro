@@ -31,11 +31,6 @@ export async function sendOwnerNotification(
   event: NotifyEvent,
   nomSignataire?: string
 ): Promise<void> {
-  if (!resend) {
-    console.warn('[notify-owner] RESEND_API_KEY non configurée, notification ignorée.')
-    return
-  }
-
   const admin = createAdminClient()
 
   const { data: devisRaw } = await admin
@@ -70,6 +65,21 @@ export async function sendOwnerNotification(
   }
 
   const clientName = devisRow.clients?.company || devisRow.clients?.name || 'Votre client'
+
+  // ── Notif en base en PREMIER (indépendant de l'email) ──
+  await admin.from('notifications').insert({
+    user_id:      devisRow.user_id,
+    devis_id:     devisRow.id,
+    event,
+    devis_numero: devisRow.numero,
+    client_name:  clientName,
+  })
+
+  if (!resend) {
+    console.warn('[notify-owner] RESEND_API_KEY non configurée, email ignoré.')
+    return
+  }
+
   const config = EVENT_CONFIG[event]
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const lienDashboard = `${appUrl}/devis`
@@ -155,13 +165,4 @@ export async function sendOwnerNotification(
   if (error) {
     console.error('[notify-owner] Erreur Resend:', error)
   }
-
-  // Insérer la notification en base (pour la cloche sur le site)
-  await admin.from('notifications').insert({
-    user_id: devisRow.user_id,
-    devis_id: devisRow.id,
-    event,
-    devis_numero: devisRow.numero,
-    client_name: clientName,
-  })
 }

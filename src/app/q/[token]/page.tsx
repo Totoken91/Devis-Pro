@@ -71,7 +71,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const cfg        = STATUT_CONFIG[d.statut as keyof typeof STATUT_CONFIG]
 
   if (d.statut === 'envoye') {
-    await supabase
+    await admin
       .from('devis')
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
       .eq('id', d.id)
