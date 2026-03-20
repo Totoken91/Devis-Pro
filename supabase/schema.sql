@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   address               TEXT,
   siret                 TEXT,
   logo_url              TEXT,
+  brand_color           TEXT        DEFAULT '#6CC531',
   plan                  TEXT        NOT NULL DEFAULT 'free' CHECK (plan IN ('free', 'pro')),
   stripe_customer_id    TEXT,
   stripe_subscription_id TEXT

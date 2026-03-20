@@ -16,6 +16,7 @@ export type Database = {
           address: string | null
           siret: string | null
           logo_url: string | null
+          brand_color: string | null
           plan: 'free' | 'pro'
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -29,6 +30,7 @@ export type Database = {
           address?: string | null
           siret?: string | null
           logo_url?: string | null
+          brand_color?: string | null
           plan?: 'free' | 'pro'
         }
         Update: {
@@ -38,6 +40,7 @@ export type Database = {
           address?: string | null
           siret?: string | null
           logo_url?: string | null
+          brand_color?: string | null
           plan?: 'free' | 'pro'
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null

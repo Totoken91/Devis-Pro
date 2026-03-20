@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, generateToken } from '@/lib/utils'
 import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut } from '@/types/supabase'
-import { Plus, Trash2, ArrowLeft, Save, Send } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
+import { DevisPreview } from '@/components/devis/DevisPreview'
 
 const TVA_OPTIONS = [0, 5.5, 10, 20] as const
 
@@ -56,6 +57,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
     initialData?.lignes?.length ? initialData.lignes : [newLigne()]
   )
   const [loading, setLoading] = useState<'draft' | 'send' | null>(null)
+  const [showPreview, setShowPreview] = useState(true)
 
   const montantHT  = lignes.reduce((s, l) => s + l.total, 0)
   const montantTVA = montantHT * tvaT / 100
@@ -118,11 +120,14 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
     setLoading(null)
   }
 
+  const selectedClient = clients.find((c) => c.id === clientId) ?? null
+  const brandColor = profile.brand_color || '#6CC531'
+
   return (
-    <div className="p-4 md:p-8 max-w-4xl">
+    <div className="p-4 md:p-8">
 
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-8 max-w-4xl">
         <div className="flex items-center gap-3">
           <Link
             href="/devis"
@@ -147,6 +152,14 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setShowPreview((v) => !v)}
+            className="flex items-center gap-2 border border-white/10 text-white/40 font-medium rounded-lg px-3 py-2 text-sm hover:bg-white/5 hover:text-white/60 transition-colors cursor-pointer"
+            title={showPreview ? 'Masquer l\'aperçu' : 'Afficher l\'aperçu'}
+          >
+            {showPreview ? <EyeOff size={14} /> : <Eye size={14} />}
+            <span className="hidden sm:inline">Aperçu</span>
+          </button>
+          <button
             onClick={() => handleSave('brouillon')}
             disabled={!!loading}
             className="flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-4 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -165,184 +178,211 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
         </div>
       </div>
 
-      <div className="space-y-5">
+      <div className="flex gap-8 items-start">
+        {/* ── Form column ── */}
+        <div className="flex-1 max-w-4xl space-y-5 min-w-0">
 
-        {/* ── Informations ── */}
-        <Section title="Informations">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5">Titre du devis</label>
-              <input
-                type="text"
-                value={titre}
-                onChange={(e) => setTitre(e.target.value)}
-                placeholder="Développement site web"
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5">Client</label>
-              <select
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-                className={inputCls}
-              >
-                <option value="">— Sans client —</option>
-                {clients.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}{c.company ? ` (${c.company})` : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5">Date de validité</label>
-              <input
-                type="date"
-                value={dateValidite}
-                onChange={(e) => setDateValidite(e.target.value)}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5">Template</label>
-              <select
-                value={template}
-                onChange={(e) => setTemplate(e.target.value as DevisTemplate)}
-                className={inputCls}
-              >
-                <option value="classique">Classique</option>
-                <option value="moderne">Moderne</option>
-                <option value="minimaliste">Minimaliste</option>
-              </select>
-            </div>
-          </div>
-        </Section>
-
-        {/* ── Lignes ── */}
-        <Section title="Lignes de devis">
-          <div className="hidden md:grid grid-cols-[1fr_72px_116px_96px_32px] gap-3 mb-2 px-1">
-            <span className="text-xs font-medium text-white/30">Description</span>
-            <span className="text-xs font-medium text-white/30 text-center">Qté</span>
-            <span className="text-xs font-medium text-white/30 text-right">Prix unitaire</span>
-            <span className="text-xs font-medium text-white/30 text-right">Total HT</span>
-            <span />
-          </div>
-
-          <div className="space-y-2">
-            {lignes.map((ligne, i) => (
-              <div
-                key={ligne.id}
-                className="flex flex-col gap-2 md:grid md:grid-cols-[1fr_72px_116px_96px_32px] md:items-center border border-white/8 rounded-xl p-3 md:border-0 md:rounded-none md:p-0 md:gap-3"
-              >
+          {/* ── Informations ── */}
+          <Section title="Informations">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-white/40 mb-1.5">Titre du devis</label>
                 <input
                   type="text"
-                  value={ligne.description}
-                  onChange={(e) => updateLigne(ligne.id, 'description', e.target.value)}
-                  placeholder={`Prestation ${i + 1}`}
+                  value={titre}
+                  onChange={(e) => setTitre(e.target.value)}
+                  placeholder="Développement site web"
                   className={inputCls}
                 />
-                <div className="grid grid-cols-3 gap-2 md:contents">
-                  <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-white/30 md:hidden">Qté</span>
-                    <input
-                      type="number" min="0" step="0.5"
-                      value={ligne.quantite}
-                      onChange={(e) => updateLigne(ligne.id, 'quantite', e.target.value)}
-                      className={inputCls + ' text-center'}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-white/30 md:hidden">Prix unit.</span>
-                    <input
-                      type="number" min="0" step="0.01"
-                      value={ligne.prix_unitaire}
-                      onChange={(e) => updateLigne(ligne.id, 'prix_unitaire', e.target.value)}
-                      className={inputCls + ' text-right'}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-white/30 md:hidden">Total HT</span>
-                    <p className="text-sm font-medium text-white/60 text-right pr-1 py-2.5 tabular-nums">
-                      {formatCurrency(ligne.total)}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeLigne(ligne.id)}
-                  disabled={lignes.length === 1}
-                  className="self-end md:self-auto p-1.5 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-30 cursor-pointer"
-                >
-                  <Trash2 size={13} />
-                </button>
               </div>
-            ))}
+              <div>
+                <label className="block text-xs font-medium text-white/40 mb-1.5">Client</label>
+                <select
+                  value={clientId}
+                  onChange={(e) => setClientId(e.target.value)}
+                  className={inputCls}
+                >
+                  <option value="">— Sans client —</option>
+                  {clients.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}{c.company ? ` (${c.company})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-white/40 mb-1.5">Date de validité</label>
+                <input
+                  type="date"
+                  value={dateValidite}
+                  onChange={(e) => setDateValidite(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-white/40 mb-1.5">Template</label>
+                <select
+                  value={template}
+                  onChange={(e) => setTemplate(e.target.value as DevisTemplate)}
+                  className={inputCls}
+                >
+                  <option value="classique">Classique</option>
+                  <option value="moderne">Moderne</option>
+                  <option value="minimaliste">Minimaliste</option>
+                </select>
+              </div>
+            </div>
+          </Section>
+
+          {/* ── Lignes ── */}
+          <Section title="Lignes de devis">
+            <div className="hidden md:grid grid-cols-[1fr_72px_116px_96px_32px] gap-3 mb-2 px-1">
+              <span className="text-xs font-medium text-white/30">Description</span>
+              <span className="text-xs font-medium text-white/30 text-center">Qté</span>
+              <span className="text-xs font-medium text-white/30 text-right">Prix unitaire</span>
+              <span className="text-xs font-medium text-white/30 text-right">Total HT</span>
+              <span />
+            </div>
+
+            <div className="space-y-2">
+              {lignes.map((ligne, i) => (
+                <div
+                  key={ligne.id}
+                  className="flex flex-col gap-2 md:grid md:grid-cols-[1fr_72px_116px_96px_32px] md:items-center border border-white/8 rounded-xl p-3 md:border-0 md:rounded-none md:p-0 md:gap-3"
+                >
+                  <input
+                    type="text"
+                    value={ligne.description}
+                    onChange={(e) => updateLigne(ligne.id, 'description', e.target.value)}
+                    placeholder={`Prestation ${i + 1}`}
+                    className={inputCls}
+                  />
+                  <div className="grid grid-cols-3 gap-2 md:contents">
+                    <div className="flex flex-col gap-1 md:contents">
+                      <span className="text-xs text-white/30 md:hidden">Qté</span>
+                      <input
+                        type="number" min="0" step="0.5"
+                        value={ligne.quantite}
+                        onChange={(e) => updateLigne(ligne.id, 'quantite', e.target.value)}
+                        className={inputCls + ' text-center'}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:contents">
+                      <span className="text-xs text-white/30 md:hidden">Prix unit.</span>
+                      <input
+                        type="number" min="0" step="0.01"
+                        value={ligne.prix_unitaire}
+                        onChange={(e) => updateLigne(ligne.id, 'prix_unitaire', e.target.value)}
+                        className={inputCls + ' text-right'}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:contents">
+                      <span className="text-xs text-white/30 md:hidden">Total HT</span>
+                      <p className="text-sm font-medium text-white/60 text-right pr-1 py-2.5 tabular-nums">
+                        {formatCurrency(ligne.total)}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeLigne(ligne.id)}
+                    disabled={lignes.length === 1}
+                    className="self-end md:self-auto p-1.5 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-30 cursor-pointer"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={addLigne}
+              className="mt-3 flex items-center gap-1.5 text-sm text-brand hover:text-brand-dark font-medium transition-colors cursor-pointer"
+            >
+              <Plus size={14} />
+              Ajouter une ligne
+            </button>
+          </Section>
+
+          {/* ── Notes + Récap ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Section title="Notes">
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-white/30 mb-1.5">Note client</label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={3}
+                    placeholder="Message visible par le client…"
+                    className={inputCls + ' resize-none'}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-white/30 mb-1.5">Conditions</label>
+                  <textarea
+                    value={conditions}
+                    onChange={(e) => setConditions(e.target.value)}
+                    rows={2}
+                    placeholder="Conditions de paiement, acompte…"
+                    className={inputCls + ' resize-none'}
+                  />
+                </div>
+              </div>
+            </Section>
+
+            <Section title="Récapitulatif">
+              <div className="mb-4">
+                <label className="block text-xs font-medium text-white/30 mb-1.5">Taux de TVA</label>
+                <select
+                  value={tvaT}
+                  onChange={(e) => setTvaT(Number(e.target.value))}
+                  className={inputCls}
+                >
+                  {TVA_OPTIONS.map((t) => (
+                    <option key={t} value={t}>{t}%</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2.5 border-t border-white/8 pt-4">
+                <TotalRow label="Montant HT"         value={formatCurrency(montantHT)} />
+                <TotalRow label={`TVA (${tvaT}%)`}   value={formatCurrency(montantTVA)} />
+              </div>
+
+              <div className="mt-4 bg-brand/10 border border-brand/20 rounded-xl px-5 py-4 flex items-center justify-between">
+                <span className="text-sm font-semibold text-brand/70">Total TTC</span>
+                <span className="font-display text-xl font-bold text-brand tabular-nums">
+                  {formatCurrency(montantTTC)}
+                </span>
+              </div>
+            </Section>
           </div>
 
-          <button
-            onClick={addLigne}
-            className="mt-3 flex items-center gap-1.5 text-sm text-brand hover:text-brand-dark font-medium transition-colors cursor-pointer"
-          >
-            <Plus size={14} />
-            Ajouter une ligne
-          </button>
-        </Section>
-
-        {/* ── Notes + Récap ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Section title="Notes">
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-medium text-white/30 mb-1.5">Note client</label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={3}
-                  placeholder="Message visible par le client…"
-                  className={inputCls + ' resize-none'}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-white/30 mb-1.5">Conditions</label>
-                <textarea
-                  value={conditions}
-                  onChange={(e) => setConditions(e.target.value)}
-                  rows={2}
-                  placeholder="Conditions de paiement, acompte…"
-                  className={inputCls + ' resize-none'}
-                />
-              </div>
-            </div>
-          </Section>
-
-          <Section title="Récapitulatif">
-            <div className="mb-4">
-              <label className="block text-xs font-medium text-white/30 mb-1.5">Taux de TVA</label>
-              <select
-                value={tvaT}
-                onChange={(e) => setTvaT(Number(e.target.value))}
-                className={inputCls}
-              >
-                {TVA_OPTIONS.map((t) => (
-                  <option key={t} value={t}>{t}%</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-2.5 border-t border-white/8 pt-4">
-              <TotalRow label="Montant HT"         value={formatCurrency(montantHT)} />
-              <TotalRow label={`TVA (${tvaT}%)`}   value={formatCurrency(montantTVA)} />
-            </div>
-
-            <div className="mt-4 bg-brand/10 border border-brand/20 rounded-xl px-5 py-4 flex items-center justify-between">
-              <span className="text-sm font-semibold text-brand/70">Total TTC</span>
-              <span className="font-display text-xl font-bold text-brand tabular-nums">
-                {formatCurrency(montantTTC)}
-              </span>
-            </div>
-          </Section>
         </div>
 
+        {/* ── Preview column (desktop only) ── */}
+        {showPreview && (
+          <div className="hidden xl:block w-[340px] shrink-0 sticky top-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Aperçu</p>
+            </div>
+            <DevisPreview
+              numero={mode === 'create' ? nextNumero! : initialData!.numero}
+              titre={titre}
+              lignes={lignes}
+              tvaTaux={tvaT}
+              montantHT={montantHT}
+              montantTVA={montantTVA}
+              montantTTC={montantTTC}
+              dateValidite={dateValidite}
+              notes={notes}
+              conditions={conditions}
+              profile={profile}
+              client={selectedClient}
+              brandColor={brandColor}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

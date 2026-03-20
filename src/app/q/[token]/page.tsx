@@ -15,6 +15,8 @@ type DevisPublic = Devis & {
     phone:        string | null
     address:      string | null
     siret:        string | null
+    logo_url:     string | null
+    brand_color:  string | null
   } | null
   clients: {
     name:    string
@@ -54,7 +56,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const row = devisRow as Record<string, unknown> & { user_id: string }
   const { data: profileRow } = await admin
     .from('profiles')
-    .select('full_name, company_name, email, phone, address, siret')
+    .select('full_name, company_name, email, phone, address, siret, logo_url, brand_color')
     .eq('id', row.user_id)
     .single()
 
@@ -81,6 +83,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   }
 
   const emetteurName = emetteur?.company_name || emetteur?.full_name || '—'
+  const accentColor = emetteur?.brand_color || '#6CC531'
 
   return (
     <div className="min-h-screen bg-[#F3F4F1]">
@@ -88,10 +91,16 @@ export default async function DevisPublicPage({ params }: { params: { token: str
       {/* ── Sticky top bar ── */}
       <header className="print:hidden sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-gray-100 h-14 flex items-center justify-between px-5 md:px-8">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-[#6CC531] rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-[10px] font-sans">D</span>
-          </div>
-          <span className="font-bold text-gray-900 text-sm tracking-tight">Deviso</span>
+          {emetteur?.logo_url ? (
+            <img src={emetteur.logo_url} alt="" className="h-7 w-auto object-contain" />
+          ) : (
+            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+              <span className="text-white font-bold text-[10px] font-sans">D</span>
+            </div>
+          )}
+          <span className="font-bold text-gray-900 text-sm tracking-tight">
+            {emetteur?.company_name || 'Deviso'}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <PrintButton />
@@ -114,15 +123,15 @@ export default async function DevisPublicPage({ params }: { params: { token: str
       <main className="max-w-2xl mx-auto px-4 py-8 md:py-12">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
-          {/* Green accent strip */}
-          <div className="h-1 bg-[#6CC531]" />
+          {/* Accent strip */}
+          <div className="h-1" style={{ backgroundColor: accentColor }} />
 
           <div className="px-8 py-8 md:px-10 md:py-10">
 
             {/* ── Doc header ── */}
             <div className="flex items-start justify-between gap-6 mb-8">
               <div>
-                <p className="text-[11px] font-bold text-[#6CC531] uppercase tracking-widest mb-2">Devis</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: accentColor }}>Devis</p>
                 <h1 className="text-3xl font-bold text-gray-900 tracking-tight leading-none mb-1.5" style={{ fontFamily: 'var(--font-sora, sans-serif)' }}>
                   {d.numero}
                 </h1>

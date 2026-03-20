@@ -27,6 +27,18 @@
   * {
     border-color: #EAECE7;
   }
+
+  /* Dark-themed select options (app forms) */
+  select option {
+    background-color: #0D1320;
+    color: #fff;
+  }
+
+  /* Date/color input dark scheme */
+  input[type="date"],
+  input[type="color"] {
+    color-scheme: dark;
+  }
 }
 
 @layer components {
