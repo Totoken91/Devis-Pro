@@ -13,12 +13,12 @@ export default function MentionsLegalesPage() {
         Le site <strong>deviso.fr</strong> est édité par :<br />
         <strong>totoken</strong><br />
         Entreprise individuelle<br />
-        Adresse : <strong>[VOTRE ADRESSE — obligatoire légalement]</strong><br />
+        Adresse : 21 Domaine de Montvoisin, 91400 Gometz-la-Ville<br />
         SIRET : <strong>[VOTRE NUMÉRO SIRET]</strong><br />
         Email : <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
       </p>
       <p>
-        Directeur de la publication : <strong>[VOTRE PRÉNOM ET NOM]</strong>
+        Directeur de la publication : <strong>Kenny Desaintfuscien</strong>
       </p>
 
       <hr />
