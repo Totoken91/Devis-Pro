@@ -57,8 +57,8 @@ export async function POST(
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  // Notifier le freelancer (fire-and-forget)
-  sendOwnerNotification(
+  // Notifier le freelancer (await pour éviter la terminaison serverless avant envoi)
+  await sendOwnerNotification(
     params.token,
     action as 'accepte' | 'refuse',
     action === 'accepte' ? nom_signataire : undefined

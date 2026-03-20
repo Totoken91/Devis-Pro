@@ -70,7 +70,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const destinataire = d.clients
   const cfg        = STATUT_CONFIG[d.statut as keyof typeof STATUT_CONFIG]
 
-  if (d.statut === 'envoye') {
+  if (d.statut === 'envoye' && !isOwner) {
     await admin
       .from('devis')
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
@@ -265,7 +265,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
             )}
 
             {/* ── Actions client ── */}
-            {!isPreview && (d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
+            {!isPreview && !isOwner && (d.statut === 'ouvert' || d.statut === 'envoye' || d.statut === 'accepte' || d.statut === 'refuse') && (
               <DevisActions
                 token={params.token}
                 statut={d.statut}
