@@ -3,18 +3,19 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationBell } from './NotificationBell'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard',    icon: LayoutDashboard },
-  { href: '/devis',     label: 'Devis',         icon: FileText },
-  { href: '/clients',   label: 'Clients',       icon: Users },
-  { href: '/profil',    label: 'Paramètres',    icon: Settings },
+  { href: '/dashboard',              label: 'Dashboard',    icon: LayoutDashboard },
+  { href: '/devis',                  label: 'Devis',        icon: FileText },
+  { href: '/clients',                label: 'Clients',      icon: Users },
+  { href: '/profil',                 label: 'Paramètres',   icon: Settings },
+  { href: '/parametres/facturation', label: 'Facturation',  icon: CreditCard },
 ]
 
-export function Sidebar({ userEmail }: { userEmail: string }) {
+export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?: 'free' | 'pro' }) {
   const pathname  = usePathname()
   const router    = useRouter()
   const supabase  = createClient()
@@ -42,6 +43,12 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
             Devi<span className="text-brand">so</span>
           </span>
         </Link>
+        {plan === 'pro' && (
+          <span className="ml-1 inline-flex items-center gap-1 bg-brand/20 text-brand text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <Zap size={9} />
+            PRO
+          </span>
+        )}
         <button
           className="md:hidden ml-auto text-white/40 hover:text-white transition-colors"
           onClick={() => setMobileOpen(false)}
@@ -80,6 +87,25 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
           )
         })}
       </nav>
+
+      {/* Promo Pro (free users only) */}
+      {plan === 'free' && (
+        <div className="px-3 mb-3">
+          <Link
+            href="/parametres/facturation"
+            onClick={() => setMobileOpen(false)}
+            className="block bg-brand/10 hover:bg-brand/15 border border-brand/20 rounded-xl p-3 transition-colors group"
+          >
+            <div className="flex items-center gap-1.5 mb-1">
+              <Zap size={11} className="text-brand" />
+              <span className="text-xs font-bold text-brand">Passer Pro</span>
+            </div>
+            <p className="text-[10px] text-white/35 leading-relaxed">
+              Devis illimités, relances auto, branding custom
+            </p>
+          </Link>
+        </div>
+      )}
 
       {/* Bottom */}
       <div className="px-3 pb-4 border-t border-white/6 pt-3 space-y-0.5">

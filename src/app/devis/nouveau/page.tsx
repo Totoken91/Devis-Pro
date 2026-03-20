@@ -72,11 +72,11 @@ export default async function NouveauDevisPage() {
                   Passe en Pro et oublie les limites : devis illimités, relances automatiques, et bien plus.
                 </p>
                 <Link
-                  href="/#pricing"
+                  href="/parametres/facturation"
                   className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl px-5 py-2.5 text-sm transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px"
                 >
                   <Zap size={14} />
-                  Voir les offres Pro
+                  Passer Pro — Essai 14 jours
                 </Link>
               </div>
             </div>
