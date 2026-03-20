@@ -11,6 +11,7 @@
 | Auth email + Google OAuth | ✅ |
 | Reset de mot de passe | ✅ |
 | Profil (nom, société, SIRET, logo_url, couleur marque) | ✅ |
+| Upload logo (Supabase Storage bucket `logos`) | ✅ |
 | Carnet de clients | ✅ |
 | Création / édition de devis (lignes, TVA, totaux) | ✅ |
 | Numérotation automatique DEV-YYYY-0001 | ✅ |
@@ -23,6 +24,8 @@
 | Responsive mobile | ✅ |
 | Middleware de protection des routes | ✅ |
 | RLS Supabase (isolation multi-tenant) | ✅ |
+| Limitation plan gratuit : max 3 devis/mois + barre progression | ✅ |
+| Relances automatiques (Vercel Cron, tous les 7 jours) | ✅ |
 
 ### Sécurité appliquée (sprint audit 2026-03)
 - `generateToken()` → Web Crypto API (64 bits d'entropie, plus `Math.random`)
@@ -30,47 +33,39 @@
 - Headers HTTP de sécurité (`X-Frame-Options`, `X-Content-Type-Options`, etc.)
 - Validation du format token dans chaque route (`/api/track`, `/api/notify-owner`, `/api/devis/[token]/action`)
 
-### Reste à faire avant lancement public
-- [x] Limitation plan gratuit : max 3 devis/mois — mur de blocage sur `/devis/nouveau`, barre de progression dans le dashboard
-- [ ] Export PDF réel (actuellement : impression navigateur uniquement)
-- [x] Relances automatiques — toggle dans le formulaire, cron Vercel `/api/cron/reminders` (expire + relance email tous les 7 jours)
-- [ ] Logo upload (champ `logo_url` en base, pas d'UI d'upload)
+### Blocages avant lancement public
+- [ ] Export PDF réel (actuellement : impression navigateur `window.print()`)
 - [ ] Tests de bout en bout sur les flows auth + devis
 
 ---
 
-## Phase 2 — Monétisation `🔄 À VENIR`
+## Phase 2 — Monétisation `🔄 EN COURS`
 
 Objectif : **30 abonnés payants** | Délai cible : 3 mois après lancement public
 
-### Stripe — checklist d'intégration
+### Stripe — état d'avancement
 
-**Setup**
+**Setup** *(à faire côté compte Stripe + Vercel)*
 - [ ] Créer compte Stripe, activer payments
 - [ ] Créer 2 produits : Pro Mensuel (15 €) + Pro Annuel (12 €/mois × 12)
 - [ ] Ajouter `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_YEARLY_PRICE_ID` dans Vercel
 
-**Backend**
-- [ ] `POST /api/stripe/checkout` — crée une Stripe Checkout Session, redirige vers Stripe
-- [ ] `POST /api/stripe/portal` — crée une Customer Portal Session (gestion abonnement self-service)
-- [ ] `POST /api/stripe/webhook` — reçoit et vérifie les événements Stripe :
-  - `checkout.session.completed` → passer `profiles.plan` à `pro`, stocker `stripe_customer_id`
-  - `customer.subscription.updated` → mettre à jour le statut
-  - `customer.subscription.deleted` → repasser en `free`
-  - `invoice.payment_failed` → email de relance paiement
-- [ ] Migration SQL : ajouter `stripe_subscription_id` sur `profiles` (déjà dans le schéma)
-- [ ] Helper `isPro(userId): boolean` — lit `profiles.plan`
+**Backend** *(code fait)*
+- [x] `POST /api/stripe/checkout` — Stripe Checkout Session
+- [x] `POST /api/stripe/portal` — Customer Portal Session
+- [x] `POST /api/stripe/webhook` — vérifie signature + gère `checkout.session.completed`, `subscription.updated/deleted`, `invoice.payment_failed`
+- [x] `lib/stripe.ts` — helper `isPro`, constantes price IDs
 
-**Frontend**
-- [ ] Bouton "Passer Pro" dans `/profil` et dans le modal de limite atteinte
-- [ ] Page `/settings/billing` — affiche statut abonnement + lien Customer Portal
-- [ ] Modal "Limite atteinte" quand un utilisateur free essaie de créer un 4e devis
-- [ ] Badge "PRO" dans la sidebar
+**Frontend** *(partiellement fait)*
+- [x] Page `/parametres/facturation` — statut abonnement + boutons Upgrade / Portal
+- [x] Badge "PRO" dans la sidebar
+- [x] Bouton "Passer Pro" dans `/parametres/facturation`
+- [ ] Modal "Limite atteinte" quand un free essaie de créer un 4e devis (actuellement : redirect silencieux)
 - [ ] Toggle mensuel/annuel sur la landing page pricing
 
 **Sécurité Stripe**
-- [ ] Vérifier la signature du webhook (`stripe.webhooks.constructEvent`)
-- [ ] Ne jamais lire le plan côté client — toujours depuis la DB via une Server Component ou API route
+- [x] Vérification signature webhook (`stripe.webhooks.constructEvent`)
+- [x] Plan lu depuis la DB via Server Component (jamais côté client)
 
 ---
 
@@ -78,13 +73,34 @@ Objectif : **30 abonnés payants** | Délai cible : 3 mois après lancement publ
 
 Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 
-- [x] Relances automatiques (Vercel Cron + `CRON_SECRET`) ← fait en Phase 1
-- [ ] PDF serveur via `@react-pdf/renderer` ou Puppeteer
-- [ ] Templates visuels (classique / moderne / minimaliste — champ en base, rendu non différencié)
+- [x] Relances automatiques (Vercel Cron + `CRON_SECRET`)
+- [ ] Export PDF serveur via `@react-pdf/renderer` ou Puppeteer
+- [ ] Templates visuels (classique / moderne / minimaliste)
 - [ ] Programme de parrainage (Stripe coupons)
-- [ ] Analytiques dans le dashboard (courbe MRR, taux de conversion)
-- [ ] Sentry pour le monitoring des erreurs
+- [ ] Analytiques avancées dans le dashboard (courbe MRR, taux de conversion)
+- [ ] Sentry pour le monitoring des erreurs en prod
 - [ ] Mentions légales / CGU / Politique de confidentialité
+
+---
+
+## ✈️ Checklist lancement public
+
+> À cocher avant de passer le DNS en prod et d'annoncer le produit.
+
+### Critique (bloquant)
+- [ ] Variables d'env Vercel complètes (Stripe, Resend, Supabase, CRON_SECRET)
+- [ ] Bucket Supabase Storage `logos` créé avec policy RLS correcte
+- [ ] Webhook Stripe configuré avec l'URL de prod (pas localhost)
+- [ ] Test end-to-end : créer un devis → envoyer → signer → passer Pro → annuler
+- [ ] Mentions légales + CGU + Politique de confidentialité (obligatoire RGPD)
+- [ ] Domaine custom vérifié sur Resend (réputation email)
+
+### Important (non bloquant mais à faire rapidement)
+- [ ] Modal "Limite atteinte" pour les utilisateurs free
+- [ ] Export PDF réel
+- [ ] Page 404 custom
+- [ ] Favicon / OG image pour le partage social
+- [ ] Google Analytics ou Plausible pour tracker l'acquisition
 
 ---
 
@@ -102,4 +118,4 @@ Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 
 ---
 
-_Dernière mise à jour : 2026-03-20 — Phase 1 quasiment terminée, Phase 2 (Stripe) à venir_
+_Dernière mise à jour : 2026-03-20 — Phase 2 Stripe backend terminé, frontend partiel, lancement public imminent_
