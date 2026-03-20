@@ -12,15 +12,15 @@ const LINKS = {
     { label: 'Support', href: 'mailto:hello@deviso.fr' },
   ],
   Légal: [
-    { label: 'Confidentialité', href: '#' },
-    { label: 'CGU', href: '#' },
-    { label: 'Mentions légales', href: '#' },
+    { label: 'Confidentialité', href: '/confidentialite' },
+    { label: 'CGU', href: '/cgu' },
+    { label: 'Mentions légales', href: '/mentions-legales' },
   ],
 }
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#0A0F1E] border-t border-white/6 px-4 py-16">
+    <footer className="relative bg-[#141C2E] border-t border-white/6 px-4 py-16">
       <div className="max-w-5xl mx-auto">
 
         {/* grid-cols-3 mobile : brand full-width (col-span-3), puis 3 cols de liens */}

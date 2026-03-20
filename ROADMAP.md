@@ -79,7 +79,7 @@ Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 - [ ] Programme de parrainage (Stripe coupons)
 - [ ] Analytiques avancées dans le dashboard (courbe MRR, taux de conversion)
 - [ ] Sentry pour le monitoring des erreurs en prod
-- [ ] Mentions légales / CGU / Politique de confidentialité
+- [x] Mentions légales / CGU / Politique de confidentialité (`/mentions-legales`, `/cgu`, `/confidentialite`)
 
 ---
 
@@ -92,7 +92,7 @@ Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 - [ ] Bucket Supabase Storage `logos` créé avec policy RLS correcte
 - [ ] Webhook Stripe configuré avec l'URL de prod (pas localhost)
 - [ ] Test end-to-end : créer un devis → envoyer → signer → passer Pro → annuler
-- [ ] Mentions légales + CGU + Politique de confidentialité (obligatoire RGPD)
+- [x] Mentions légales + CGU + Politique de confidentialité (obligatoire RGPD) — ⚠️ compléter les placeholders `[NOM/ADRESSE/SIRET]`
 - [ ] Domaine custom vérifié sur Resend (réputation email)
 
 ### Important (non bloquant mais à faire rapidement)
@@ -118,4 +118,4 @@ Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 
 ---
 
-_Dernière mise à jour : 2026-03-20 — Phase 2 Stripe backend terminé, frontend partiel, lancement public imminent_
+_Dernière mise à jour : 2026-03-20 — Mentions légales / CGU / Confidentialité créées, reste à remplir les placeholders [NOM/ADRESSE/SIRET]_
