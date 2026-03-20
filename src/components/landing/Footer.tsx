@@ -23,10 +23,11 @@ export default function Footer() {
     <footer className="relative bg-[#0A0F1E] border-t border-white/6 px-4 py-16">
       <div className="max-w-5xl mx-auto">
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 mb-14">
+        {/* grid-cols-3 mobile : brand full-width (col-span-3), puis 3 cols de liens */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-8 sm:gap-10 mb-14">
 
-          {/* Marque */}
-          <div className="col-span-2 sm:col-span-1">
+          {/* Marque — full width mobile, 1 col desktop */}
+          <div className="col-span-3 sm:col-span-1">
             <span className="font-display text-xl font-bold text-white tracking-tight">
               Devi<span className="text-brand">so</span>
             </span>
@@ -35,7 +36,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Colonnes de liens */}
+          {/* 3 colonnes de liens — chacune 1 col */}
           {Object.entries(LINKS).map(([group, items]) => (
             <div key={group}>
               <p className="text-white/25 text-xs font-semibold tracking-widest uppercase mb-4">
@@ -55,6 +56,7 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+
         </div>
 
         {/* Barre basse */}

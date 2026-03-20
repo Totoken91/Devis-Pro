@@ -30,7 +30,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-display text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-tight mb-6 tracking-tight"
+          className="font-display text-5xl sm:text-7xl lg:text-8xl font-extrabold leading-tight mb-6 tracking-tight"
         >
           Tes devis.{' '}
           <span className="text-brand">Signés.</span>
@@ -90,20 +90,20 @@ export default function HeroSection() {
               <span className="w-3 h-3 rounded-full bg-red-500/60" />
               <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <span className="w-3 h-3 rounded-full bg-brand/60" />
-              <span className="ml-4 text-xs text-white/30 font-mono">deviso.fr/q/devis-2024-047</span>
+              <span className="ml-4 text-xs text-white/30 font-mono truncate">deviso.fr/q/devis-2024-047</span>
             </div>
 
             {/* Corps du mockup */}
-            <div className="p-8 text-left">
-              <div className="flex items-start justify-between mb-6">
-                <div>
+            <div className="p-4 sm:p-8 text-left">
+              <div className="flex items-start justify-between mb-6 gap-4">
+                <div className="min-w-0">
                   <p className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-1">Devis #2024-047</p>
-                  <h2 className="font-display text-white text-2xl font-bold">Refonte site vitrine</h2>
-                  <p className="text-white/40 text-sm mt-1">Pour Agence Lumière · Valable jusqu&apos;au 15 avril</p>
+                  <h2 className="font-display text-white text-lg sm:text-2xl font-bold">Refonte site vitrine</h2>
+                  <p className="text-white/40 text-xs sm:text-sm mt-1 truncate">Pour Agence Lumière · Valable jusqu&apos;au 15 avril</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   <p className="text-white/40 text-xs mb-1">Total TTC</p>
-                  <p className="font-display text-brand text-3xl font-bold">3 200 €</p>
+                  <p className="font-display text-brand text-2xl sm:text-3xl font-bold">3 200 €</p>
                 </div>
               </div>
 
@@ -138,8 +138,8 @@ export default function HeroSection() {
             initial={{ opacity: 0, x: 40, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ delay: 1.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -top-4 -right-4 sm:-right-8 bg-[#0F1812] border border-brand/40
-                       rounded-xl px-4 py-3 shadow-xl shadow-brand/10 flex items-center gap-3 max-w-xs"
+            className="absolute -top-4 right-2 sm:-right-8 bg-[#0F1812] border border-brand/40
+                       rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 shadow-xl shadow-brand/10 flex items-center gap-2 sm:gap-3 max-w-[220px] sm:max-w-xs"
           >
             <div className="w-8 h-8 rounded-lg bg-brand/20 flex items-center justify-center shrink-0">
               <svg className="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -147,9 +147,9 @@ export default function HeroSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
             </div>
-            <div>
-              <p className="text-white text-xs font-semibold leading-snug">Marc Dupont a ouvert votre devis</p>
-              <p className="text-white/40 text-[11px] mt-0.5">il y a 2 minutes · 3 200 €</p>
+            <div className="min-w-0">
+              <p className="text-white text-[11px] sm:text-xs font-semibold leading-snug">Marc Dupont a ouvert votre devis</p>
+              <p className="text-white/40 text-[10px] sm:text-[11px] mt-0.5">il y a 2 minutes · 3 200 €</p>
             </div>
             <span className="w-2 h-2 rounded-full bg-brand animate-pulse shrink-0" />
           </motion.div>

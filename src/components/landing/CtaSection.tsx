@@ -36,7 +36,7 @@ export default function CtaSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.65, delay: 0.08, ease }}
-          className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight"
+          className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight"
         >
           Ton prochain devis.{' '}
           <span className="text-brand">Signé.</span>
