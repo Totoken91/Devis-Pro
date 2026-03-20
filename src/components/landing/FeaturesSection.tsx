@@ -95,7 +95,7 @@ export default function FeaturesSection() {
   const gridInView   = useInView(gridRef,   { once: true, margin: '-80px' })
 
   return (
-    <section className="relative bg-[#0A0F1E] py-32 px-4 overflow-hidden">
+    <section id="features" className="relative bg-[#0A0F1E] py-32 px-4 overflow-hidden">
 
       {/* Séparateur haut */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />

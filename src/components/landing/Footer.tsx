@@ -4,7 +4,6 @@ const LINKS = {
   Produit: [
     { label: 'Fonctionnalités', href: '#features' },
     { label: 'Tarifs', href: '#pricing' },
-    { label: 'Changelog', href: '#' },
   ],
   Ressources: [
     { label: 'Documentation', href: '#' },
