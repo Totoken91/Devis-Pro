@@ -1,19 +1,31 @@
 import { createClient } from '@/lib/supabase/server'
 import { sendOwnerNotification } from '@/lib/notify'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+const actionSchema = z.object({
+  action:         z.enum(['accepte', 'refuse']),
+  nom_signataire: z.string().min(1).max(200).trim().optional(),
+})
+
+const TOKEN_RE = /^[a-f0-9]{12,32}$/
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { token: string } }
 ) {
-  const body = await req.json()
-  const { action, nom_signataire } = body as { action: string; nom_signataire?: string }
-
-  if (!['accepte', 'refuse'].includes(action)) {
-    return NextResponse.json({ error: 'Action invalide' }, { status: 400 })
+  if (!TOKEN_RE.test(params.token)) {
+    return NextResponse.json({ error: 'Token invalide' }, { status: 400 })
   }
 
-  if (action === 'accepte' && !nom_signataire?.trim()) {
+  const raw = await req.json().catch(() => null)
+  const parsed = actionSchema.safeParse(raw)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Action invalide' }, { status: 400 })
+  }
+  const { action, nom_signataire } = parsed.data
+
+  if (action === 'accepte' && !nom_signataire) {
     return NextResponse.json({ error: 'Nom requis pour signer' }, { status: 400 })
   }
 

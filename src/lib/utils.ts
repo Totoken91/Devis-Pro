@@ -21,10 +21,10 @@ export function formatDate(date: string | Date): string {
 }
 
 export function generateToken(): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
-  return Array.from({ length: 12 }, () =>
-    chars[Math.floor(Math.random() * chars.length)]
-  ).join('')
+  // 8 bytes = 64 bits d'entropie cryptographique (Web Crypto API — dispo navigateur + Node 18+)
+  const bytes = new Uint8Array(8)
+  globalThis.crypto.getRandomValues(bytes)
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 export function generateNumeroDevis(count: number): string {

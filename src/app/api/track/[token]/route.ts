@@ -8,10 +8,18 @@ const TRANSPARENT_GIF = Buffer.from(
   'base64'
 )
 
+const TOKEN_RE = /^[a-f0-9]{12,32}$/
+
 export async function GET(
   _req: NextRequest,
   { params }: { params: { token: string } }
 ) {
+  if (!TOKEN_RE.test(params.token)) {
+    return new NextResponse(TRANSPARENT_GIF, {
+      headers: { 'Content-Type': 'image/gif', 'Cache-Control': 'no-store' },
+    })
+  }
+
   const admin = createAdminClient()
 
   const { data: devis } = await admin
