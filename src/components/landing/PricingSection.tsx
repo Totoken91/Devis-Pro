@@ -38,7 +38,7 @@ const PLANS = [
   },
   {
     name: 'Pro',
-    price: '15 €',
+    price: '14,99 €',
     sub: 'par mois, HT',
     badge: 'Le plus populaire',
     features: [

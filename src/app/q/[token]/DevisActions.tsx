@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { CheckCircle2, XCircle, PenLine, X } from 'lucide-react'
 
-export function DevisActions({ token, statut, signeL }: { token: string; statut: string; signeL: string | null }) {
+export function DevisActions({ token, statut, signeL, brandColor = '#6CC531' }: { token: string; statut: string; signeL: string | null; brandColor?: string }) {
   const [modal,         setModal]         = useState<'accepter' | 'refuser' | null>(null)
   const [nomSignataire, setNomSignataire] = useState('')
   const [consent,       setConsent]       = useState(false)
@@ -76,7 +76,8 @@ export function DevisActions({ token, statut, signeL }: { token: string; statut:
             </button>
             <button
               onClick={() => { setModal('accepter'); setError(null) }}
-              className="flex items-center gap-2 bg-[#6CC531] hover:bg-[#4FA31E] text-white font-semibold rounded-xl px-5 py-2.5 text-sm transition-all shadow-sm shadow-[#6CC531]/25 cursor-pointer"
+              className="flex items-center gap-2 text-white font-semibold rounded-xl px-5 py-2.5 text-sm transition-all shadow-sm cursor-pointer"
+              style={{ backgroundColor: brandColor }}
             >
               <PenLine size={14} />
               Accepter & signer
@@ -103,7 +104,8 @@ export function DevisActions({ token, statut, signeL }: { token: string; statut:
                 onChange={(e) => { setNomSignataire(e.target.value); setError(null) }}
                 placeholder="Jean Dupont"
                 autoFocus
-                className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6CC531]/20 focus:border-[#6CC531] transition-all mb-4"
+                className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all mb-4"
+                style={{ '--tw-ring-color': `${brandColor}33` } as React.CSSProperties}
               />
 
               {/* Aperçu signature */}
@@ -122,7 +124,8 @@ export function DevisActions({ token, statut, signeL }: { token: string; statut:
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => { setConsent(e.target.checked); setError(null) }}
-                  className="mt-0.5 rounded accent-[#6CC531]"
+                  className="mt-0.5 rounded"
+                  style={{ accentColor: brandColor }}
                 />
                 <span className="text-xs text-gray-500 leading-relaxed">
                   Je confirme avoir lu ce devis et j&apos;accepte sans réserve ses termes, conditions et montants.
@@ -142,7 +145,8 @@ export function DevisActions({ token, statut, signeL }: { token: string; statut:
                 <button
                   onClick={() => handleAction('accepte')}
                   disabled={loading}
-                  className="flex-1 bg-[#6CC531] hover:bg-[#4FA31E] text-white font-semibold rounded-xl py-2.5 text-sm transition-colors cursor-pointer disabled:opacity-50"
+                  className="flex-1 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors cursor-pointer disabled:opacity-50"
+                  style={{ backgroundColor: brandColor }}
                 >
                   {loading ? 'Envoi…' : 'Confirmer & signer'}
                 </button>

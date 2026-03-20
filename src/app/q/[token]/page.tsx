@@ -270,6 +270,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                 token={params.token}
                 statut={d.statut}
                 signeL={d.signe_le}
+                brandColor={accentColor}
               />
             )}
 
