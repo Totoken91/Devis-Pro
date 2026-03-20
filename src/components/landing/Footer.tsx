@@ -9,7 +9,7 @@ const LINKS = {
   Ressources: [
     { label: 'Documentation', href: '#' },
     { label: 'Blog', href: '#' },
-    { label: 'Support', href: 'mailto:hello@deviso.fr' },
+    { label: 'Support', href: 'mailto:kennydsf91@gmail.com' },
   ],
   Légal: [
     { label: 'Confidentialité', href: '/confidentialite' },

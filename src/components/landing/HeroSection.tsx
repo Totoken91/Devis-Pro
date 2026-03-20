@@ -90,7 +90,7 @@ export default function HeroSection() {
               <span className="w-3 h-3 rounded-full bg-red-500/60" />
               <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <span className="w-3 h-3 rounded-full bg-brand/60" />
-              <span className="ml-4 text-xs text-white/30 font-mono truncate">deviso.fr/q/devis-2024-047</span>
+              <span className="ml-4 text-xs text-white/30 font-mono truncate">deviso.app/q/devis-2024-047</span>
             </div>
 
             {/* Corps du mockup */}

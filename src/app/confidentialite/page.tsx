@@ -10,8 +10,8 @@ export default function ConfidentialitePage() {
     <LegalLayout title="Politique de confidentialité" lastUpdated="20 mars 2026">
       <h2>1. Responsable du traitement</h2>
       <p>
-        Le responsable du traitement des données personnelles collectées via <strong>deviso.fr</strong> est :<br />
-        <strong>totoken</strong>, entreprise individuelle — <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
+        Le responsable du traitement des données personnelles collectées via <strong>deviso.app</strong> est :<br />
+        <strong>totoken</strong>, entreprise individuelle — <a href="mailto:kennydsf91@gmail.com">kennydsf91@gmail.com</a>
       </p>
 
       <hr />
@@ -129,7 +129,7 @@ export default function ConfidentialitePage() {
       </ul>
       <p>
         Pour exercer ces droits, contactez-nous à{' '}
-        <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>. Nous répondrons dans un délai maximum de
+        <a href="mailto:kennydsf91@gmail.com">kennydsf91@gmail.com</a>. Nous répondrons dans un délai maximum de
         30 jours.
       </p>
       <p>

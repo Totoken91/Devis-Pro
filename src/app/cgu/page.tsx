@@ -11,7 +11,7 @@ export default function CguPage() {
       <h2>1. Objet</h2>
       <p>
         Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du
-        service <strong>Deviso</strong> accessible sur <a href="https://deviso.fr">deviso.fr</a>. Deviso
+        service <strong>Deviso</strong> accessible sur <a href="https://deviso.app">deviso.app</a>. Deviso
         est un logiciel SaaS permettant à des professionnels indépendants et PME de créer, envoyer et
         faire signer des devis en ligne.
       </p>
@@ -91,7 +91,7 @@ export default function CguPage() {
       <h2>7. Résiliation et suppression du compte</h2>
       <p>
         L'utilisateur peut supprimer son compte à tout moment depuis les paramètres de son profil ou en
-        contactant <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>. La suppression entraîne
+        contactant <a href="mailto:kennydsf91@gmail.com">kennydsf91@gmail.com</a>. La suppression entraîne
         l'effacement définitif de toutes les données associées dans un délai de 30 jours.
       </p>
       <p>
