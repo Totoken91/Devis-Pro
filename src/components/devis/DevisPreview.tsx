@@ -102,6 +102,7 @@ function ClassiquePreview(props: DevisPreviewProps) {
         <div className="grid grid-cols-2 gap-3 py-3 border-t border-b border-gray-100 mb-4">
           <div>
             <p className={labelCls}>De</p>
+            {profile.logo_url && <img src={profile.logo_url} alt="" className="h-6 w-auto object-contain mb-1" />}
             <p className="font-semibold text-gray-900">{emetteurName}</p>
             {profile.full_name && profile.company_name && <p className="text-gray-500">{profile.full_name}</p>}
             {profile.email && <p className="text-gray-400 flex items-center gap-0.5 mt-0.5"><Mail size={7} className="shrink-0" />{profile.email}</p>}
@@ -195,6 +196,7 @@ function ModernePreview(props: DevisPreviewProps) {
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="bg-gray-50 rounded-lg p-2.5">
             <p className={labelCls}>Émetteur</p>
+            {profile.logo_url && <img src={profile.logo_url} alt="" className="h-6 w-auto object-contain mb-1" />}
             <p className="font-semibold text-gray-900">{emetteurName}</p>
             {profile.full_name && profile.company_name && <p className="text-gray-500">{profile.full_name}</p>}
             {profile.email && <p className="text-gray-400 flex items-center gap-0.5 mt-0.5"><Mail size={7} className="shrink-0" />{profile.email}</p>}
@@ -279,6 +281,7 @@ function MinimalistePreview(props: DevisPreviewProps) {
         <div className="flex gap-6 mb-5 pb-4 border-b border-gray-100">
           <div className="flex-1">
             <p className={labelCls}>De</p>
+            {profile.logo_url && <img src={profile.logo_url} alt="" className="h-6 w-auto object-contain mb-1" />}
             <p className="font-medium text-gray-900">{emetteurName}</p>
             {profile.email && <p className="text-gray-400 mt-0.5">{profile.email}</p>}
           </div>

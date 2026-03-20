@@ -13,6 +13,8 @@ const sendDevisSchema = z.object({
   titre:         z.string().min(1).max(300).trim(),
   montantTTC:    z.number().min(0).max(10_000_000),
   token:         z.string().regex(/^[a-z0-9]{12,32}$/),
+  logoUrl:       z.string().url().max(500).optional(),
+  brandColor:    z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -29,6 +31,7 @@ export async function POST(req: NextRequest) {
   }
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const lienDevis = `${appUrl}/q/${body.token}`
+  const accentColor = body.brandColor ?? '#6CC531'
 
   const montantFormate = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -48,8 +51,8 @@ export async function POST(req: NextRequest) {
       <td align="center">
         <table width="580" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e8ece7;">
 
-          <!-- Green accent strip -->
-          <tr><td style="background:#6CC531;height:4px;font-size:0;">&nbsp;</td></tr>
+          <!-- Accent strip -->
+          <tr><td style="background:${accentColor};height:4px;font-size:0;">&nbsp;</td></tr>
 
           <!-- Header -->
           <tr>
@@ -57,10 +60,13 @@ export async function POST(req: NextRequest) {
               <!-- Logo -->
               <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
-                  <td style="background:#6CC531;border-radius:8px;width:28px;height:28px;text-align:center;vertical-align:middle;">
+                  ${body.logoUrl
+                    ? `<td><img src="${body.logoUrl}" alt="${body.emetteurName}" height="32" style="display:block;height:32px;width:auto;object-fit:contain;" /></td>`
+                    : `<td style="background:${accentColor};border-radius:8px;width:28px;height:28px;text-align:center;vertical-align:middle;">
                     <span style="color:#ffffff;font-weight:700;font-size:14px;line-height:28px;">D</span>
                   </td>
-                  <td style="padding-left:8px;font-weight:700;font-size:16px;color:#1a1e17;vertical-align:middle;">Deviso</td>
+                  <td style="padding-left:8px;font-weight:700;font-size:16px;color:#1a1e17;vertical-align:middle;">Deviso</td>`
+                  }
                 </tr>
               </table>
 
@@ -97,7 +103,7 @@ export async function POST(req: NextRequest) {
               <!-- CTA -->
               <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
-                  <td style="background:#6CC531;border-radius:12px;box-shadow:0 2px 8px rgba(108,197,49,0.3);">
+                  <td style="background:${accentColor};border-radius:12px;">
                     <a href="${lienDevis}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;">
                       Voir & signer le devis →
                     </a>
@@ -107,7 +113,7 @@ export async function POST(req: NextRequest) {
 
               <p style="margin:0;color:#d1d5db;font-size:12px;line-height:1.7;">
                 Ou copiez ce lien dans votre navigateur :<br/>
-                <a href="${lienDevis}" style="color:#6CC531;word-break:break-all;">${lienDevis}</a>
+                <a href="${lienDevis}" style="color:${accentColor};word-break:break-all;">${lienDevis}</a>
               </p>
             </td>
           </tr>

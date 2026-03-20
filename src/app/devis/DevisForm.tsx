@@ -112,6 +112,8 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             emetteurName, emetteurEmail: profile.email,
             numero: mode === 'create' ? nextNumero! : initialData!.numero,
             titre, montantTTC, token,
+            logoUrl: profile.logo_url ?? undefined,
+            brandColor: profile.brand_color ?? undefined,
           }),
         }).catch(() => {})
       }
