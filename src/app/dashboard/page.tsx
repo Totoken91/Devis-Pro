@@ -6,11 +6,21 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import type { Devis } from '@/types/supabase'
+import type { Devis, DevisStatut } from '@/types/supabase'
+
+type RecentDevis = {
+  id: string
+  numero: string
+  titre: string
+  statut: DevisStatut
+  montant_ttc: number | null
+  created_at: string
+  clients: { name: string } | null
+}
 
 /* ─── Status config ──────────────────────────────────────────── */
 
-const STATUT_CONFIG: Record<Devis['statut'], { label: string; color: string; dot: string }> = {
+const STATUT_CONFIG: Record<DevisStatut, { label: string; color: string; dot: string }> = {
   brouillon: { label: 'Brouillon',  color: 'bg-gray-100 text-gray-500',   dot: 'bg-gray-400'   },
   envoye:    { label: 'Envoyé',     color: 'bg-blue-50 text-blue-600',    dot: 'bg-blue-500'   },
   ouvert:    { label: 'Ouvert',     color: 'bg-amber-50 text-amber-600',  dot: 'bg-amber-400'  },
@@ -38,7 +48,7 @@ export default async function DashboardPage() {
     { count: clientsCount },
     { count: devisMoisCount },
     { data: devisCA },
-    { data: recentDevis },
+    { data: recentRaw },
   ] = await Promise.all([
     supabase
       .from('clients')
@@ -62,6 +72,7 @@ export default async function DashboardPage() {
       .limit(6),
   ])
 
+  const recentDevis = recentRaw as RecentDevis[] | null
   const chiffreAffaires = devisCA?.reduce((sum, d) => sum + (d.montant_ttc ?? 0), 0) ?? 0
   const prenom = profile?.full_name?.split(' ')[0] ?? 'toi'
 
@@ -138,8 +149,8 @@ export default async function DashboardPage() {
           {recentDevis && recentDevis.length > 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 overflow-hidden">
               {recentDevis.map((d) => {
-                const cfg = STATUT_CONFIG[d.statut as Devis['statut']]
-                const clientName = (d.clients as { name: string } | null)?.name
+                const cfg = STATUT_CONFIG[d.statut]
+                const clientName = d.clients?.name
                 return (
                   <Link
                     key={d.id}
@@ -161,7 +172,7 @@ export default async function DashboardPage() {
                       {cfg.label}
                     </span>
                     <span className="text-sm font-semibold text-gray-900 shrink-0 hidden sm:block tabular-nums">
-                      {formatCurrency(d.montant_ttc)}
+                      {formatCurrency(d.montant_ttc ?? 0)}
                     </span>
                     <ArrowRight size={13} className="text-gray-200 group-hover:text-brand shrink-0 transition-colors" />
                   </Link>
