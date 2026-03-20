@@ -130,7 +130,7 @@ export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?
   return (
     <>
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-[#0D1320] border-b border-white/6 px-4 h-14 flex items-center gap-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-[#1A2438] border-b border-white/6 px-4 h-14 flex items-center gap-3">
         <button
           onClick={() => setMobileOpen(true)}
           className="text-white/50 hover:text-white transition-colors"
@@ -158,7 +158,7 @@ export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?
       {/* Sidebar */}
       <aside
         className={`
-          bg-[#0D1320] border-r border-white/6 flex flex-col shrink-0
+          bg-[#1A2438] border-r border-white/6 flex flex-col shrink-0
           fixed inset-y-0 left-0 w-56 z-50 transition-transform duration-200
           md:static md:w-52 md:min-h-screen md:translate-x-0
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

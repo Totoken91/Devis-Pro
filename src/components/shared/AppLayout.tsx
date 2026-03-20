@@ -18,7 +18,7 @@ export async function AppLayout({ children }: { children: React.ReactNode }) {
   const plan = (profile as Pick<Profile, 'plan'> | null)?.plan ?? 'free'
 
   return (
-    <div className="flex min-h-screen bg-[#0A0F1E]">
+    <div className="flex min-h-screen bg-[#141C2E]">
       <Sidebar userEmail={user.email ?? ''} plan={plan} />
       <main className="flex-1 overflow-auto pt-14 md:pt-0">
         {children}
