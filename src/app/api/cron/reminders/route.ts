@@ -18,9 +18,7 @@ export async function GET(req: NextRequest) {
   }
 
   const admin = createAdminClient()
-  const now   = new Date()
-  const RELANCE_DELAI_MS = 7 * 24 * 60 * 60 * 1000 // 7 jours
-  const sevenDaysAgo = new Date(now.getTime() - RELANCE_DELAI_MS).toISOString()
+  const now = new Date()
 
   let expired  = 0
   let relanced = 0
@@ -57,10 +55,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, expired, relanced, errors })
   }
 
-  // Filtrage temporel en JS (plus simple que le OR Supabase)
+  // Filtrage temporel en JS
+  // - Première relance : pas encore relancé ET créé il y a 3+ jours (J+3)
+  // - Deuxième relance : déjà relancé une fois ET dernière relance il y a 4+ jours (= J+7 au total)
+  const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString()
+  const fourDaysAgo  = new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000).toISOString()
+
   const aRelancer = (allDevis ?? []).filter((d) => {
-    const ref = d.derniere_relance ?? d.created_at
-    return new Date(ref) < new Date(sevenDaysAgo)
+    if (!d.derniere_relance) {
+      return new Date(d.created_at) < new Date(threeDaysAgo)
+    } else {
+      return new Date(d.derniere_relance) < new Date(fourDaysAgo)
+    }
   })
 
   if (aRelancer.length === 0) {
@@ -89,6 +95,8 @@ export async function GET(req: NextRequest) {
       continue
     }
 
+    const isSecondRelance = !!devis.derniere_relance
+
     try {
       await sendRelanceEmail({
         devis:   { token_public: devis.token_public, numero: devis.numero, titre: devis.titre, montant_ttc: devis.montant_ttc },
@@ -98,7 +106,11 @@ export async function GET(req: NextRequest) {
 
       await admin
         .from('devis')
-        .update({ derniere_relance: now.toISOString() })
+        .update({
+          derniere_relance: now.toISOString(),
+          // Après la 2e relance (J+7), on stoppe les relances automatiquement
+          ...(isSecondRelance ? { relance_active: false } : {}),
+        })
         .eq('id', devis.id)
 
       relanced++
