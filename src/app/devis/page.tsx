@@ -11,15 +11,24 @@ export default async function DevisPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: devis } = await supabase
-    .from('devis')
-    .select('*, clients(name, company)')
-    .eq('user_id', user!.id)
-    .order('created_at', { ascending: false })
+  const [{ data: devis }, { count: clientCount }] = await Promise.all([
+    supabase
+      .from('devis')
+      .select('*, clients(name, company)')
+      .eq('user_id', user!.id)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('clients')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user!.id),
+  ])
 
   return (
     <AppLayout>
-      <DevisList initialDevis={(devis ?? []) as unknown as DevisWithClient[]} />
+      <DevisList
+        initialDevis={(devis ?? []) as unknown as DevisWithClient[]}
+        hasClients={(clientCount ?? 0) > 0}
+      />
     </AppLayout>
   )
 }

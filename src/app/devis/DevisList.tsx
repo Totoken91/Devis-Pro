@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Devis, DevisStatut } from '@/types/supabase'
-import { Plus, FileText, Pencil, Trash2, Copy, Eye } from 'lucide-react'
+import { Plus, FileText, Pencil, Trash2, Copy, Eye, Users } from 'lucide-react'
 import Link from 'next/link'
 
 type DevisWithClient = Devis & {
@@ -20,7 +20,7 @@ const STATUT_CONFIG: Record<DevisStatut, { label: string; color: string; dot: st
   expire:    { label: 'Expiré',   color: 'bg-orange-500/15 text-orange-400 border border-orange-500/20',   dot: 'bg-orange-400' },
 }
 
-export function DevisList({ initialDevis }: { initialDevis: DevisWithClient[] }) {
+export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWithClient[]; hasClients: boolean }) {
   const [devisList, setDevisList] = useState<DevisWithClient[]>(initialDevis)
   const [deleteId,  setDeleteId]  = useState<string | null>(null)
   const supabase = createClient()
@@ -48,6 +48,25 @@ export function DevisList({ initialDevis }: { initialDevis: DevisWithClient[] })
           Nouveau devis
         </Link>
       </div>
+
+      {/* Bannière : aucun client enregistré */}
+      {!hasClients && (
+        <Link
+          href="/clients"
+          className="flex items-center gap-3 bg-brand/8 border border-brand/20 rounded-xl px-4 py-3 mb-5 hover:bg-brand/12 transition-colors group"
+        >
+          <div className="w-8 h-8 bg-brand/15 border border-brand/25 rounded-lg flex items-center justify-center shrink-0">
+            <Users size={15} className="text-brand" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white/80">Commence par ajouter tes clients</p>
+            <p className="text-xs text-white/35">Ils seront disponibles lors de la création d&apos;un devis.</p>
+          </div>
+          <span className="text-xs font-semibold text-brand opacity-70 group-hover:opacity-100 transition-opacity shrink-0">
+            Ajouter →
+          </span>
+        </Link>
+      )}
 
       {devisList.length === 0 ? (
         /* ── Empty state ── */
