@@ -17,9 +17,9 @@ const fadeUp = {
 
 const PLANS = [
   {
-    name: 'Starter',
+    name: 'Gratuit',
     price: 'Gratuit',
-    sub: 'Pour découvrir',
+    sub: 'Pour commencer',
     features: [
       '3 devis par mois',
       'Lien de partage unique',
@@ -27,9 +27,10 @@ const PLANS = [
       'Signature en ligne',
     ],
     missing: [
-      'Tracking d\u2019ouverture',
+      "Tracking d'ouverture",
       'Relances automatiques',
-      'Branding personnalis\u00e9',
+      'Branding personnalisé',
+      '"Créé avec Deviso" retiré',
     ],
     cta: 'Commencer gratuitement',
     href: '/inscription',
@@ -37,38 +38,23 @@ const PLANS = [
   },
   {
     name: 'Pro',
-    price: '29\u00a0\u20ac',
+    price: '15 €',
     sub: 'par mois, HT',
     badge: 'Le plus populaire',
     features: [
-      'Devis illimit\u00e9s',
+      'Devis illimités',
       'Lien de partage unique',
       'PDF professionnel',
       'Signature en ligne',
-      'Tracking d\u2019ouverture en temps r\u00e9el',
-      'Relances automatiques',
-      'Branding personnalis\u00e9',
+      "Tracking d'ouverture en temps réel",
+      'Relances automatiques J+3 / J+7',
+      'Branding personnalisé',
+      '"Créé avec Deviso" retiré',
     ],
     missing: [],
     cta: 'Essayer 14 jours gratuit',
     href: '/inscription',
     highlighted: true,
-  },
-  {
-    name: 'Agence',
-    price: '79\u00a0\u20ac',
-    sub: 'par mois, HT',
-    features: [
-      'Tout le plan Pro',
-      'Jusqu\u2019\u00e0 5 utilisateurs',
-      'Espace client d\u00e9di\u00e9',
-      'Statistiques avanc\u00e9es',
-      'Priorit\u00e9 support',
-    ],
-    missing: [],
-    cta: 'Contacter l\u2019\u00e9quipe',
-    href: 'mailto:hello@deviso.fr',
-    highlighted: false,
   },
 ]
 
@@ -92,7 +78,7 @@ export default function PricingSection() {
   const gridInView   = useInView(gridRef,   { once: true, margin: '-80px' })
 
   return (
-    <section className="relative bg-[#0A0F1E] py-32 px-4 overflow-hidden">
+    <section id="pricing" className="relative bg-[#0A0F1E] py-32 px-4 overflow-hidden">
 
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
 
@@ -100,7 +86,7 @@ export default function PricingSection() {
       <div className="absolute top-1/3 -right-32 w-96 h-96 bg-brand/8 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-80 h-64 bg-brand/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
 
         {/* Label */}
         <motion.div
@@ -123,7 +109,7 @@ export default function PricingSection() {
           transition={{ duration: 0.6, delay: 0.1, ease }}
           className="font-display text-4xl sm:text-5xl font-bold text-white leading-tight mb-4 max-w-2xl"
         >
-          Pas d&apos;abonnement pi\u00e8ge.{' '}
+          Pas d&apos;abonnement piège.{' '}
           <span className="text-white/35">Pas de surprise.</span>
         </motion.h2>
 
@@ -133,11 +119,11 @@ export default function PricingSection() {
           transition={{ duration: 0.5, delay: 0.18, ease }}
           className="text-white/45 text-lg mb-16 max-w-xl leading-relaxed"
         >
-          14 jours gratuits sur le plan Pro, sans carte bancaire. Tu vois si \u00e7a marche pour toi, et tu d\u00e9cides ensuite.
+          14 jours gratuits sur le plan Pro, sans carte bancaire. Tu vois si ça marche pour toi, et tu décides ensuite.
         </motion.p>
 
-        {/* Grille */}
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+        {/* Grille 2 colonnes centrée */}
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
           {PLANS.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -159,7 +145,7 @@ export default function PricingSection() {
                 </span>
               )}
 
-              {/* En-t\u00eate */}
+              {/* En-tête */}
               <div>
                 <p className="text-white/45 text-sm font-medium mb-3">{plan.name}</p>
                 <div className="flex items-end gap-1.5">
@@ -173,7 +159,7 @@ export default function PricingSection() {
                 )}
               </div>
 
-              {/* Features incluses */}
+              {/* Features */}
               <ul className="flex flex-col gap-3">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5">
@@ -210,10 +196,10 @@ export default function PricingSection() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={gridInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.5, ease }}
+          transition={{ duration: 0.5, delay: 0.4, ease }}
           className="text-center text-white/25 text-sm mt-10"
         >
-          Paiement s\u00e9curis\u00e9 par Stripe &middot; R\u00e9siliation \u00e0 tout moment &middot; Sans engagement
+          Paiement sécurisé par Stripe &middot; Résiliation à tout moment &middot; Sans engagement
         </motion.p>
 
       </div>

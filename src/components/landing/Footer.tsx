@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 const LINKS = {
   Produit: [
-    { label: 'Fonctionnalit\u00e9s', href: '#features' },
+    { label: 'Fonctionnalités', href: '#features' },
     { label: 'Tarifs', href: '#pricing' },
     { label: 'Changelog', href: '#' },
   ],
@@ -11,10 +11,10 @@ const LINKS = {
     { label: 'Blog', href: '#' },
     { label: 'Support', href: 'mailto:hello@deviso.fr' },
   ],
-  L\u00e9gal: [
-    { label: 'Confidentialit\u00e9', href: '#' },
+  Légal: [
+    { label: 'Confidentialité', href: '#' },
     { label: 'CGU', href: '#' },
-    { label: 'Mentions l\u00e9gales', href: '#' },
+    { label: 'Mentions légales', href: '#' },
   ],
 }
 
@@ -31,7 +31,7 @@ export default function Footer() {
               Devi<span className="text-brand">so</span>
             </span>
             <p className="text-white/30 text-sm mt-3 leading-relaxed max-w-xs">
-              Devis professionnels pour freelances et TPE. Sign\u00e9s plus vite, suivis en temps r\u00e9el.
+              Devis professionnels pour freelances et TPE. Signés plus vite, suivis en temps réel.
             </p>
           </div>
 
