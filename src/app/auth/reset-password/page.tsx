@@ -48,11 +48,10 @@ export default function ResetPasswordPage() {
       <div className="relative w-full max-w-sm">
 
         {/* Logo */}
-        <div className="flex items-center gap-2.5 justify-center mb-10">
-          <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center shadow-sm shadow-brand/40">
-            <span className="text-white font-display font-bold text-sm">D</span>
-          </div>
-          <span className="font-display font-bold text-white text-lg tracking-tight">Deviso</span>
+        <div className="flex justify-center mb-10">
+          <span className="font-display font-bold text-white text-xl tracking-tight">
+            Devi<span className="text-brand">so</span>
+          </span>
         </div>
 
         <div className="bg-white/[0.04] border border-white/8 rounded-2xl p-8">

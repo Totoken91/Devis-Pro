@@ -42,11 +42,10 @@ function ConnexionForm() {
         {/* Glow */}
         <div className="absolute top-1/3 left-0 w-64 h-64 bg-brand/8 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex items-center gap-2.5 relative">
-          <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center shadow-sm shadow-brand/40">
-            <span className="text-white font-display font-bold text-sm">D</span>
-          </div>
-          <span className="font-display font-bold text-white text-lg tracking-tight">Deviso</span>
+        <div className="flex items-center relative">
+          <span className="font-display font-bold text-white text-xl tracking-tight">
+            Devi<span className="text-brand">so</span>
+          </span>
         </div>
 
         <div className="relative">
@@ -80,11 +79,10 @@ function ConnexionForm() {
         <div className="w-full max-w-sm">
 
           {/* Mobile logo */}
-          <div className="md:hidden flex items-center gap-2 mb-8">
-            <div className="w-7 h-7 bg-brand rounded-lg flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xs">D</span>
-            </div>
-            <span className="font-display font-bold text-white">Deviso</span>
+          <div className="md:hidden mb-8">
+            <span className="font-display font-bold text-white text-xl tracking-tight">
+              Devi<span className="text-brand">so</span>
+            </span>
           </div>
 
           <h1 className="font-display text-2xl font-bold text-white tracking-tight mb-1">Connexion</h1>

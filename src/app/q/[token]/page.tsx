@@ -93,13 +93,9 @@ export default async function DevisPublicPage({ params }: { params: { token: str
         <div className="flex items-center gap-2">
           {emetteur?.logo_url ? (
             <img src={emetteur.logo_url} alt="" className="h-7 w-auto object-contain" />
-          ) : (
-            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-              <span className="text-white font-bold text-[10px] font-sans">D</span>
-            </div>
-          )}
-          <span className="font-bold text-gray-900 text-sm tracking-tight">
-            {emetteur?.company_name || 'Deviso'}
+          ) : null}
+          <span className="font-display font-bold text-gray-900 text-sm tracking-tight">
+            {emetteur?.company_name || (<>Devi<span style={{ color: accentColor }}>so</span></>)}
           </span>
         </div>
         <div className="flex items-center gap-3">

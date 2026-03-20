@@ -57,11 +57,10 @@ export default function InscriptionPage() {
       <div className="hidden md:flex w-[420px] shrink-0 bg-[#0D1320] border-r border-white/6 flex-col justify-between p-10 relative">
         <div className="absolute top-1/3 left-0 w-64 h-64 bg-brand/8 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex items-center gap-2.5 relative">
-          <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center shadow-sm shadow-brand/40">
-            <span className="text-white font-display font-bold text-sm">D</span>
-          </div>
-          <span className="font-display font-bold text-white text-lg tracking-tight">Deviso</span>
+        <div className="flex items-center relative">
+          <span className="font-display font-bold text-white text-xl tracking-tight">
+            Devi<span className="text-brand">so</span>
+          </span>
         </div>
 
         <div className="relative">
@@ -91,11 +90,10 @@ export default function InscriptionPage() {
         <div className="w-full max-w-sm">
 
           {/* Mobile logo */}
-          <div className="md:hidden flex items-center gap-2 mb-8">
-            <div className="w-7 h-7 bg-brand rounded-lg flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xs">D</span>
-            </div>
-            <span className="font-display font-bold text-white">Deviso</span>
+          <div className="md:hidden mb-8">
+            <span className="font-display font-bold text-white text-xl tracking-tight">
+              Devi<span className="text-brand">so</span>
+            </span>
           </div>
 
           {success ? (

@@ -38,11 +38,8 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
           onClick={() => setMobileOpen(false)}
           className="flex items-center gap-2.5 group"
         >
-          <div className="w-7 h-7 bg-brand rounded-lg flex items-center justify-center shadow-sm shadow-brand/40 group-hover:shadow-brand/60 transition-shadow">
-            <span className="text-white font-display font-bold text-xs leading-none">D</span>
-          </div>
           <span className="font-display font-bold text-white text-[17px] tracking-tight">
-            Deviso
+            Devi<span className="text-brand">so</span>
           </span>
         </Link>
         <button
@@ -115,10 +112,9 @@ export function Sidebar({ userEmail }: { userEmail: string }) {
           <Menu size={20} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-brand rounded-md flex items-center justify-center shadow-sm shadow-brand/30">
-            <span className="text-white font-bold text-[10px]">D</span>
-          </div>
-          <span className="font-display font-bold text-white">Deviso</span>
+          <span className="font-display font-bold text-white text-[17px] tracking-tight">
+            Devi<span className="text-brand">so</span>
+          </span>
         </Link>
         <div className="ml-auto">
           <NotificationBell />
