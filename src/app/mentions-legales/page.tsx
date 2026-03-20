@@ -14,7 +14,7 @@ export default function MentionsLegalesPage() {
         <strong>totoken</strong><br />
         Entreprise individuelle<br />
         Adresse : 21 Domaine de Montvoisin, 91400 Gometz-la-Ville<br />
-        SIRET : <strong>[VOTRE NUMÉRO SIRET]</strong><br />
+        SIRET : 93792854700010<br />
         Email : <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
       </p>
       <p>
