@@ -2,10 +2,9 @@ import { AppLayout } from '@/components/shared/AppLayout'
 import { createClient } from '@/lib/supabase/server'
 import {
   FileText, Users, TrendingUp, Plus, ArrowRight,
-  Clock, CheckCircle2, Send, Eye, XCircle, AlertCircle,
 } from 'lucide-react'
 import Link from 'next/link'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
 import type { Devis, DevisStatut } from '@/types/supabase'
 
 type RecentDevis = {
@@ -21,12 +20,12 @@ type RecentDevis = {
 /* ─── Status config ──────────────────────────────────────────── */
 
 const STATUT_CONFIG: Record<DevisStatut, { label: string; color: string; dot: string }> = {
-  brouillon: { label: 'Brouillon',  color: 'bg-gray-100 text-gray-500',   dot: 'bg-gray-400'   },
-  envoye:    { label: 'Envoyé',     color: 'bg-blue-50 text-blue-600',    dot: 'bg-blue-500'   },
-  ouvert:    { label: 'Ouvert',     color: 'bg-amber-50 text-amber-600',  dot: 'bg-amber-400'  },
-  accepte:   { label: 'Accepté',    color: 'bg-brand-light text-brand-dark', dot: 'bg-brand'  },
-  refuse:    { label: 'Refusé',     color: 'bg-red-50 text-red-600',      dot: 'bg-red-500'    },
-  expire:    { label: 'Expiré',     color: 'bg-orange-50 text-orange-600', dot: 'bg-orange-400' },
+  brouillon: { label: 'Brouillon',  color: 'bg-white/8 text-white/40 border border-white/10',                  dot: 'bg-white/30'   },
+  envoye:    { label: 'Envoyé',     color: 'bg-blue-500/15 text-blue-400 border border-blue-500/20',           dot: 'bg-blue-400'   },
+  ouvert:    { label: 'Ouvert',     color: 'bg-amber-500/15 text-amber-400 border border-amber-500/20',        dot: 'bg-amber-400'  },
+  accepte:   { label: 'Accepté',    color: 'bg-brand/15 text-brand border border-brand/20',                    dot: 'bg-brand'      },
+  refuse:    { label: 'Refusé',     color: 'bg-red-500/15 text-red-400 border border-red-500/20',              dot: 'bg-red-400'    },
+  expire:    { label: 'Expiré',     color: 'bg-orange-500/15 text-orange-400 border border-orange-500/20',     dot: 'bg-orange-400' },
 }
 
 /* ─── Page ───────────────────────────────────────────────────── */
@@ -84,15 +83,19 @@ export default async function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="p-6 md:p-10 max-w-4xl mx-auto w-full">
+      <div className="relative p-6 md:p-10 max-w-4xl mx-auto w-full">
+
+        {/* Glow décoratif */}
+        <div className="absolute -top-16 right-0 w-80 h-80 bg-brand/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -right-20 w-48 h-48 bg-brand/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* ── Header ── */}
-        <div className="flex items-start justify-between mb-10 gap-4">
+        <div className="flex items-start justify-between mb-10 gap-4 relative">
           <div>
-            <h1 className="font-display text-3xl font-bold text-gray-900 tracking-tight leading-tight">
+            <h1 className="font-display text-3xl font-bold text-white tracking-tight leading-tight">
               Bonjour, {prenom}
             </h1>
-            <p className="text-gray-400 mt-1 text-sm capitalize">{dateLabel}</p>
+            <p className="text-white/35 mt-1 text-sm capitalize">{dateLabel}</p>
           </div>
           <Link
             href="/devis/nouveau"
@@ -101,7 +104,7 @@ export default async function DashboardPage() {
               bg-brand hover:bg-brand-dark
               text-white font-semibold rounded-xl px-4 py-2.5 text-sm
               transition-all duration-150
-              shadow-sm shadow-brand/30 hover:shadow-md hover:shadow-brand/25
+              shadow-sm shadow-brand/30 hover:shadow-md hover:shadow-brand/40
               hover:-translate-y-px
             "
           >
@@ -134,12 +137,12 @@ export default async function DashboardPage() {
         </div>
 
         {/* ── Devis récents ── */}
-        <section className="mb-8">
+        <section className="mb-8 relative">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-gray-900 tracking-tight">Devis récents</h2>
+            <h2 className="text-sm font-semibold text-white/70 tracking-tight">Devis récents</h2>
             <Link
               href="/devis"
-              className="text-xs text-gray-400 hover:text-brand transition-colors flex items-center gap-1 group"
+              className="text-xs text-white/30 hover:text-brand transition-colors flex items-center gap-1 group"
             >
               Voir tous
               <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
@@ -147,7 +150,7 @@ export default async function DashboardPage() {
           </div>
 
           {recentDevis && recentDevis.length > 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 overflow-hidden">
+            <div className="bg-white/[0.03] rounded-2xl border border-white/8 divide-y divide-white/5 overflow-hidden">
               {recentDevis.map((d) => {
                 const cfg = STATUT_CONFIG[d.statut]
                 const clientName = d.clients?.name
@@ -155,14 +158,14 @@ export default async function DashboardPage() {
                   <Link
                     key={d.id}
                     href={`/devis/${d.id}`}
-                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50/80 transition-colors group"
+                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.04] transition-colors group"
                   >
-                    <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-brand/8 transition-colors">
-                      <FileText size={13} className="text-gray-400 group-hover:text-brand transition-colors" />
+                    <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-brand/10 transition-colors">
+                      <FileText size={13} className="text-white/30 group-hover:text-brand transition-colors" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate leading-snug">{d.titre}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-sm font-medium text-white/85 truncate leading-snug">{d.titre}</p>
+                      <p className="text-xs text-white/35 mt-0.5">
                         {d.numero}
                         {clientName && <> · {clientName}</>}
                       </p>
@@ -171,10 +174,10 @@ export default async function DashboardPage() {
                       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
                       {cfg.label}
                     </span>
-                    <span className="text-sm font-semibold text-gray-900 shrink-0 hidden sm:block tabular-nums">
+                    <span className="text-sm font-semibold text-white/60 shrink-0 hidden sm:block tabular-nums">
                       {formatCurrency(d.montant_ttc ?? 0)}
                     </span>
-                    <ArrowRight size={13} className="text-gray-200 group-hover:text-brand shrink-0 transition-colors" />
+                    <ArrowRight size={13} className="text-white/15 group-hover:text-brand shrink-0 transition-colors" />
                   </Link>
                 )
               })}
@@ -186,20 +189,19 @@ export default async function DashboardPage() {
 
         {/* ── Plan banner ── */}
         {profile?.plan === 'free' && (
-          <div className="relative overflow-hidden bg-gray-950 rounded-2xl p-6 text-white">
-            {/* Glow */}
-            <div className="absolute -top-8 -right-8 w-40 h-40 bg-brand/25 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="relative overflow-hidden bg-white/[0.03] border border-brand/15 rounded-2xl p-6 text-white">
+            <div className="absolute -top-8 -right-8 w-40 h-40 bg-brand/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand/8 rounded-full blur-2xl pointer-events-none" />
             <div className="relative flex items-center justify-between gap-4">
               <div>
                 <p className="font-display font-semibold text-base leading-snug mb-1">
                   Tu es sur le plan gratuit
                 </p>
-                <p className="text-sm text-white/50">
-                  Devis illimités, signature électronique et relances automatiques en Pro.
+                <p className="text-sm text-white/45">
+                  Devis illimités, tracking d&apos;ouverture et relances automatiques en Pro.
                 </p>
               </div>
-              <button className="shrink-0 bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-4 py-2 rounded-xl transition-colors shadow-sm shadow-brand/30 cursor-pointer">
+              <button className="shrink-0 bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-4 py-2 rounded-xl transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px cursor-pointer">
                 Passer Pro
               </button>
             </div>
@@ -228,28 +230,31 @@ function StatCard({
 }) {
   return (
     <div className={`
-      rounded-2xl border p-5 flex flex-col gap-3 transition-all
+      relative overflow-hidden rounded-2xl border p-5 flex flex-col gap-3 transition-all duration-200
       ${highlight
-        ? 'bg-brand border-brand/20 shadow-sm shadow-brand/15'
-        : 'bg-white border-gray-100'
-      }
+        ? 'bg-brand/10 border-brand/25 hover:border-brand/40'
+        : 'bg-white/[0.04] border-white/8 hover:border-white/15'}
     `}>
-      <div className="flex items-center justify-between">
-        <span className={`text-xs font-medium ${highlight ? 'text-white/70' : 'text-gray-400'}`}>
+      {/* Glow interne sur la carte highlight */}
+      {highlight && (
+        <div className="absolute -top-6 -right-6 w-24 h-24 bg-brand/25 rounded-full blur-2xl pointer-events-none" />
+      )}
+      <div className="flex items-center justify-between relative">
+        <span className={`text-xs font-medium ${highlight ? 'text-brand/70' : 'text-white/40'}`}>
           {label}
         </span>
         <div className={`
           w-7 h-7 rounded-lg flex items-center justify-center
-          ${highlight ? 'bg-white/15 text-white' : 'bg-gray-100 text-gray-500'}
+          ${highlight ? 'bg-brand/20 text-brand' : 'bg-white/8 text-white/40'}
         `}>
           {icon}
         </div>
       </div>
-      <div>
-        <p className={`font-display text-2xl font-bold tracking-tight leading-none ${highlight ? 'text-white' : 'text-gray-900'}`}>
+      <div className="relative">
+        <p className={`font-display text-2xl font-bold tracking-tight leading-none ${highlight ? 'text-brand' : 'text-white'}`}>
           {value}
         </p>
-        <p className={`text-xs mt-1 ${highlight ? 'text-white/50' : 'text-gray-400'}`}>{sub}</p>
+        <p className={`text-xs mt-1 ${highlight ? 'text-brand/50' : 'text-white/35'}`}>{sub}</p>
       </div>
     </div>
   )
@@ -259,12 +264,12 @@ function StatCard({
 
 function EmptyDevis() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 py-14 flex flex-col items-center text-center px-6">
-      <div className="w-12 h-12 bg-brand/8 rounded-2xl flex items-center justify-center mb-4">
+    <div className="bg-white/[0.03] rounded-2xl border border-white/8 py-14 flex flex-col items-center text-center px-6">
+      <div className="w-12 h-12 bg-brand/10 border border-brand/15 rounded-2xl flex items-center justify-center mb-4">
         <FileText size={20} className="text-brand/60" />
       </div>
-      <p className="text-sm font-medium text-gray-900 mb-1">Aucun devis pour l&apos;instant</p>
-      <p className="text-xs text-gray-400 mb-6 max-w-xs">
+      <p className="text-sm font-medium text-white/70 mb-1">Aucun devis pour l&apos;instant</p>
+      <p className="text-xs text-white/30 mb-6 max-w-xs">
         Crée ton premier devis en quelques clics et envoie-le directement à ton client.
       </p>
       <Link
