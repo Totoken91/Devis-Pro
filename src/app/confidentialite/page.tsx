@@ -11,7 +11,7 @@ export default function ConfidentialitePage() {
       <h2>1. Responsable du traitement</h2>
       <p>
         Le responsable du traitement des données personnelles collectées via <strong>deviso.fr</strong> est :<br />
-        <strong>[NOM / RAISON SOCIALE]</strong> — <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
+        <strong>totoken</strong>, entreprise individuelle — <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
       </p>
 
       <hr />

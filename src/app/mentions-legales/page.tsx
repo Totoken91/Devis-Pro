@@ -11,14 +11,14 @@ export default function MentionsLegalesPage() {
       <h2>1. Éditeur du site</h2>
       <p>
         Le site <strong>deviso.fr</strong> est édité par :<br />
-        <strong>[NOM / RAISON SOCIALE]</strong><br />
-        [Forme juridique] au capital de [X] €<br />
-        Siège social : [ADRESSE COMPLÈTE]<br />
-        SIRET : [NUMÉRO SIRET]<br />
+        <strong>totoken</strong><br />
+        Entreprise individuelle<br />
+        Adresse : <strong>[VOTRE ADRESSE — obligatoire légalement]</strong><br />
+        SIRET : <strong>[VOTRE NUMÉRO SIRET]</strong><br />
         Email : <a href="mailto:hello@deviso.fr">hello@deviso.fr</a>
       </p>
       <p>
-        Directeur de la publication : <strong>[PRÉNOM NOM]</strong>
+        Directeur de la publication : <strong>[VOTRE PRÉNOM ET NOM]</strong>
       </p>
 
       <hr />
