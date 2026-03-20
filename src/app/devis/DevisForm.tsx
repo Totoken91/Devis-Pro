@@ -27,19 +27,19 @@ interface DevisFormProps {
 }
 
 const STATUT_BADGE: Record<DevisStatut, string> = {
-  brouillon: 'bg-gray-100 text-gray-500',
-  envoye:    'bg-blue-50 text-blue-600',
-  ouvert:    'bg-amber-50 text-amber-600',
-  accepte:   'bg-brand-light text-brand-dark',
-  refuse:    'bg-red-50 text-red-500',
-  expire:    'bg-orange-50 text-orange-500',
+  brouillon: 'bg-white/8 text-white/40',
+  envoye:    'bg-blue-500/15 text-blue-400',
+  ouvert:    'bg-amber-500/15 text-amber-400',
+  accepte:   'bg-brand/15 text-brand',
+  refuse:    'bg-red-500/15 text-red-400',
+  expire:    'bg-orange-500/15 text-orange-400',
 }
 const STATUT_LABEL: Record<DevisStatut, string> = {
   brouillon: 'Brouillon', envoye: 'Envoyé', ouvert: 'Ouvert',
   accepte: 'Accepté', refuse: 'Refusé', expire: 'Expiré',
 }
 
-const inputCls = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all'
+const inputCls = 'w-full border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 bg-white/5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand/50 transition-all'
 
 export function DevisForm({ mode, clients, profile, nextNumero, initialData }: DevisFormProps) {
   const router   = useRouter()
@@ -126,17 +126,17 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
         <div className="flex items-center gap-3">
           <Link
             href="/devis"
-            className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-white/40 hover:text-white hover:bg-white/8 rounded-lg transition-colors"
           >
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="font-display text-xl font-bold text-gray-900 tracking-tight">
+            <h1 className="font-display text-xl font-bold text-white tracking-tight">
               {mode === 'create' ? `Nouveau devis — ${nextNumero}` : `Modifier ${initialData?.numero}`}
             </h1>
             {mode === 'edit' && (
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-xs text-gray-400">Statut :</span>
+                <span className="text-xs text-white/35">Statut :</span>
                 <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${STATUT_BADGE[initialData!.statut]}`}>
                   {STATUT_LABEL[initialData!.statut]}
                 </span>
@@ -149,7 +149,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
           <button
             onClick={() => handleSave('brouillon')}
             disabled={!!loading}
-            className="flex items-center gap-2 border border-gray-200 text-gray-600 font-medium rounded-lg px-4 py-2 text-sm hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-4 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save size={14} />
             {loading === 'draft' ? 'Sauvegarde…' : 'Brouillon'}
@@ -171,7 +171,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
         <Section title="Informations">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Titre du devis</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Titre du devis</label>
               <input
                 type="text"
                 value={titre}
@@ -181,7 +181,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Client</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Client</label>
               <select
                 value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
@@ -196,7 +196,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Date de validité</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Date de validité</label>
               <input
                 type="date"
                 value={dateValidite}
@@ -205,7 +205,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Template</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Template</label>
               <select
                 value={template}
                 onChange={(e) => setTemplate(e.target.value as DevisTemplate)}
@@ -222,10 +222,10 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
         {/* ── Lignes ── */}
         <Section title="Lignes de devis">
           <div className="hidden md:grid grid-cols-[1fr_72px_116px_96px_32px] gap-3 mb-2 px-1">
-            <span className="text-xs font-medium text-gray-400">Description</span>
-            <span className="text-xs font-medium text-gray-400 text-center">Qté</span>
-            <span className="text-xs font-medium text-gray-400 text-right">Prix unitaire</span>
-            <span className="text-xs font-medium text-gray-400 text-right">Total HT</span>
+            <span className="text-xs font-medium text-white/30">Description</span>
+            <span className="text-xs font-medium text-white/30 text-center">Qté</span>
+            <span className="text-xs font-medium text-white/30 text-right">Prix unitaire</span>
+            <span className="text-xs font-medium text-white/30 text-right">Total HT</span>
             <span />
           </div>
 
@@ -233,7 +233,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             {lignes.map((ligne, i) => (
               <div
                 key={ligne.id}
-                className="flex flex-col gap-2 md:grid md:grid-cols-[1fr_72px_116px_96px_32px] md:items-center border border-gray-100 rounded-xl p-3 md:border-0 md:rounded-none md:p-0 md:gap-3"
+                className="flex flex-col gap-2 md:grid md:grid-cols-[1fr_72px_116px_96px_32px] md:items-center border border-white/8 rounded-xl p-3 md:border-0 md:rounded-none md:p-0 md:gap-3"
               >
                 <input
                   type="text"
@@ -244,7 +244,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                 />
                 <div className="grid grid-cols-3 gap-2 md:contents">
                   <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-gray-400 md:hidden">Qté</span>
+                    <span className="text-xs text-white/30 md:hidden">Qté</span>
                     <input
                       type="number" min="0" step="0.5"
                       value={ligne.quantite}
@@ -253,7 +253,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-gray-400 md:hidden">Prix unit.</span>
+                    <span className="text-xs text-white/30 md:hidden">Prix unit.</span>
                     <input
                       type="number" min="0" step="0.01"
                       value={ligne.prix_unitaire}
@@ -262,8 +262,8 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:contents">
-                    <span className="text-xs text-gray-400 md:hidden">Total HT</span>
-                    <p className="text-sm font-medium text-gray-700 text-right pr-1 py-2.5 tabular-nums">
+                    <span className="text-xs text-white/30 md:hidden">Total HT</span>
+                    <p className="text-sm font-medium text-white/60 text-right pr-1 py-2.5 tabular-nums">
                       {formatCurrency(ligne.total)}
                     </p>
                   </div>
@@ -271,7 +271,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                 <button
                   onClick={() => removeLigne(ligne.id)}
                   disabled={lignes.length === 1}
-                  className="self-end md:self-auto p-1.5 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-30 cursor-pointer"
+                  className="self-end md:self-auto p-1.5 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-30 cursor-pointer"
                 >
                   <Trash2 size={13} />
                 </button>
@@ -293,7 +293,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
           <Section title="Notes">
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1.5">Note client</label>
+                <label className="block text-xs font-medium text-white/30 mb-1.5">Note client</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -303,7 +303,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1.5">Conditions</label>
+                <label className="block text-xs font-medium text-white/30 mb-1.5">Conditions</label>
                 <textarea
                   value={conditions}
                   onChange={(e) => setConditions(e.target.value)}
@@ -317,7 +317,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
 
           <Section title="Récapitulatif">
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Taux de TVA</label>
+              <label className="block text-xs font-medium text-white/30 mb-1.5">Taux de TVA</label>
               <select
                 value={tvaT}
                 onChange={(e) => setTvaT(Number(e.target.value))}
@@ -329,14 +329,14 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
               </select>
             </div>
 
-            <div className="space-y-2.5 border-t border-gray-100 pt-4">
+            <div className="space-y-2.5 border-t border-white/8 pt-4">
               <TotalRow label="Montant HT"         value={formatCurrency(montantHT)} />
               <TotalRow label={`TVA (${tvaT}%)`}   value={formatCurrency(montantTVA)} />
             </div>
 
-            <div className="mt-4 bg-gray-950 rounded-xl px-5 py-4 flex items-center justify-between">
-              <span className="text-sm font-semibold text-white/70">Total TTC</span>
-              <span className="font-display text-xl font-bold text-white tabular-nums">
+            <div className="mt-4 bg-brand/10 border border-brand/20 rounded-xl px-5 py-4 flex items-center justify-between">
+              <span className="text-sm font-semibold text-brand/70">Total TTC</span>
+              <span className="font-display text-xl font-bold text-brand tabular-nums">
                 {formatCurrency(montantTTC)}
               </span>
             </div>
@@ -352,8 +352,8 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-5">{title}</h2>
+    <div className="bg-white/[0.04] rounded-2xl border border-white/8 p-6">
+      <h2 className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-5">{title}</h2>
       {children}
     </div>
   )
@@ -362,8 +362,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function TotalRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between text-sm">
-      <span className="text-gray-400">{label}</span>
-      <span className="font-medium text-gray-700 tabular-nums">{value}</span>
+      <span className="text-white/40">{label}</span>
+      <span className="font-medium text-white/65 tabular-nums">{value}</span>
     </div>
   )
 }

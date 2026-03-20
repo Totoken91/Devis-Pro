@@ -109,41 +109,41 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+        <div className="absolute left-0 top-full mt-2 w-80 bg-[#0D1320] rounded-2xl shadow-2xl shadow-black/60 border border-white/10 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
-              <span className="text-xs text-[#2E86C1] font-medium">
+              <span className="text-xs text-brand font-medium">
                 {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}
               </span>
             )}
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+          <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
             {notifs.length === 0 ? (
               <div className="px-4 py-8 text-center">
-                <Bell size={24} className="text-gray-200 mx-auto mb-2" />
-                <p className="text-sm text-gray-400">Aucune notification</p>
+                <Bell size={24} className="text-white/15 mx-auto mb-2" />
+                <p className="text-sm text-white/35">Aucune notification</p>
               </div>
             ) : (
               notifs.map((n) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 ${!n.is_read ? 'bg-blue-50/60' : ''}`}
+                  className={`px-4 py-3 ${!n.is_read ? 'bg-brand/5' : ''}`}
                 >
                   <div className="flex items-start gap-3">
                     <span className="text-base mt-0.5 shrink-0">{EVENT_ICON[n.event]}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-900 leading-snug">
+                      <p className="text-sm text-white/80 leading-snug">
                         <span className="font-medium">{n.client_name}</span>{' '}
-                        <span className="text-gray-600">{EVENT_LABEL[n.event]}</span>
+                        <span className="text-white/50">{EVENT_LABEL[n.event]}</span>
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-white/30 mt-0.5">
                         {n.devis_numero} · {timeAgo(n.created_at)}
                       </p>
                     </div>
                     {!n.is_read && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 shrink-0" />
+                      <div className="w-2 h-2 bg-brand rounded-full mt-1.5 shrink-0" />
                     )}
                   </div>
                 </div>

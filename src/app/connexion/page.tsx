@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowRight } from 'lucide-react'
 
-const inputCls = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all'
+const inputCls = 'w-full border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 bg-white/5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand/50 transition-all'
 
 function ConnexionForm() {
   const [email,    setEmail]    = useState('')
@@ -35,18 +35,21 @@ function ConnexionForm() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[#0A0F1E]">
 
       {/* ── Left panel ── */}
-      <div className="hidden md:flex w-[420px] shrink-0 bg-gray-950 flex-col justify-between p-10">
-        <div className="flex items-center gap-2.5">
+      <div className="hidden md:flex w-[420px] shrink-0 bg-[#0D1320] border-r border-white/6 flex-col justify-between p-10">
+        {/* Glow */}
+        <div className="absolute top-1/3 left-0 w-64 h-64 bg-brand/8 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex items-center gap-2.5 relative">
           <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center shadow-sm shadow-brand/40">
             <span className="text-white font-display font-bold text-sm">D</span>
           </div>
           <span className="font-display font-bold text-white text-lg tracking-tight">Deviso</span>
         </div>
 
-        <div>
+        <div className="relative">
           <p className="font-display text-3xl font-bold text-white leading-tight mb-4">
             Tes devis.<br />
             <span className="text-brand">Professionnels.</span><br />
@@ -57,11 +60,11 @@ function ConnexionForm() {
           </p>
           <ul className="space-y-3">
             {[
-              'Devis signés électroniquement',
-              'Suivi d\'ouverture en temps réel',
+              "Devis signés électroniquement",
+              "Suivi d'ouverture en temps réel",
               'Relances automatiques',
             ].map((f) => (
-              <li key={f} className="flex items-center gap-2.5 text-sm text-white/60">
+              <li key={f} className="flex items-center gap-2.5 text-sm text-white/55">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
                 {f}
               </li>
@@ -69,11 +72,11 @@ function ConnexionForm() {
           </ul>
         </div>
 
-        <p className="text-white/20 text-xs">© {new Date().getFullYear()} Deviso</p>
+        <p className="text-white/20 text-xs relative">© {new Date().getFullYear()} Deviso</p>
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12 bg-[#F7F8F5]">
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
 
           {/* Mobile logo */}
@@ -81,14 +84,14 @@ function ConnexionForm() {
             <div className="w-7 h-7 bg-brand rounded-lg flex items-center justify-center">
               <span className="text-white font-display font-bold text-xs">D</span>
             </div>
-            <span className="font-display font-bold text-gray-900">Deviso</span>
+            <span className="font-display font-bold text-white">Deviso</span>
           </div>
 
-          <h1 className="font-display text-2xl font-bold text-gray-900 tracking-tight mb-1">Connexion</h1>
-          <p className="text-gray-400 text-sm mb-7">Bon retour 👋</p>
+          <h1 className="font-display text-2xl font-bold text-white tracking-tight mb-1">Connexion</h1>
+          <p className="text-white/40 text-sm mb-7">Bon retour 👋</p>
 
           {urlError && (
-            <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm mb-5">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm mb-5">
               Une erreur est survenue. Réessaie.
             </div>
           )}
@@ -96,33 +99,33 @@ function ConnexionForm() {
           <button
             onClick={handleGoogleLogin}
             type="button"
-            className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white rounded-xl py-2.5 px-4 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors mb-5 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 border border-white/10 bg-white/5 rounded-xl py-2.5 px-4 text-white/70 text-sm font-medium hover:bg-white/8 hover:text-white transition-colors mb-5 cursor-pointer"
           >
             <GoogleIcon />
             Continuer avec Google
           </button>
 
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">ou</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-xs text-white/30">ou</span>
+            <div className="flex-1 h-px bg-white/10" />
           </div>
 
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Email</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Email</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputCls} />
             </div>
             <div>
               <div className="flex justify-between mb-1.5">
-                <label className="text-xs font-medium text-gray-500">Mot de passe</label>
+                <label className="text-xs font-medium text-white/40">Mot de passe</label>
                 <Link href="/mot-de-passe-oublie" className="text-xs text-brand hover:text-brand-dark transition-colors">Oublié ?</Link>
               </div>
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" className={inputCls} />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">{error}</div>
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm">{error}</div>
             )}
 
             <button
@@ -134,7 +137,7 @@ function ConnexionForm() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-white/35 mt-6">
             Pas encore de compte ?{' '}
             <Link href="/inscription" className="text-brand font-medium hover:text-brand-dark transition-colors">
               Créer un compte
