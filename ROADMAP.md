@@ -33,7 +33,7 @@
 ### Reste à faire avant lancement public
 - [ ] Limitation plan gratuit : max 3 devis/mois (sans Stripe, juste un compteur)
 - [ ] Export PDF réel (actuellement : impression navigateur uniquement)
-- [ ] Relances automatiques (champ `relance_active` en base, pas de cron job)
+- [x] Relances automatiques — toggle dans le formulaire, cron Vercel `/api/cron/reminders` (expire + relance email tous les 7 jours)
 - [ ] Logo upload (champ `logo_url` en base, pas d'UI d'upload)
 - [ ] Tests de bout en bout sur les flows auth + devis
 
@@ -78,7 +78,7 @@ Objectif : **30 abonnés payants** | Délai cible : 3 mois après lancement publ
 
 Objectif : **100–200 abonnés** | MRR cible : 1 500–3 000 €
 
-- [ ] Relances automatiques (Vercel Cron + `CRON_SECRET`)
+- [x] Relances automatiques (Vercel Cron + `CRON_SECRET`) ← fait en Phase 1
 - [ ] PDF serveur via `@react-pdf/renderer` ou Puppeteer
 - [ ] Templates visuels (classique / moderne / minimaliste — champ en base, rendu non différencié)
 - [ ] Programme de parrainage (Stripe coupons)
