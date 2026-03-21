@@ -20,6 +20,7 @@ export type Database = {
           plan: 'free' | 'pro'
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
+          is_admin: boolean
         }
         Insert: {
           id: string

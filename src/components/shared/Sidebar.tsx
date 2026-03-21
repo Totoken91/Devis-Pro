@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationBell } from './NotificationBell'
 import { Spinner } from '@/components/ui/Spinner'
@@ -16,7 +16,7 @@ const navItems = [
   { href: '/parametres/facturation', label: 'Facturation',  icon: CreditCard },
 ]
 
-export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?: 'free' | 'pro' }) {
+export function Sidebar({ userEmail, plan = 'free', isAdmin = false }: { userEmail: string; plan?: 'free' | 'pro'; isAdmin?: boolean }) {
   const pathname  = usePathname()
   const router    = useRouter()
   const supabase  = createClient()
@@ -89,6 +89,26 @@ export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?
             </Link>
           )
         })}
+        {isAdmin && (
+          <>
+            <div className="border-t border-white/6 my-2" />
+            <Link
+              href="/admin"
+              onClick={() => setMobileOpen(false)}
+              className={`
+                flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+                transition-all duration-150
+                ${pathname === '/admin'
+                  ? 'bg-brand/15 text-brand'
+                  : 'text-white/45 hover:text-white hover:bg-white/6'
+                }
+              `}
+            >
+              <Shield size={15} strokeWidth={pathname === '/admin' ? 2.5 : 2} className="shrink-0" />
+              Admin
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* Promo Pro (free users only) */}

@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   brand_color           TEXT        DEFAULT '#6CC531',
   plan                  TEXT        NOT NULL DEFAULT 'free' CHECK (plan IN ('free', 'pro')),
   stripe_customer_id    TEXT,
-  stripe_subscription_id TEXT
+  stripe_subscription_id TEXT,
+  is_admin              BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 -- ============================================================
@@ -54,7 +55,11 @@ CREATE POLICY "profiles_insert_own"
 CREATE POLICY "profiles_update_own"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id AND plan = (SELECT plan FROM public.profiles WHERE id = auth.uid()));
+  WITH CHECK (
+    auth.uid() = id
+    AND plan = (SELECT plan FROM public.profiles WHERE id = auth.uid())
+    AND is_admin = (SELECT is_admin FROM public.profiles WHERE id = auth.uid())
+  );
 
 -- ============================================================
 -- RLS: clients

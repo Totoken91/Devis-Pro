@@ -33,7 +33,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Protéger les routes du dashboard
-  const protectedRoutes = ['/dashboard', '/devis', '/clients', '/profil']
+  const protectedRoutes = ['/dashboard', '/devis', '/clients', '/profil', '/admin']
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   )

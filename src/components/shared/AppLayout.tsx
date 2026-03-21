@@ -11,15 +11,16 @@ export async function AppLayout({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('plan')
+    .select('plan, is_admin')
     .eq('id', user.id)
     .single()
 
   const plan = (profile as Pick<Profile, 'plan'> | null)?.plan ?? 'free'
+  const isAdmin = (profile as Pick<Profile, 'is_admin'> | null)?.is_admin ?? false
 
   return (
     <div className="flex min-h-screen bg-[#141C2E]">
-      <Sidebar userEmail={user.email ?? ''} plan={plan} />
+      <Sidebar userEmail={user.email ?? ''} plan={plan} isAdmin={isAdmin} />
       <main className="flex-1 overflow-auto pt-14 md:pt-0">
         {children}
       </main>
