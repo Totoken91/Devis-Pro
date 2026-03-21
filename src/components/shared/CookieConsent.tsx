@@ -3,10 +3,8 @@
 import Script from 'next/script'
 import { useEffect } from 'react'
 
-const PIXEL_ID          = process.env.NEXT_PUBLIC_META_PIXEL_ID    ?? '2574873622968634'
-const AXEPTIO_CLIENT_ID = process.env.NEXT_PUBLIC_AXEPTIO_CLIENT_ID ?? ''
-// Doit correspondre au nom de version configuré dans le dashboard Axeptio
-const AXEPTIO_COOKIES_VERSION = process.env.NEXT_PUBLIC_AXEPTIO_COOKIES_VERSION ?? 'deviso-fr'
+const PIXEL_ID        = process.env.NEXT_PUBLIC_META_PIXEL_ID    ?? '2574873622968634'
+const COOKIE_SCRIPT_ID = process.env.NEXT_PUBLIC_COOKIE_SCRIPT_ID ?? ''
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyWindow = Window & Record<string, any>
@@ -26,49 +24,66 @@ function loadMetaPixel() {
   win.fbq.version = '2.0'
   win.fbq.queue   = []
 
-  const script    = document.createElement('script')
-  script.async    = true
-  script.src      = 'https://connect.facebook.net/en_US/fbevents.js'
+  const script   = document.createElement('script')
+  script.async   = true
+  script.src     = 'https://connect.facebook.net/en_US/fbevents.js'
   document.head.appendChild(script)
 
   win.fbq('init', PIXEL_ID)
   win.fbq('track', 'PageView')
 }
 
+/** Vérifie si le consentement "targeting" a déjà été donné (visites suivantes) */
+function hasTargetingConsent(): boolean {
+  const win = window as AnyWindow
+  if (!win.CookieScript?.instance) return false
+  const state = win.CookieScript.instance.currentState()
+  return (
+    state.action === 'accept' &&
+    Array.isArray(state.categories) &&
+    (state.categories as string[]).includes('targeting')
+  )
+}
+
 /**
- * Charge Axeptio et n'initialise le Meta Pixel que si l'utilisateur
- * accepte le cookie "meta_pixel" (nom à configurer dans le dashboard Axeptio).
+ * Charge Cookie Script et n'initialise le Meta Pixel que si l'utilisateur
+ * accepte la catégorie "targeting" (publicité / analytics tiers).
  */
 export function CookieConsent() {
   useEffect(() => {
-    const win = window as AnyWindow
-    win._axcb = win._axcb || []
-    win._axcb.push((axeptio: { on: (event: string, cb: (choices: Record<string, boolean>) => void) => void }) => {
-      axeptio.on('cookies:complete', (choices) => {
-        // "meta_pixel" doit correspondre au nom du vendor dans Axeptio
-        if (choices.meta_pixel) {
-          loadMetaPixel()
-        }
-      })
-    })
+    // Consentement déjà donné lors d'une visite précédente
+    if (hasTargetingConsent()) {
+      loadMetaPixel()
+      return
+    }
+
+    // L'utilisateur vient d'accepter certaines catégories
+    const onAccept = (e: Event) => {
+      const detail = (e as CustomEvent<{ categories: string[] }>).detail
+      if (detail?.categories?.includes('targeting')) {
+        loadMetaPixel()
+      }
+    }
+
+    // L'utilisateur a tout accepté
+    const onAcceptAll = () => loadMetaPixel()
+
+    window.addEventListener('CookieScriptAccept',    onAccept)
+    window.addEventListener('CookieScriptAcceptAll', onAcceptAll)
+
+    return () => {
+      window.removeEventListener('CookieScriptAccept',    onAccept)
+      window.removeEventListener('CookieScriptAcceptAll', onAcceptAll)
+    }
   }, [])
 
-  if (!AXEPTIO_CLIENT_ID) return null
+  if (!COOKIE_SCRIPT_ID) return null
 
   return (
-    <Script id="axeptio-sdk" strategy="afterInteractive">
-      {`
-        window.axeptioSettings = {
-          clientId: "${AXEPTIO_CLIENT_ID}",
-          cookiesVersion: "${AXEPTIO_COOKIES_VERSION}",
-        };
-        (function(d, s) {
-          var t = d.getElementsByTagName(s)[0], e = d.createElement(s);
-          e.async = true;
-          e.src = "//static.axept.io/sdk-slim.js";
-          t.parentNode.insertBefore(e, t);
-        })(document, "script");
-      `}
-    </Script>
+    <Script
+      id="cookie-script"
+      src={`https://cdn.cookie-script.com/s/${COOKIE_SCRIPT_ID}.js`}
+      strategy="afterInteractive"
+    />
   )
 }
