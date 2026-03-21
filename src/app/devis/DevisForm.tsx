@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, generateToken } from '@/lib/utils'
 import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut, DevisModele } from '@/types/supabase'
-import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing, Lock, Zap, BookmarkPlus, AlertTriangle, Copy } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing, Lock, Zap, BookmarkPlus, AlertTriangle, Copy, X, Check, FolderOpen } from 'lucide-react'
 import { Spinner } from '@/components/ui/Spinner'
 import Link from 'next/link'
 import { DevisPreview } from '@/components/devis/DevisPreview'
@@ -133,13 +133,15 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
 
   // Sauvegarder comme modèle
   const [savingModel, setSavingModel] = useState(false)
+  const [showModelModal, setShowModelModal] = useState(false)
+  const [modelName, setModelName] = useState('')
+  const [modelSaved, setModelSaved] = useState(false)
   const handleSaveAsModel = async () => {
-    const name = window.prompt('Nom du modèle :')
-    if (!name?.trim()) return
+    if (!modelName.trim()) return
     setSavingModel(true)
     await supabase.from('devis_modeles').insert({
       user_id: profile.id,
-      name: name.trim(),
+      name: modelName.trim(),
       lignes,
       tva_taux: tvaT,
       notes: notes || null,
@@ -147,9 +149,16 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
       template,
     })
     setSavingModel(false)
-    alert('Modèle sauvegardé !')
+    setModelSaved(true)
+    setTimeout(() => {
+      setShowModelModal(false)
+      setModelName('')
+      setModelSaved(false)
+    }, 1200)
   }
 
+  // Charger un modèle
+  const [showModelPicker, setShowModelPicker] = useState(false)
   const loadModel = (id: string) => {
     const m = modeles.find((x) => x.id === id)
     if (!m) return
@@ -158,6 +167,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
     setNotes(m.notes ?? '')
     setConditions(m.conditions ?? '')
     setTemplate((m.template ?? 'classique') as DevisTemplate)
+    setShowModelPicker(false)
   }
 
   return (
@@ -196,14 +206,46 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
             {showPreview ? <EyeOff size={14} /> : <Eye size={14} />}
             <span className="hidden sm:inline">Aperçu</span>
           </button>
+          {modeles.length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setShowModelPicker((v) => !v)}
+                className="flex items-center gap-2 border border-white/10 text-white/40 font-medium rounded-lg px-3 py-2 text-sm hover:bg-white/5 hover:text-white/60 transition-colors cursor-pointer"
+                title="Charger un modèle"
+              >
+                <FolderOpen size={14} />
+                <span className="hidden sm:inline">Charger</span>
+              </button>
+              {showModelPicker && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowModelPicker(false)} />
+                  <div className="absolute right-0 top-full mt-2 z-50 w-64 bg-[#1E293B] border border-white/10 rounded-xl shadow-xl overflow-hidden">
+                    <div className="px-4 py-3 border-b border-white/8">
+                      <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">Mes modèles</p>
+                    </div>
+                    <div className="max-h-56 overflow-y-auto">
+                      {modeles.map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => loadModel(m.id)}
+                          className="w-full text-left px-4 py-2.5 text-sm text-white/70 hover:bg-white/8 hover:text-white transition-colors cursor-pointer"
+                        >
+                          {m.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
           <button
-            onClick={handleSaveAsModel}
-            disabled={savingModel}
-            className="flex items-center gap-2 border border-white/10 text-white/40 font-medium rounded-lg px-3 py-2 text-sm hover:bg-white/5 hover:text-white/60 transition-colors cursor-pointer disabled:opacity-50"
+            onClick={() => { setShowModelModal(true); setModelName(''); setModelSaved(false) }}
+            className="flex items-center gap-2 border border-white/10 text-white/40 font-medium rounded-lg px-3 py-2 text-sm hover:bg-white/5 hover:text-white/60 transition-colors cursor-pointer"
             title="Sauvegarder comme modèle"
           >
-            {savingModel ? <Spinner size={14} /> : <BookmarkPlus size={14} />}
-            <span className="hidden sm:inline">Modèle</span>
+            <BookmarkPlus size={14} />
+            <span className="hidden sm:inline">Sauvegarder</span>
           </button>
           {!locked && (
             <>
@@ -298,21 +340,6 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
                   <option value="minimaliste">Minimaliste</option>
                 </select>
               </div>
-              {mode === 'create' && modeles.length > 0 && (
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-white/40 mb-1.5">Charger un modèle</label>
-                  <select
-                    value=""
-                    onChange={(e) => loadModel(e.target.value)}
-                    className={inputCls}
-                  >
-                    <option value="">— Sélectionner un modèle —</option>
-                    {modeles.map((m) => (
-                      <option key={m.id} value={m.id}>{m.name}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
           </Section>
 
@@ -513,6 +540,65 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
           </div>
         )}
       </div>
+
+      {/* ── Modal : sauvegarder comme modèle ── */}
+      {showModelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModelModal(false)} />
+          <div className="relative w-full max-w-sm bg-[#131C27] border border-white/10 rounded-2xl shadow-2xl p-6">
+            <button
+              onClick={() => setShowModelModal(false)}
+              className="absolute top-4 right-4 p-1.5 text-white/30 hover:text-white hover:bg-white/8 rounded-lg transition-colors cursor-pointer"
+            >
+              <X size={15} />
+            </button>
+
+            {modelSaved ? (
+              <div className="flex flex-col items-center gap-3 py-4">
+                <div className="w-12 h-12 rounded-full bg-brand/15 border border-brand/25 flex items-center justify-center">
+                  <Check size={22} className="text-brand" />
+                </div>
+                <p className="text-white font-semibold">Modèle sauvegardé !</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-5">
+                  <h3 className="text-base font-semibold text-white mb-1">Sauvegarder comme modèle</h3>
+                  <p className="text-xs text-white/40">Les lignes, TVA, notes et template seront enregistrés.</p>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-white/40 mb-1.5">Nom du modèle</label>
+                  <input
+                    type="text"
+                    value={modelName}
+                    onChange={(e) => setModelName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSaveAsModel()}
+                    placeholder="Ex : Prestation web standard"
+                    autoFocus
+                    className={inputCls}
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <button
+                    onClick={() => setShowModelModal(false)}
+                    className="px-4 py-2 text-sm text-white/40 hover:text-white hover:bg-white/8 rounded-lg transition-colors cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleSaveAsModel}
+                    disabled={savingModel || !modelName.trim()}
+                    className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-4 py-2 text-sm transition-all shadow-sm shadow-brand/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    {savingModel ? <Spinner size={13} /> : <BookmarkPlus size={13} />}
+                    Sauvegarder
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

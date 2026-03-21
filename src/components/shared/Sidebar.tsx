@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap, Shield } from 'lucide-react'
@@ -22,6 +22,10 @@ export function Sidebar({ userEmail, plan = 'free', isAdmin = false }: { userEma
   const supabase  = createClient()
   const [mobileOpen,    setMobileOpen]    = useState(false)
   const [signingOut,    setSigningOut]    = useState(false)
+  const [navigating,    setNavigating]    = useState<string | null>(null)
+
+  // Reset loading state when navigation completes
+  useEffect(() => { setNavigating(null) }, [pathname])
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -66,25 +70,35 @@ export function Sidebar({ userEmail, plan = 'free', isAdmin = false }: { userEma
           const isActive =
             pathname === href ||
             (href !== '/dashboard' && pathname.startsWith(href + '/'))
+          const isLoading = navigating === href && !isActive
           return (
             <Link
               key={href}
               href={href}
-              onClick={() => setMobileOpen(false)}
+              onClick={() => {
+                setMobileOpen(false)
+                if (!isActive) setNavigating(href)
+              }}
               className={`
                 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                 transition-all duration-150
                 ${isActive
                   ? 'bg-brand/15 text-brand'
-                  : 'text-white/45 hover:text-white hover:bg-white/6'
+                  : isLoading
+                    ? 'bg-white/6 text-white/60'
+                    : 'text-white/45 hover:text-white hover:bg-white/6'
                 }
               `}
             >
-              <Icon
-                size={15}
-                strokeWidth={isActive ? 2.5 : 2}
-                className="shrink-0"
-              />
+              {isLoading ? (
+                <Spinner size={15} />
+              ) : (
+                <Icon
+                  size={15}
+                  strokeWidth={isActive ? 2.5 : 2}
+                  className="shrink-0"
+                />
+              )}
               {label}
             </Link>
           )
@@ -94,17 +108,26 @@ export function Sidebar({ userEmail, plan = 'free', isAdmin = false }: { userEma
             <div className="border-t border-white/6 my-2" />
             <Link
               href="/admin"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => {
+                setMobileOpen(false)
+                if (pathname !== '/admin') setNavigating('/admin')
+              }}
               className={`
                 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                 transition-all duration-150
                 ${pathname === '/admin'
                   ? 'bg-brand/15 text-brand'
-                  : 'text-white/45 hover:text-white hover:bg-white/6'
+                  : navigating === '/admin'
+                    ? 'bg-white/6 text-white/60'
+                    : 'text-white/45 hover:text-white hover:bg-white/6'
                 }
               `}
             >
-              <Shield size={15} strokeWidth={pathname === '/admin' ? 2.5 : 2} className="shrink-0" />
+              {navigating === '/admin' && pathname !== '/admin' ? (
+                <Spinner size={15} />
+              ) : (
+                <Shield size={15} strokeWidth={pathname === '/admin' ? 2.5 : 2} className="shrink-0" />
+              )}
               Admin
             </Link>
           </>
