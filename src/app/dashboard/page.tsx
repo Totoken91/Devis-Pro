@@ -205,7 +205,7 @@ export default async function DashboardPage() {
                       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
                       {cfg.label}
                     </span>
-                    <span className="text-sm font-semibold text-white/60 shrink-0 hidden sm:block tabular-nums">
+                    <span className="text-sm font-semibold text-white/60 shrink-0 hidden sm:block tabular-nums w-28 text-right">
                       {formatCurrency(d.montant_ttc ?? 0)}
                     </span>
                     <ArrowRight size={13} className="text-white/15 group-hover:text-brand shrink-0 transition-colors" />

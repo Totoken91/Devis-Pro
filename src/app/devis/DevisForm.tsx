@@ -380,8 +380,9 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
                       <span className="text-xs text-white/30 md:hidden">Prix unit.</span>
                       <input
                         type="number" min="0" step="0.01"
-                        value={ligne.prix_unitaire}
+                        value={ligne.prix_unitaire === 0 ? '' : ligne.prix_unitaire}
                         onChange={(e) => updateLigne(ligne.id, 'prix_unitaire', e.target.value)}
+                        placeholder="0,00"
                         className={inputCls + ' text-right'}
                       />
                     </div>
