@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendOwnerNotification } from '@/lib/notify'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import type { Devis, DevisLigne } from '@/types/supabase'
@@ -75,11 +76,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
       .from('devis')
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
       .eq('id', d.id)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    fetch(`${appUrl}/api/notify-owner`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: params.token, event: 'ouvert' }),
-    }).catch(() => {})
+    await sendOwnerNotification(params.token, 'ouvert').catch(() => {})
   }
 
   const emetteurName = emetteur?.company_name || emetteur?.full_name || '—'

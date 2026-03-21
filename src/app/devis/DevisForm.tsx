@@ -370,7 +370,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                 <div>
                   <p className="text-sm font-medium text-white/80">Relances automatiques</p>
                   <p className="text-xs text-white/35 mt-0.5 max-w-sm">
-                    Un email de rappel est envoyé au client tous les 7 jours tant que le devis n&apos;est pas signé.
+                    Deux rappels automatiques sont envoyés au client : à J+3 puis J+7 après l&apos;envoi du devis.
                   </p>
                 </div>
               </div>

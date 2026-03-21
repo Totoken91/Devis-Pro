@@ -53,21 +53,19 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
     setLogoUploading(true)
     setError('')
 
-    const ext = file.name.split('.').pop() ?? 'png'
-    const path = `${profile!.id}/logo.${ext}`
+    const body = new FormData()
+    body.append('file', file)
 
-    const { error: uploadError } = await supabase.storage
-      .from('logos')
-      .upload(path, file, { upsert: true })
+    const res = await fetch('/api/upload-logo', { method: 'POST', body })
+    const json = await res.json()
 
-    if (uploadError) {
-      setError('Erreur lors de l\'upload. Vérifie que le bucket "logos" existe dans Supabase Storage.')
+    if (!res.ok) {
+      setError(json.error ?? 'Erreur lors de l\'upload.')
       setLogoUploading(false)
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path)
-    setLogoUrl(publicUrl)
+    setLogoUrl(json.publicUrl)
     setLogoUploading(false)
     setSaved(false)
   }

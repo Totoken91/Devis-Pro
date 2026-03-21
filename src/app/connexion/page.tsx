@@ -30,7 +30,10 @@ function ConnexionForm() {
     }
   }
 
+  const [googleLoading, setGoogleLoading] = useState(false)
+
   const handleGoogleLogin = async () => {
+    setGoogleLoading(true)
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/auth/callback` } })
   }
@@ -97,11 +100,11 @@ function ConnexionForm() {
 
           <button
             onClick={handleGoogleLogin}
+            disabled={googleLoading}
             type="button"
-            className="w-full flex items-center justify-center gap-3 border border-white/10 bg-white/5 rounded-xl py-2.5 px-4 text-white/70 text-sm font-medium hover:bg-white/8 hover:text-white transition-colors mb-5 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 border border-white/10 bg-white/5 rounded-xl py-2.5 px-4 text-white/70 text-sm font-medium hover:bg-white/8 hover:text-white transition-colors mb-5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <GoogleIcon />
-            Continuer avec Google
+            {googleLoading ? <><Spinner size={16} />Redirection…</> : <><GoogleIcon />Continuer avec Google</>}
           </button>
 
           <div className="flex items-center gap-3 mb-5">

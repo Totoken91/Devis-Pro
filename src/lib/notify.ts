@@ -66,7 +66,20 @@ export async function sendOwnerNotification(
 
   const clientName = devisRow.clients?.company || devisRow.clients?.name || 'Votre client'
 
-  // ── Notif en base en PREMIER (indépendant de l'email) ──
+  // ── Notif en base (avec déduplication) ──
+  const { data: existing } = await admin
+    .from('notifications')
+    .select('id')
+    .eq('devis_id', devisRow.id)
+    .eq('event', event)
+    .limit(1)
+    .single()
+
+  if (existing) {
+    // Notification déjà créée pour cet événement, on skip
+    return
+  }
+
   await admin.from('notifications').insert({
     user_id:      devisRow.user_id,
     devis_id:     devisRow.id,
