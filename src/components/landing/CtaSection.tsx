@@ -2,13 +2,22 @@
 
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Spinner } from '@/components/ui/Spinner'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 export default function CtaSection() {
-  const ref    = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const ref     = useRef(null)
+  const inView  = useInView(ref, { once: true, margin: '-80px' })
+  const router  = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  const handleStart = () => {
+    setLoading(true)
+    router.push('/inscription')
+  }
 
   return (
     <section className="relative bg-[#0A0F1E] py-32 px-4 overflow-hidden">
@@ -59,14 +68,15 @@ export default function CtaSection() {
           transition={{ duration: 0.5, delay: 0.28, ease }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Link
-            href="/inscription"
-            className="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl text-lg
+          <button
+            onClick={handleStart}
+            disabled={loading}
+            className="inline-flex items-center gap-3 bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl text-lg
                        shadow-sm shadow-brand/30 hover:shadow-md hover:shadow-brand/40
-                       transition-all duration-200 hover:-translate-y-px"
+                       transition-all duration-200 hover:-translate-y-px disabled:opacity-80 disabled:cursor-not-allowed"
           >
-            Créer mon compte gratuit
-          </Link>
+            {loading ? <><Spinner size={18} />Chargement…</> : 'Créer mon compte gratuit'}
+          </button>
           <Link
             href="/connexion"
             className="text-white/55 hover:text-white text-sm font-medium transition-colors duration-200"

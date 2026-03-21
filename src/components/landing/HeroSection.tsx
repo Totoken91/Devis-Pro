@@ -2,8 +2,19 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Spinner } from '@/components/ui/Spinner'
 
 export default function HeroSection() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  const handleStart = () => {
+    setLoading(true)
+    router.push('/inscription')
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A0F1E] px-4">
 
@@ -55,14 +66,15 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Link
-            href="/inscription"
-            className="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl text-lg
+          <button
+            onClick={handleStart}
+            disabled={loading}
+            className="inline-flex items-center gap-3 bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl text-lg
                        shadow-sm shadow-brand/30 hover:shadow-md hover:shadow-brand/40
-                       transition-all duration-200 hover:-translate-y-px"
+                       transition-all duration-200 hover:-translate-y-px disabled:opacity-80 disabled:cursor-not-allowed"
           >
-            Essayer gratuitement
-          </Link>
+            {loading ? <><Spinner size={18} />Chargement…</> : 'Essayer gratuitement'}
+          </button>
           <Link
             href="#demo"
             className="flex items-center gap-2 border border-white/15 hover:border-brand/50
