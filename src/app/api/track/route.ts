@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-const PROD_URL = process.env.NEXT_PUBLIC_APP_URL ?? ''
-
 export async function POST(req: NextRequest) {
   try {
-    // Ignore les appels depuis les URLs de preview Vercel
-    const origin = req.headers.get('origin') ?? ''
-    if (PROD_URL && origin && !origin.startsWith(PROD_URL)) {
+    // Sur Vercel, ne tracker qu'en production (pas sur les previews/branches)
+    if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
       return NextResponse.json({ ok: true })
     }
 
