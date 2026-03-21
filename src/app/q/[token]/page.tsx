@@ -159,22 +159,22 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                   <p className="text-sm text-gray-500">{emetteur.full_name}</p>
                 )}
                 {emetteur?.email && (
-                  <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                  <p className="text-xs text-gray-600 flex items-center gap-1 mt-1">
                     <Mail size={10} className="shrink-0" />{emetteur.email}
                   </p>
                 )}
                 {emetteur?.phone && (
-                  <p className="text-xs text-gray-400 flex items-center gap-1">
+                  <p className="text-xs text-gray-600 flex items-center gap-1">
                     <Phone size={10} className="shrink-0" />{emetteur.phone}
                   </p>
                 )}
                 {emetteur?.address && (
-                  <p className="text-xs text-gray-400 flex items-start gap-1 mt-0.5 whitespace-pre-line">
+                  <p className="text-xs text-gray-600 flex items-start gap-1 mt-0.5 whitespace-pre-line">
                     <MapPin size={10} className="shrink-0 mt-0.5" />{emetteur.address}
                   </p>
                 )}
                 {(emetteur?.siret || emetteur?.tva_numero || emetteur?.statut_juridique) && (
-                  <div className="mt-1.5 space-y-0.5 text-[11px] text-gray-300">
+                  <div className="mt-1.5 space-y-0.5 text-[11px] text-gray-500">
                     {emetteur.siret && <p>SIRET : {emetteur.siret}</p>}
                     {emetteur.tva_numero && <p>TVA : {emetteur.tva_numero}</p>}
                     {emetteur.statut_juridique && (
@@ -196,17 +196,17 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                     <p className="text-sm text-gray-500">{destinataire.name}</p>
                   )}
                   {destinataire.email && (
-                    <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                    <p className="text-xs text-gray-600 flex items-center gap-1 mt-1">
                       <Mail size={10} className="shrink-0" />{destinataire.email}
                     </p>
                   )}
                   {destinataire.phone && (
-                    <p className="text-xs text-gray-400 flex items-center gap-1">
+                    <p className="text-xs text-gray-600 flex items-center gap-1">
                       <Phone size={10} className="shrink-0" />{destinataire.phone}
                     </p>
                   )}
                   {destinataire.address && (
-                    <p className="text-xs text-gray-400 flex items-start gap-1 mt-0.5 whitespace-pre-line">
+                    <p className="text-xs text-gray-600 flex items-start gap-1 mt-0.5 whitespace-pre-line">
                       <MapPin size={10} className="shrink-0 mt-0.5" />{destinataire.address}
                     </p>
                   )}
@@ -228,8 +228,8 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                 {(d.lignes as DevisLigne[]).map((ligne, i) => (
                   <tr key={ligne.id} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
                     <td className="py-3 pr-2 text-sm text-gray-900 break-words">{ligne.description || '—'}</td>
-                    <td className="py-3 text-sm text-gray-400 text-center tabular-nums">{ligne.quantite}</td>
-                    <td className="py-3 text-xs sm:text-sm text-gray-400 text-right tabular-nums">{formatCurrency(ligne.prix_unitaire)}</td>
+                    <td className="py-3 text-sm text-gray-600 text-center tabular-nums">{ligne.quantite}</td>
+                    <td className="py-3 text-xs sm:text-sm text-gray-600 text-right tabular-nums">{formatCurrency(ligne.prix_unitaire)}</td>
                     <td className="py-3 text-xs sm:text-sm font-medium text-gray-900 text-right tabular-nums">{formatCurrency(ligne.total)}</td>
                   </tr>
                 ))}
@@ -241,12 +241,12 @@ export default async function DevisPublicPage({ params }: { params: { token: str
               <div className="w-full sm:w-64">
                 <div className="space-y-2 mb-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Montant HT</span>
-                    <span className="font-medium text-gray-700 tabular-nums">{formatCurrency(d.montant_ht)}</span>
+                    <span className="text-gray-600">Montant HT</span>
+                    <span className="font-medium text-gray-800 tabular-nums">{formatCurrency(d.montant_ht)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">TVA ({d.tva_taux}%)</span>
-                    <span className="font-medium text-gray-700 tabular-nums">{formatCurrency(d.montant_tva)}</span>
+                    <span className="text-gray-600">TVA ({d.tva_taux}%)</span>
+                    <span className="font-medium text-gray-800 tabular-nums">{formatCurrency(d.montant_tva)}</span>
                   </div>
                 </div>
                 <div className="bg-gray-950 rounded-xl px-5 py-3.5 flex items-center justify-between">
