@@ -107,3 +107,8 @@
     print-color-adjust: exact !important;
   }
 }
+
+/* Cookie Script — masque le widget persistant (bouton cookie en bas à gauche) */
+#cookiescript_badge {
+  display: none !important;
+}
