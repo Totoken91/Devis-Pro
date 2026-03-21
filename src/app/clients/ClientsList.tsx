@@ -180,7 +180,7 @@ export function ClientsList({ initialClients, userId }: { initialClients: Client
                   disabled={loading || !form.name.trim()}
                   className="flex-1 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 transition-colors disabled:opacity-60 text-sm cursor-pointer disabled:cursor-not-allowed"
                 >
-                  {loading ? <><Spinner />Sauvegarde…</> : modal === 'add' ? 'Ajouter' : 'Sauvegarder'}
+                  {loading ? <span className="inline-flex items-center gap-2"><Spinner />Sauvegarde…</span> : modal === 'add' ? 'Ajouter' : 'Sauvegarder'}
                 </button>
               </div>
             </form>

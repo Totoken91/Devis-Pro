@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
                   disabled={loading}
                   className="w-full bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 text-sm transition-all shadow-sm shadow-brand/25 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {loading ? <><Spinner />Mise à jour…</> : 'Mettre à jour le mot de passe'}
+                  {loading ? <span className="inline-flex items-center gap-2"><Spinner />Mise à jour…</span> : 'Mettre à jour le mot de passe'}
                 </button>
               </form>
 

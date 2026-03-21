@@ -132,7 +132,7 @@ function ConnexionForm() {
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 text-sm transition-all shadow-sm shadow-brand/25 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? <><Spinner />Connexion…</> : <>Se connecter <ArrowRight size={14} /></>}
+              {loading ? <span className="inline-flex items-center gap-2"><Spinner />Connexion…</span> : <>Se connecter <ArrowRight size={14} /></>}
             </button>
           </form>
 

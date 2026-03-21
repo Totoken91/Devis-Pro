@@ -32,7 +32,7 @@ export function UpgradeButton({ interval, label }: { interval: 'monthly' | 'year
         className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl px-5 py-2.5 text-sm transition-all shadow-sm shadow-brand/30 hover:shadow-brand/50 hover:-translate-y-px disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
       >
         <Zap size={14} />
-        {loading ? <><Spinner />Redirection…</> : label}
+        {loading ? <><Zap size={14} /><span className="inline-flex items-center gap-2"><Spinner />Redirection…</span></> : label}
       </button>
       {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
     </div>

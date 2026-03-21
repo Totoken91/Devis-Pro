@@ -187,7 +187,7 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
                   className="inline-flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-3 py-1.5 text-xs hover:bg-white/5 hover:text-white transition-colors cursor-pointer"
                 >
                   <Upload size={12} />
-                  {logoUploading ? <><Spinner size={12} />Upload…</> : logoUrl ? 'Changer' : 'Importer un logo'}
+                  {logoUploading ? <span className="inline-flex items-center gap-1.5"><Spinner size={12} />Upload…</span> : logoUrl ? 'Changer' : 'Importer un logo'}
                 </label>
                 <p className="text-[10px] text-white/25 mt-1">PNG, JPG ou SVG · 2 Mo max</p>
               </div>
@@ -268,7 +268,7 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
           className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl px-5 py-2.5 text-sm transition-all shadow-sm shadow-brand/25 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <Save size={14} />
-          {loading ? <><Spinner />Sauvegarde…</> : 'Sauvegarder'}
+          {loading ? <span className="inline-flex items-center gap-2"><Spinner />Sauvegarde…</span> : 'Sauvegarder'}
         </button>
         {saved && (
           <span className="flex items-center gap-1.5 text-brand text-sm font-medium">

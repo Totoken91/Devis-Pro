@@ -29,7 +29,7 @@ export function PortalButton() {
         className="inline-flex items-center gap-2 border border-white/15 text-white/70 hover:text-white hover:border-white/30 font-medium rounded-xl px-5 py-2.5 text-sm transition-all cursor-pointer disabled:opacity-50"
       >
         <ExternalLink size={14} />
-        {loading ? <><Spinner />Redirection…</> : 'Gérer l\'abonnement'}
+        {loading ? <span className="inline-flex items-center gap-2"><Spinner />Redirection…</span> : 'Gérer l\'abonnement'}
       </button>
       {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
     </div>

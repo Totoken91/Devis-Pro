@@ -93,7 +93,7 @@ export default function MotDePasseOubliePage() {
                   disabled={loading}
                   className="w-full bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 text-sm transition-all shadow-sm shadow-brand/25 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {loading ? <><Spinner />Envoi…</> : 'Envoyer le lien'}
+                  {loading ? <span className="inline-flex items-center gap-2"><Spinner />Envoi…</span> : 'Envoyer le lien'}
                 </button>
               </form>
 
