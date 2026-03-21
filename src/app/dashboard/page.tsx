@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/shared/AppLayout'
 import { createClient } from '@/lib/supabase/server'
 import {
-  FileText, Users, TrendingUp, Plus, ArrowRight, Zap,
+  FileText, Users, TrendingUp, Plus, ArrowRight, Zap, Bell,
 } from 'lucide-react'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
@@ -14,7 +14,20 @@ type RecentDevis = {
   statut: DevisStatut
   montant_ttc: number | null
   created_at: string
+  relance_active: boolean
+  derniere_relance: string | null
   clients: { name: string } | null
+}
+
+function getRelanceInfo(d: RecentDevis): { jours: number; premiere: boolean } | null {
+  if (!d.relance_active) return null
+  if (d.statut !== 'envoye' && d.statut !== 'ouvert') return null
+  const premiere = !d.derniere_relance
+  const nextMs = d.derniere_relance
+    ? new Date(d.derniere_relance).getTime() + 4 * 86_400_000
+    : new Date(d.created_at).getTime() + 3 * 86_400_000
+  const jours = Math.ceil((nextMs - Date.now()) / 86_400_000)
+  return { jours, premiere }
 }
 
 /* ─── Status config ──────────────────────────────────────────── */
@@ -65,7 +78,7 @@ export default async function DashboardPage() {
       .eq('statut', 'accepte'),
     supabase
       .from('devis')
-      .select('id, numero, titre, statut, montant_ttc, created_at, clients(name)')
+      .select('id, numero, titre, statut, montant_ttc, created_at, relance_active, derniere_relance, clients(name)')
       .eq('user_id', user!.id)
       .order('created_at', { ascending: false })
       .limit(6),
@@ -170,6 +183,24 @@ export default async function DashboardPage() {
                         {clientName && <> · {clientName}</>}
                       </p>
                     </div>
+                    {(() => {
+                      const info = getRelanceInfo(d)
+                      if (!info) return null
+                      const { jours: j, premiere } = info
+                      if (j < 0) return null
+                      const countdown = j > 1 ? `dans ${j}j` : j === 1 ? 'demain' : "aujourd'hui"
+                      const cls = j > 1
+                        ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                        : j === 1
+                        ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        : 'bg-orange-500/10 text-orange-400 border-orange-500/20'
+                      return (
+                        <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium border ${cls}`}>
+                          <Bell size={9} />
+                          {premiere ? countdown : `1ère faite · ${countdown}`}
+                        </span>
+                      )
+                    })()}
                     <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${cfg.color}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
                       {cfg.label}

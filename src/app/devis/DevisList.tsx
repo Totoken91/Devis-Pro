@@ -133,11 +133,7 @@ export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWit
                       </p>
                     </td>
                     <td className="px-5 py-3.5">
-                      <div className="flex flex-col gap-1 items-start">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${cfg.color}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                          {cfg.label}
-                        </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         {(() => {
                           const info = getRelanceInfo(d)
                           if (!info) return null
@@ -156,6 +152,10 @@ export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWit
                             </span>
                           )
                         })()}
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${cfg.color}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+                          {cfg.label}
+                        </span>
                       </div>
                     </td>
                     <td className="px-5 py-3.5 text-right hidden lg:table-cell">
