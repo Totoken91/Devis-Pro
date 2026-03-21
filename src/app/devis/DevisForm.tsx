@@ -219,7 +219,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData, mod
               {showModelPicker && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowModelPicker(false)} />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-64 bg-[#1E293B] border border-white/10 rounded-xl shadow-xl overflow-hidden">
+                  <div className="absolute left-0 top-full mt-2 z-50 w-64 bg-[#1E293B] border border-white/10 rounded-xl shadow-xl overflow-hidden">
                     <div className="px-4 py-3 border-b border-white/8">
                       <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">Mes modèles</p>
                     </div>
