@@ -125,18 +125,18 @@ export default async function DevisPublicPage({ params }: { params: { token: str
           {/* Accent strip */}
           <div className="h-1" style={{ backgroundColor: accentColor }} />
 
-          <div className="px-8 py-8 md:px-10 md:py-10">
+          <div className="px-4 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
 
             {/* ── Doc header ── */}
-            <div className="flex items-start justify-between gap-6 mb-8">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+              <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: accentColor }}>Devis</p>
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight leading-none mb-1.5" style={{ fontFamily: 'var(--font-sora, sans-serif)' }}>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight leading-tight mb-1.5 break-all" style={{ fontFamily: 'var(--font-sora, sans-serif)' }}>
                   {d.numero}
                 </h1>
                 <p className="text-gray-500 text-base">{d.titre}</p>
               </div>
-              <div className="text-right shrink-0 space-y-2">
+              <div className="sm:text-right shrink-0 space-y-2">
                 <div>
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Émis le</p>
                   <p className="text-sm font-semibold text-gray-900">{formatDate(d.created_at)}</p>
@@ -151,7 +151,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
             </div>
 
             {/* ── Parties ── */}
-            <div className="grid grid-cols-2 gap-6 py-6 border-t border-b border-gray-100 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6 border-t border-b border-gray-100 mb-8">
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">De</p>
                 <p className="font-semibold text-gray-900 text-sm">{emetteurName}</p>
@@ -218,19 +218,19 @@ export default async function DevisPublicPage({ params }: { params: { token: str
             <table className="w-full mb-8">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 pr-4">Description</th>
-                  <th className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-14">Qté</th>
-                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-28">Prix unit.</th>
-                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-28">Total HT</th>
+                  <th className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 pr-2">Description</th>
+                  <th className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-10 sm:w-14">Qté</th>
+                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-20 sm:w-28">Prix unit.</th>
+                  <th className="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-3 w-20 sm:w-28">Total HT</th>
                 </tr>
               </thead>
               <tbody>
                 {(d.lignes as DevisLigne[]).map((ligne, i) => (
                   <tr key={ligne.id} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
-                    <td className="py-3 pr-4 text-sm text-gray-900">{ligne.description || '—'}</td>
+                    <td className="py-3 pr-2 text-sm text-gray-900 break-words">{ligne.description || '—'}</td>
                     <td className="py-3 text-sm text-gray-400 text-center tabular-nums">{ligne.quantite}</td>
-                    <td className="py-3 text-sm text-gray-400 text-right tabular-nums">{formatCurrency(ligne.prix_unitaire)}</td>
-                    <td className="py-3 text-sm font-medium text-gray-900 text-right tabular-nums">{formatCurrency(ligne.total)}</td>
+                    <td className="py-3 text-xs sm:text-sm text-gray-400 text-right tabular-nums">{formatCurrency(ligne.prix_unitaire)}</td>
+                    <td className="py-3 text-xs sm:text-sm font-medium text-gray-900 text-right tabular-nums">{formatCurrency(ligne.total)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -238,7 +238,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
 
             {/* ── Totaux ── */}
             <div className="flex justify-end mb-8">
-              <div className="w-64">
+              <div className="w-full sm:w-64">
                 <div className="space-y-2 mb-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Montant HT</span>
