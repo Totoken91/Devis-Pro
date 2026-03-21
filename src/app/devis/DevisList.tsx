@@ -6,6 +6,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Devis, DevisStatut } from '@/types/supabase'
 import { Plus, FileText, Pencil, Trash2, Copy, Eye, Users } from 'lucide-react'
 import Link from 'next/link'
+import { Spinner } from '@/components/ui/Spinner'
 
 type DevisWithClient = Devis & {
   clients: { name: string; company: string | null } | null
@@ -22,12 +23,15 @@ const STATUT_CONFIG: Record<DevisStatut, { label: string; color: string; dot: st
 
 export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWithClient[]; hasClients: boolean }) {
   const [devisList, setDevisList] = useState<DevisWithClient[]>(initialDevis)
-  const [deleteId,  setDeleteId]  = useState<string | null>(null)
+  const [deleteId,      setDeleteId]      = useState<string | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const supabase = createClient()
 
   const handleDelete = async (id: string) => {
+    setDeleteLoading(true)
     await supabase.from('devis').delete().eq('id', id)
     setDevisList((prev) => prev.filter((d) => d.id !== id))
+    setDeleteLoading(false)
     setDeleteId(null)
   }
 
@@ -186,9 +190,10 @@ export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWit
               </button>
               <button
                 onClick={() => handleDelete(deleteId)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm cursor-pointer"
+                disabled={deleteLoading}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 transition-colors text-sm cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Supprimer
+                {deleteLoading ? <span className="inline-flex items-center gap-2"><Spinner />Suppression…</span> : 'Supprimer'}
               </button>
             </div>
           </div>

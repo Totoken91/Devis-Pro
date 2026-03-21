@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationBell } from './NotificationBell'
+import { Spinner } from '@/components/ui/Spinner'
 
 const navItems = [
   { href: '/dashboard',              label: 'Dashboard',    icon: LayoutDashboard },
@@ -19,9 +20,11 @@ export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?
   const pathname  = usePathname()
   const router    = useRouter()
   const supabase  = createClient()
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpen,    setMobileOpen]    = useState(false)
+  const [signingOut,    setSigningOut]    = useState(false)
 
   const handleSignOut = async () => {
+    setSigningOut(true)
     await supabase.auth.signOut()
     router.push('/connexion')
     router.refresh()
@@ -118,10 +121,10 @@ export function Sidebar({ userEmail, plan = 'free' }: { userEmail: string; plan?
         </div>
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-white/35 hover:text-white/70 hover:bg-white/5 transition-colors cursor-pointer"
+          disabled={signingOut}
+          className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-white/35 hover:text-white/70 hover:bg-white/5 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <LogOut size={15} />
-          Déconnexion
+          {signingOut ? <><Spinner size={15} />Déconnexion…</> : <><LogOut size={15} />Déconnexion</>}
         </button>
       </div>
     </div>

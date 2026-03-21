@@ -15,8 +15,9 @@ export function ClientsList({ initialClients, userId }: { initialClients: Client
   const [modal,    setModal]    = useState<'add' | 'edit' | null>(null)
   const [selected, setSelected] = useState<Client | null>(null)
   const [form,     setForm]     = useState(emptyForm)
-  const [loading,  setLoading]  = useState(false)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [loading,       setLoading]       = useState(false)
+  const [deleteId,      setDeleteId]      = useState<string | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const supabase = createClient()
 
   const openAdd = () => { setForm(emptyForm); setSelected(null); setModal('add') }
@@ -53,8 +54,10 @@ export function ClientsList({ initialClients, userId }: { initialClients: Client
   }
 
   const handleDelete = async (id: string) => {
+    setDeleteLoading(true)
     await supabase.from('clients').delete().eq('id', id)
     setClients((prev) => prev.filter((c) => c.id !== id))
+    setDeleteLoading(false)
     setDeleteId(null)
   }
 
@@ -199,7 +202,9 @@ export function ClientsList({ initialClients, userId }: { initialClients: Client
             <p className="text-xs text-white/40 mb-5">Cette action est irréversible.</p>
             <div className="flex gap-3">
               <button onClick={() => setDeleteId(null)} className="flex-1 border border-white/10 text-white/60 font-medium rounded-xl py-2.5 hover:bg-white/5 text-sm cursor-pointer">Annuler</button>
-              <button onClick={() => handleDelete(deleteId)} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 text-sm cursor-pointer">Supprimer</button>
+              <button onClick={() => handleDelete(deleteId)} disabled={deleteLoading} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 text-sm cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+                {deleteLoading ? <span className="inline-flex items-center gap-2"><Spinner />Suppression…</span> : 'Supprimer'}
+              </button>
             </div>
           </div>
         </div>
