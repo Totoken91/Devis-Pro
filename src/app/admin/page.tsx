@@ -4,8 +4,9 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { formatCurrency } from '@/lib/utils'
 import {
-  Users, FileText, TrendingUp, Shield, Crown, Calendar, Eye,
+  Users, FileText, TrendingUp, Shield, Crown, Calendar, Eye, MessageSquarePlus,
 } from 'lucide-react'
+import { AdminFeedbackList } from './AdminFeedbackList'
 
 export default async function AdminPage() {
   const supabase = createClient()
@@ -32,6 +33,7 @@ export default async function AdminPage() {
     { data: recentUsers },
     { count: devisThisMonth },
     { count: uniqueVisitors },
+    { data: feedbacksRaw },
   ] = await Promise.all([
     admin.from('profiles').select('*', { count: 'exact', head: true }),
     admin.from('profiles').select('*', { count: 'exact', head: true }).eq('plan', 'pro'),
@@ -40,6 +42,7 @@ export default async function AdminPage() {
     admin.from('profiles').select('id, email, full_name, company_name, plan, created_at').order('created_at', { ascending: false }).limit(10),
     admin.from('devis').select('*', { count: 'exact', head: true }).gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
     admin.from('visitors').select('*', { count: 'exact', head: true }),
+    admin.from('feedbacks').select('id, created_at, email, message, is_read').order('created_at', { ascending: false }).limit(20),
   ])
 
   const caTotal = devisCA?.reduce((sum, d) => sum + (d.montant_ttc ?? 0), 0) ?? 0
@@ -145,6 +148,18 @@ export default async function AdminPage() {
               <p className="text-sm text-white/40">Aucun utilisateur</p>
             </div>
           )}
+        </section>
+
+        {/* ── Feedbacks ── */}
+        <section className="mt-10 relative">
+          <div className="flex items-center gap-2 mb-4">
+            <MessageSquarePlus size={14} className="text-brand" />
+            <h2 className="text-sm font-semibold text-white/70 tracking-tight">Feedbacks utilisateurs</h2>
+            {feedbacksRaw && feedbacksRaw.length > 0 && (
+              <span className="text-xs text-white/25">{feedbacksRaw.length}</span>
+            )}
+          </div>
+          <AdminFeedbackList initialFeedbacks={feedbacksRaw ?? []} />
         </section>
 
       </div>

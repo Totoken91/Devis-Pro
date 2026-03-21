@@ -179,6 +179,10 @@ CREATE POLICY "notifications_insert_own"
   ON public.notifications FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+CREATE POLICY "notifications_delete_own"
+  ON public.notifications FOR DELETE
+  USING (auth.uid() = user_id);
+
 -- NOTE: Pour activer le Realtime, aller dans Supabase Dashboard
 -- → Database → Replication → cocher "notifications" dans Source Tables
 
@@ -215,6 +219,24 @@ CREATE POLICY "devis_modeles_update_own"
 CREATE POLICY "devis_modeles_delete_own"
   ON public.devis_modeles FOR DELETE
   USING (auth.uid() = user_id);
+
+-- ============================================================
+-- TABLE: feedbacks
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.feedbacks (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id    UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  email      TEXT NOT NULL,
+  message    TEXT NOT NULL,
+  is_read    BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+ALTER TABLE public.feedbacks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY feedbacks_insert_own
+  ON public.feedbacks FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
 -- ============================================================
 -- TRIGGER: créer le profil automatiquement à l'inscription

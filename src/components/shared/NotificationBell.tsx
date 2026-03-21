@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { Bell } from 'lucide-react'
+import { Bell, Trash2, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Notification } from '@/types/supabase'
 
@@ -40,6 +40,18 @@ export function NotificationBell() {
     await supabase.from('notifications').update({ is_read: true }).in('id', ids)
     setNotifs((prev) => prev.map((n) => ({ ...n, is_read: true })))
   }, [supabase])
+
+  const deleteOne = useCallback(async (id: string) => {
+    await supabase.from('notifications').delete().eq('id', id)
+    setNotifs((prev) => prev.filter((n) => n.id !== id))
+  }, [supabase])
+
+  const deleteAll = useCallback(async () => {
+    const ids = notifs.map((n) => n.id)
+    if (ids.length === 0) return
+    await supabase.from('notifications').delete().in('id', ids)
+    setNotifs([])
+  }, [supabase, notifs])
 
   useEffect(() => {
     let userId = ''
@@ -124,11 +136,22 @@ export function NotificationBell() {
         <div className={`absolute w-[min(320px,calc(100vw-1rem))] bg-[#0D1320] rounded-2xl shadow-2xl shadow-black/60 border border-white/10 z-50 overflow-hidden ${dropdownCls}`}>
           <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
-            {unreadCount > 0 && (
-              <span className="text-xs text-brand font-medium">
-                {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <span className="text-xs text-brand font-medium">
+                  {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}
+                </span>
+              )}
+              {notifs.length > 0 && (
+                <button
+                  onClick={deleteAll}
+                  className="text-white/25 hover:text-red-400 transition-colors cursor-pointer p-0.5"
+                  title="Tout effacer"
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
@@ -141,7 +164,7 @@ export function NotificationBell() {
               notifs.map((n) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 ${!n.is_read ? 'bg-brand/5' : ''}`}
+                  className={`px-4 py-3 group/notif ${!n.is_read ? 'bg-brand/5' : ''}`}
                 >
                   <div className="flex items-start gap-3">
                     <span className="text-base mt-0.5 shrink-0">{EVENT_ICON[n.event]}</span>
@@ -154,9 +177,13 @@ export function NotificationBell() {
                         {n.devis_numero} · {timeAgo(n.created_at)}
                       </p>
                     </div>
-                    {!n.is_read && (
-                      <div className="w-2 h-2 bg-brand rounded-full mt-1.5 shrink-0" />
-                    )}
+                    <button
+                      onClick={() => deleteOne(n.id)}
+                      className="shrink-0 mt-1 p-0.5 text-white/0 group-hover/notif:text-white/25 hover:!text-red-400 transition-colors cursor-pointer"
+                      title="Supprimer"
+                    >
+                      <X size={12} />
+                    </button>
                   </div>
                 </div>
               ))

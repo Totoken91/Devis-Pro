@@ -137,6 +137,26 @@ export type Database = {
         }
         Relationships: []
       }
+      feedbacks: {
+        Row: {
+          id: string
+          created_at: string
+          user_id: string
+          email: string
+          message: string
+          is_read: boolean
+        }
+        Insert: {
+          user_id: string
+          email: string
+          message: string
+          is_read?: boolean
+        }
+        Update: {
+          is_read?: boolean
+        }
+        Relationships: []
+      }
       devis: {
         Row: {
           id: string

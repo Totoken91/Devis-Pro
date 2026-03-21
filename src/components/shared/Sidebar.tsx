@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X, CreditCard, Zap, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationBell } from './NotificationBell'
+import { FeedbackButton } from './FeedbackButton'
 import { Spinner } from '@/components/ui/Spinner'
 
 const navItems = [
@@ -152,6 +153,11 @@ export function Sidebar({ userEmail, plan = 'free', isAdmin = false }: { userEma
           </Link>
         </div>
       )}
+
+      {/* Feedback */}
+      <div className="px-3 mb-2">
+        <FeedbackButton />
+      </div>
 
       {/* Bottom */}
       <div className="px-3 pb-4 border-t border-white/6 pt-3 space-y-0.5">
