@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/supabase'
-import { Save, CheckCircle, Upload, X, Palette } from 'lucide-react'
+import { Save, CheckCircle, Upload, X, Palette, CreditCard, Scale, PenLine } from 'lucide-react'
 import { Spinner } from '@/components/ui/Spinner'
 import Image from 'next/image'
 
@@ -16,12 +16,18 @@ const COLOR_PRESETS = [
 
 export function ProfilForm({ profile }: { profile: Profile | null }) {
   const [form, setForm] = useState({
-    full_name:    profile?.full_name    ?? '',
-    company_name: profile?.company_name ?? '',
-    email:        profile?.email        ?? '',
-    phone:        profile?.phone        ?? '',
-    address:      profile?.address      ?? '',
-    siret:        profile?.siret        ?? '',
+    full_name:        profile?.full_name        ?? '',
+    company_name:     profile?.company_name     ?? '',
+    email:            profile?.email            ?? '',
+    phone:            profile?.phone            ?? '',
+    address:          profile?.address          ?? '',
+    siret:            profile?.siret            ?? '',
+    tva_numero:       profile?.tva_numero       ?? '',
+    iban:             profile?.iban             ?? '',
+    bic:              profile?.bic              ?? '',
+    statut_juridique: profile?.statut_juridique ?? '',
+    capital_social:   profile?.capital_social   ?? '',
+    footer_custom:    profile?.footer_custom    ?? '',
   })
   const [brandColor, setBrandColor] = useState(profile?.brand_color ?? '#6CC531')
   const [logoUrl, setLogoUrl] = useState(profile?.logo_url ?? '')
@@ -80,13 +86,19 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
     e.preventDefault()
     setLoading(true); setError('')
     const { error } = await supabase.from('profiles').update({
-      full_name:    form.full_name    || null,
-      company_name: form.company_name || null,
-      phone:        form.phone        || null,
-      address:      form.address      || null,
-      siret:        form.siret        || null,
-      logo_url:     logoUrl           || null,
-      brand_color:  brandColor        || null,
+      full_name:        form.full_name        || null,
+      company_name:     form.company_name     || null,
+      phone:            form.phone            || null,
+      address:          form.address          || null,
+      siret:            form.siret            || null,
+      tva_numero:       form.tva_numero       || null,
+      iban:             form.iban             || null,
+      bic:              form.bic              || null,
+      statut_juridique: form.statut_juridique || null,
+      capital_social:   form.capital_social   || null,
+      footer_custom:    form.footer_custom    || null,
+      logo_url:         logoUrl               || null,
+      brand_color:      brandColor            || null,
     }).eq('id', profile!.id)
     if (error) { setError('Erreur lors de la sauvegarde.') } else { setSaved(true) }
     setLoading(false)
@@ -135,6 +147,102 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
               onChange={handleChange}
               rows={3}
               placeholder={'12 rue de la Paix\n75001 Paris'}
+              className={inputCls + ' resize-none'}
+            />
+          </div>
+        </div>
+
+        {/* ── TVA & Bancaire ── */}
+        <div className="bg-white/[0.04] rounded-2xl border border-white/8 p-6 space-y-4">
+          <h2 className="text-xs font-semibold text-white/30 uppercase tracking-widest pb-4 border-b border-white/8 flex items-center gap-1.5">
+            <CreditCard size={12} />
+            TVA & coordonnées bancaires
+          </h2>
+          <p className="text-[11px] text-white/25 -mt-2">Affichées sur tes devis pour faciliter le paiement.</p>
+
+          <div>
+            <label className="block text-xs font-medium text-white/40 mb-1.5">Numéro de TVA intracommunautaire</label>
+            <input
+              type="text" name="tva_numero"
+              value={form.tva_numero}
+              onChange={handleChange}
+              placeholder="FR 12 345678901"
+              className={inputCls}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">IBAN</label>
+              <input
+                type="text" name="iban"
+                value={form.iban}
+                onChange={handleChange}
+                placeholder="FR76 1234 5678 9012 3456 7890 123"
+                className={inputCls + ' font-mono text-xs'}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">BIC</label>
+              <input
+                type="text" name="bic"
+                value={form.bic}
+                onChange={handleChange}
+                placeholder="BNPAFRPP"
+                className={inputCls + ' font-mono text-xs'}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ── Mentions légales ── */}
+        <div className="bg-white/[0.04] rounded-2xl border border-white/8 p-6 space-y-4">
+          <h2 className="text-xs font-semibold text-white/30 uppercase tracking-widest pb-4 border-b border-white/8 flex items-center gap-1.5">
+            <Scale size={12} />
+            Mentions légales
+          </h2>
+          <p className="text-[11px] text-white/25 -mt-2">Crédibilise tes devis avec ton statut juridique.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Statut juridique</label>
+              <input
+                type="text" name="statut_juridique"
+                value={form.statut_juridique}
+                onChange={handleChange}
+                placeholder="Auto-entrepreneur, SAS, SARL…"
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Capital social (optionnel)</label>
+              <input
+                type="text" name="capital_social"
+                value={form.capital_social}
+                onChange={handleChange}
+                placeholder="10 000 €"
+                className={inputCls}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ── Signature / Footer ── */}
+        <div className="bg-white/[0.04] rounded-2xl border border-white/8 p-6 space-y-4">
+          <h2 className="text-xs font-semibold text-white/30 uppercase tracking-widest pb-4 border-b border-white/8 flex items-center gap-1.5">
+            <PenLine size={12} />
+            Signature & pied de page
+          </h2>
+          <p className="text-[11px] text-white/25 -mt-2">Texte affiché en bas de chaque devis.</p>
+
+          <div>
+            <label className="block text-xs font-medium text-white/40 mb-1.5">Texte personnalisé</label>
+            <textarea
+              name="footer_custom"
+              value={form.footer_custom}
+              onChange={handleChange}
+              rows={3}
+              placeholder={'Bon pour accord, signature du client :\n\n_________________________'}
               className={inputCls + ' resize-none'}
             />
           </div>

@@ -66,6 +66,37 @@ function NotesBlock({ notes, conditions, labelCls }: { notes: string; conditions
   )
 }
 
+function LegalFooterBlock({ profile, labelCls }: { profile: Profile; labelCls: string }) {
+  const hasLegal = profile.siret || profile.tva_numero || profile.statut_juridique
+  const hasBank = profile.iban || profile.bic
+  if (!hasLegal && !hasBank && !profile.footer_custom) return null
+  return (
+    <div className="border-t border-gray-100 pt-2 space-y-1.5">
+      {hasBank && (
+        <div>
+          <p className={labelCls}>Coordonnées bancaires</p>
+          <div className="text-gray-400 space-y-0.5">
+            {profile.iban && <p><span className="text-gray-300 font-medium mr-1">IBAN</span><span className="font-mono">{profile.iban}</span></p>}
+            {profile.bic && <p><span className="text-gray-300 font-medium mr-1">BIC</span><span className="font-mono">{profile.bic}</span></p>}
+          </div>
+        </div>
+      )}
+      {hasLegal && (
+        <p className="text-gray-300 text-[8px]">
+          {[
+            profile.siret && `SIRET : ${profile.siret}`,
+            profile.tva_numero && `TVA : ${profile.tva_numero}`,
+            profile.statut_juridique && (profile.capital_social ? `${profile.statut_juridique} — Capital : ${profile.capital_social}` : profile.statut_juridique),
+          ].filter(Boolean).join(' · ')}
+        </p>
+      )}
+      {profile.footer_custom && (
+        <p className="text-gray-400 whitespace-pre-line text-[9px] pt-1">{profile.footer_custom}</p>
+      )}
+    </div>
+  )
+}
+
 /* ═══════════════════════════════════════════════════════════════
    CLASSIQUE — Accent strip, structured traditional layout
    ═══════════════════════════════════════════════════════════════ */
@@ -157,6 +188,7 @@ function ClassiquePreview(props: DevisPreviewProps) {
         </div>
 
         <NotesBlock notes={notes} conditions={conditions} labelCls={labelCls} />
+        <LegalFooterBlock profile={profile} labelCls={labelCls} />
       </div>
       <div className="px-5 py-2 border-t border-gray-100 text-center text-gray-300">
         Propulsé par <span className="font-semibold text-gray-400">Deviso</span>
@@ -247,6 +279,7 @@ function ModernePreview(props: DevisPreviewProps) {
         </div>
 
         <NotesBlock notes={notes} conditions={conditions} labelCls={labelCls} />
+        <LegalFooterBlock profile={profile} labelCls={labelCls} />
       </div>
       <div className="px-5 py-2 border-t border-gray-100 text-center text-gray-300">
         Propulsé par <span className="font-semibold text-gray-400">Deviso</span>
@@ -327,6 +360,7 @@ function MinimalistePreview(props: DevisPreviewProps) {
         </div>
 
         <NotesBlock notes={notes} conditions={conditions} labelCls={labelCls} />
+        <LegalFooterBlock profile={profile} labelCls={labelCls} />
       </div>
       <div className="px-5 py-2 text-center text-gray-200 text-[9px]">
         Propulsé par <span className="font-medium text-gray-300">Deviso</span>

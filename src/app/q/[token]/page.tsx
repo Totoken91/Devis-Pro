@@ -10,14 +10,20 @@ import { Calendar, MapPin, Phone, Mail, Building2 } from 'lucide-react'
 
 type DevisPublic = Devis & {
   profiles: {
-    full_name:    string | null
-    company_name: string | null
-    email:        string
-    phone:        string | null
-    address:      string | null
-    siret:        string | null
-    logo_url:     string | null
-    brand_color:  string | null
+    full_name:        string | null
+    company_name:     string | null
+    email:            string
+    phone:            string | null
+    address:          string | null
+    siret:            string | null
+    logo_url:         string | null
+    brand_color:      string | null
+    tva_numero:       string | null
+    iban:             string | null
+    bic:              string | null
+    statut_juridique: string | null
+    capital_social:   string | null
+    footer_custom:    string | null
   } | null
   clients: {
     name:    string
@@ -57,7 +63,7 @@ export default async function DevisPublicPage({ params }: { params: { token: str
   const row = devisRow as Record<string, unknown> & { user_id: string }
   const { data: profileRow } = await admin
     .from('profiles')
-    .select('full_name, company_name, email, phone, address, siret, logo_url, brand_color')
+    .select('full_name, company_name, email, phone, address, siret, logo_url, brand_color, tva_numero, iban, bic, statut_juridique, capital_social, footer_custom')
     .eq('id', row.user_id)
     .single()
 
@@ -167,8 +173,17 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                     <MapPin size={10} className="shrink-0 mt-0.5" />{emetteur.address}
                   </p>
                 )}
-                {emetteur?.siret && (
-                  <p className="text-[11px] text-gray-300 mt-1.5">SIRET : {emetteur.siret}</p>
+                {(emetteur?.siret || emetteur?.tva_numero || emetteur?.statut_juridique) && (
+                  <div className="mt-1.5 space-y-0.5 text-[11px] text-gray-300">
+                    {emetteur.siret && <p>SIRET : {emetteur.siret}</p>}
+                    {emetteur.tva_numero && <p>TVA : {emetteur.tva_numero}</p>}
+                    {emetteur.statut_juridique && (
+                      <p>
+                        {emetteur.statut_juridique}
+                        {emetteur.capital_social && ` — Capital : ${emetteur.capital_social}`}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
               {destinataire && (
@@ -243,6 +258,21 @@ export default async function DevisPublicPage({ params }: { params: { token: str
               </div>
             </div>
 
+            {/* ── Coordonnées bancaires ── */}
+            {(emetteur?.iban || emetteur?.bic) && (
+              <div className="border-t border-gray-100 pt-6 mb-6">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Coordonnées bancaires</p>
+                <div className="bg-gray-50 rounded-lg px-4 py-3 space-y-1">
+                  {emetteur.iban && (
+                    <p className="text-sm text-gray-600"><span className="text-gray-400 text-xs font-medium mr-2">IBAN</span><span className="font-mono">{emetteur.iban}</span></p>
+                  )}
+                  {emetteur.bic && (
+                    <p className="text-sm text-gray-600"><span className="text-gray-400 text-xs font-medium mr-2">BIC</span><span className="font-mono">{emetteur.bic}</span></p>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* ── Notes & Conditions ── */}
             {(d.notes || d.conditions) && (
               <div className="border-t border-gray-100 pt-6 space-y-4 mb-6">
@@ -258,6 +288,13 @@ export default async function DevisPublicPage({ params }: { params: { token: str
                     <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{d.conditions}</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* ── Signature / Footer custom ── */}
+            {emetteur?.footer_custom && (
+              <div className="border-t border-gray-100 pt-6 mb-6">
+                <p className="text-sm text-gray-500 whitespace-pre-line leading-relaxed">{emetteur.footer_custom}</p>
               </div>
             )}
 

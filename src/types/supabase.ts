@@ -35,6 +35,12 @@ export type Database = {
           siret: string | null
           logo_url: string | null
           brand_color: string | null
+          tva_numero: string | null
+          iban: string | null
+          bic: string | null
+          statut_juridique: string | null
+          capital_social: string | null
+          footer_custom: string | null
           plan: 'free' | 'pro'
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -50,6 +56,12 @@ export type Database = {
           siret?: string | null
           logo_url?: string | null
           brand_color?: string | null
+          tva_numero?: string | null
+          iban?: string | null
+          bic?: string | null
+          statut_juridique?: string | null
+          capital_social?: string | null
+          footer_custom?: string | null
           plan?: 'free' | 'pro'
         }
         Update: {
@@ -60,6 +72,12 @@ export type Database = {
           siret?: string | null
           logo_url?: string | null
           brand_color?: string | null
+          tva_numero?: string | null
+          iban?: string | null
+          bic?: string | null
+          statut_juridique?: string | null
+          capital_social?: string | null
+          footer_custom?: string | null
           plan?: 'free' | 'pro'
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
