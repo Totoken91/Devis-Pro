@@ -4,8 +4,8 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, generateToken } from '@/lib/utils'
-import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut } from '@/types/supabase'
-import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing, Lock, Zap } from 'lucide-react'
+import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut, DevisModele } from '@/types/supabase'
+import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing, Lock, Zap, BookmarkPlus, AlertTriangle, Copy } from 'lucide-react'
 import { Spinner } from '@/components/ui/Spinner'
 import Link from 'next/link'
 import { DevisPreview } from '@/components/devis/DevisPreview'
@@ -26,6 +26,7 @@ interface DevisFormProps {
   profile: Profile
   nextNumero?: string
   initialData?: Devis
+  modeles?: DevisModele[]
 }
 
 const STATUT_BADGE: Record<DevisStatut, string> = {
@@ -43,7 +44,7 @@ const STATUT_LABEL: Record<DevisStatut, string> = {
 
 const inputCls = 'w-full border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 bg-white/5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand/50 transition-all'
 
-export function DevisForm({ mode, clients, profile, nextNumero, initialData }: DevisFormProps) {
+export function DevisForm({ mode, clients, profile, nextNumero, initialData, modeles = [] }: DevisFormProps) {
   const router   = useRouter()
   const supabase = createClient()
 
@@ -127,6 +128,38 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
   const selectedClient = clients.find((c) => c.id === clientId) ?? null
   const brandColor = profile.brand_color || '#6CC531'
 
+  // Devis finalisés : lecture seule
+  const locked = mode === 'edit' && ['accepte', 'refuse', 'expire'].includes(initialData!.statut)
+
+  // Sauvegarder comme modèle
+  const [savingModel, setSavingModel] = useState(false)
+  const handleSaveAsModel = async () => {
+    const name = window.prompt('Nom du modèle :')
+    if (!name?.trim()) return
+    setSavingModel(true)
+    await supabase.from('devis_modeles').insert({
+      user_id: profile.id,
+      name: name.trim(),
+      lignes,
+      tva_taux: tvaT,
+      notes: notes || null,
+      conditions: conditions || null,
+      template,
+    })
+    setSavingModel(false)
+    alert('Modèle sauvegardé !')
+  }
+
+  const loadModel = (id: string) => {
+    const m = modeles.find((x) => x.id === id)
+    if (!m) return
+    setLignes(m.lignes?.length ? m.lignes : [newLigne()])
+    setTvaT(m.tva_taux ?? 20)
+    setNotes(m.notes ?? '')
+    setConditions(m.conditions ?? '')
+    setTemplate((m.template ?? 'classique') as DevisTemplate)
+  }
+
   return (
     <div className="p-4 md:p-8">
 
@@ -164,25 +197,57 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             <span className="hidden sm:inline">Aperçu</span>
           </button>
           <button
-            onClick={() => handleSave('brouillon')}
-            disabled={!!loading}
-            className="flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-4 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleSaveAsModel}
+            disabled={savingModel}
+            className="flex items-center gap-2 border border-white/10 text-white/40 font-medium rounded-lg px-3 py-2 text-sm hover:bg-white/5 hover:text-white/60 transition-colors cursor-pointer disabled:opacity-50"
+            title="Sauvegarder comme modèle"
           >
-            {loading === 'draft' ? <span className="inline-flex items-center gap-2"><Spinner />Sauvegarde…</span> : <><Save size={14} />Brouillon</>}
+            {savingModel ? <Spinner size={14} /> : <BookmarkPlus size={14} />}
+            <span className="hidden sm:inline">Modèle</span>
           </button>
-          <button
-            onClick={() => handleSave('envoye')}
-            disabled={!!loading}
-            className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-4 py-2 text-sm transition-all shadow-sm shadow-brand/25 hover:shadow-brand/40 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading === 'send' ? <span className="inline-flex items-center gap-2"><Spinner />Envoi…</span> : <><Send size={14} />Finaliser {'&'} envoyer</>}
-          </button>
+          {!locked && (
+            <>
+              <button
+                onClick={() => handleSave('brouillon')}
+                disabled={!!loading}
+                className="flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-4 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading === 'draft' ? <span className="inline-flex items-center gap-2"><Spinner />Sauvegarde…</span> : <><Save size={14} />Brouillon</>}
+              </button>
+              <button
+                onClick={() => handleSave('envoye')}
+                disabled={!!loading}
+                className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-4 py-2 text-sm transition-all shadow-sm shadow-brand/25 hover:shadow-brand/40 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading === 'send' ? <span className="inline-flex items-center gap-2"><Spinner />Envoi…</span> : <><Send size={14} />Finaliser {'&'} envoyer</>}
+              </button>
+            </>
+          )}
+          {locked && (
+            <Link
+              href={`/devis/nouveau`}
+              className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-4 py-2 text-sm transition-all shadow-sm shadow-brand/25 hover:shadow-brand/40"
+            >
+              <Copy size={14} />
+              Dupliquer
+            </Link>
+          )}
         </div>
       </div>
 
+      {locked && (
+        <div className="max-w-4xl mb-5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-5 py-3.5 flex items-center gap-3">
+          <AlertTriangle size={16} className="text-amber-400 shrink-0" />
+          <p className="text-sm text-amber-300/80">
+            Ce devis a été <strong>{STATUT_LABEL[initialData!.statut].toLowerCase()}</strong> et ne peut plus être modifié.
+            Tu peux le <strong>sauvegarder comme modèle</strong> ou le <strong>dupliquer</strong>.
+          </p>
+        </div>
+      )}
+
       <div className="flex gap-8 items-start">
         {/* ── Form column ── */}
-        <div className="flex-1 max-w-4xl space-y-5 min-w-0">
+        <div className={`flex-1 max-w-4xl space-y-5 min-w-0 ${locked ? 'pointer-events-none opacity-60 select-none' : ''}`}>
 
           {/* ── Informations ── */}
           <Section title="Informations">
@@ -233,6 +298,21 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
                   <option value="minimaliste">Minimaliste</option>
                 </select>
               </div>
+              {mode === 'create' && modeles.length > 0 && (
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-medium text-white/40 mb-1.5">Charger un modèle</label>
+                  <select
+                    value=""
+                    onChange={(e) => loadModel(e.target.value)}
+                    className={inputCls}
+                  >
+                    <option value="">— Sélectionner un modèle —</option>
+                    {modeles.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </Section>
 

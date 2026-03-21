@@ -158,6 +158,36 @@ CREATE POLICY "notifications_insert_service"
 -- → Database → Replication → cocher "notifications" dans Source Tables
 
 -- ============================================================
+-- TABLE: devis_modeles (modèles réutilisables)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.devis_modeles (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name        TEXT NOT NULL,
+  lignes      JSONB NOT NULL DEFAULT '[]',
+  tva_taux    NUMERIC(5,2) NOT NULL DEFAULT 20,
+  notes       TEXT,
+  conditions  TEXT,
+  template    TEXT NOT NULL DEFAULT 'classique'
+              CHECK (template IN ('classique','moderne','minimaliste'))
+);
+
+ALTER TABLE public.devis_modeles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "devis_modeles_select_own"
+  ON public.devis_modeles FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "devis_modeles_insert_own"
+  ON public.devis_modeles FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "devis_modeles_delete_own"
+  ON public.devis_modeles FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- ============================================================
 -- TRIGGER: créer le profil automatiquement à l'inscription
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()

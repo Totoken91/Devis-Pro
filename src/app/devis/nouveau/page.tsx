@@ -2,7 +2,7 @@ import { AppLayout } from '@/components/shared/AppLayout'
 import { createClient } from '@/lib/supabase/server'
 import { DevisForm } from '../DevisForm'
 import { generateNumeroDevis } from '@/lib/utils'
-import type { Client, Profile } from '@/types/supabase'
+import type { Client, Profile, DevisModele } from '@/types/supabase'
 import { Lock, ArrowLeft, Zap } from 'lucide-react'
 import Link from 'next/link'
 
@@ -20,6 +20,7 @@ export default async function NouveauDevisPage() {
     { data: clients },
     { count: totalCount },
     { count: moisCount },
+    { data: modeles },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user!.id).single(),
     supabase.from('clients').select('*').eq('user_id', user!.id).order('name'),
@@ -27,6 +28,7 @@ export default async function NouveauDevisPage() {
     supabase.from('devis').select('*', { count: 'exact', head: true })
       .eq('user_id', user!.id)
       .gte('created_at', debutMois),
+    supabase.from('devis_modeles').select('*').eq('user_id', user!.id).order('name'),
   ])
 
   const plan          = (profile as unknown as Profile)?.plan ?? 'free'
@@ -105,6 +107,7 @@ export default async function NouveauDevisPage() {
         clients={(clients ?? []) as unknown as Client[]}
         profile={profile as unknown as Profile}
         nextNumero={nextNumero}
+        modeles={(modeles ?? []) as unknown as DevisModele[]}
       />
     </AppLayout>
   )

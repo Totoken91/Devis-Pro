@@ -164,6 +164,39 @@ export type Database = {
         }
         Relationships: []
       }
+      devis_modeles: {
+        Row: {
+          id: string
+          created_at: string
+          user_id: string
+          name: string
+          lignes: DevisLigne[]
+          tva_taux: number
+          notes: string | null
+          conditions: string | null
+          template: 'classique' | 'moderne' | 'minimaliste'
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          user_id: string
+          name: string
+          lignes?: DevisLigne[]
+          tva_taux?: number
+          notes?: string | null
+          conditions?: string | null
+          template?: 'classique' | 'moderne' | 'minimaliste'
+        }
+        Update: {
+          name?: string
+          lignes?: DevisLigne[]
+          tva_taux?: number
+          notes?: string | null
+          conditions?: string | null
+          template?: 'classique' | 'moderne' | 'minimaliste'
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
@@ -188,3 +221,4 @@ export type DevisStatut = Devis['statut']
 export type DevisTemplate = Devis['template']
 export type Plan = Profile['plan']
 export type Notification = Database['public']['Tables']['notifications']['Row']
+export type DevisModele = Database['public']['Tables']['devis_modeles']['Row']
