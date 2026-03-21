@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
               <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   ${body.logoUrl
-                    ? `<td><img src="${body.logoUrl}" alt="${body.emetteurName}" height="32" style="display:block;height:32px;width:auto;object-fit:contain;" /></td>`
+                    ? `<td><img src="${body.logoUrl}" alt="${body.emetteurName}" height="56" style="display:block;height:56px;width:auto;max-width:180px;object-fit:contain;" /></td>`
                     : `<td style="background:${accentColor};border-radius:8px;width:28px;height:28px;text-align:center;vertical-align:middle;">
                     <span style="color:#ffffff;font-weight:700;font-size:14px;line-height:28px;">D</span>
                   </td>
