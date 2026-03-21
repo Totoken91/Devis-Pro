@@ -215,7 +215,7 @@ export function ProfilForm({ profile }: { profile: Profile | null }) {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5">Capital social (optionnel)</label>
+              <label className="block text-xs font-medium text-white/40 mb-1.5">Capital social</label>
               <input
                 type="text" name="capital_social"
                 value={form.capital_social}
