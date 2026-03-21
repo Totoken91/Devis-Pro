@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
+const BOT_PATTERN = /bot|crawl|spider|slurp|vercel|lighthouse|headless|preview|monitor|pingdom|uptimerobot|pagespeed|fetch|python|curl|wget/i
+
 export async function POST(req: NextRequest) {
   try {
     // Sur Vercel, ne tracker qu'en production (pas sur les previews/branches)
     if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
+      return NextResponse.json({ ok: true })
+    }
+
+    // Ignorer les bots et outils automatisés
+    const ua = req.headers.get('user-agent') ?? ''
+    if (!ua || BOT_PATTERN.test(ua)) {
       return NextResponse.json({ ok: true })
     }
 
