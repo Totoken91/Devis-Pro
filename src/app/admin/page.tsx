@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { formatCurrency } from '@/lib/utils'
 import {
-  Users, FileText, TrendingUp, Shield, Crown, Calendar,
+  Users, FileText, TrendingUp, Shield, Crown, Calendar, Eye,
 } from 'lucide-react'
 
 export default async function AdminPage() {
@@ -31,6 +31,7 @@ export default async function AdminPage() {
     { data: devisCA },
     { data: recentUsers },
     { count: devisThisMonth },
+    { data: devisOuverts },
   ] = await Promise.all([
     admin.from('profiles').select('*', { count: 'exact', head: true }),
     admin.from('profiles').select('*', { count: 'exact', head: true }).eq('plan', 'pro'),
@@ -38,7 +39,10 @@ export default async function AdminPage() {
     admin.from('devis').select('montant_ttc').eq('statut', 'accepte'),
     admin.from('profiles').select('id, email, full_name, company_name, plan, created_at').order('created_at', { ascending: false }).limit(10),
     admin.from('devis').select('*', { count: 'exact', head: true }).gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
+    admin.from('devis').select('client_id').not('ouvert_le', 'is', null),
   ])
+
+  const uniqueVisitors = new Set(devisOuverts?.map(d => d.client_id)).size
 
   const caTotal = devisCA?.reduce((sum, d) => sum + (d.montant_ttc ?? 0), 0) ?? 0
   const freeUsers = (totalUsers ?? 0) - (proUsers ?? 0)
@@ -62,7 +66,7 @@ export default async function AdminPage() {
         </div>
 
         {/* ── Stats globales ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10">
           <StatCard
             label="Utilisateurs"
             value={String(totalUsers ?? 0)}
@@ -87,6 +91,12 @@ export default async function AdminPage() {
             value={totalUsers ? `${Math.round(((proUsers ?? 0) / totalUsers) * 100)}%` : '0%'}
             icon={<Crown size={14} />}
             sub={`${proUsers ?? 0} / ${totalUsers ?? 0}`}
+          />
+          <StatCard
+            label="Visiteurs uniques"
+            value={String(uniqueVisitors)}
+            icon={<Eye size={14} />}
+            sub="clients ayant ouvert un devis"
           />
         </div>
 
