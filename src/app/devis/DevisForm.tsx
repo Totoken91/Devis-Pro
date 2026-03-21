@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, generateToken } from '@/lib/utils'
 import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut } from '@/types/supabase'
-import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing, Lock, Zap } from 'lucide-react'
 import { Spinner } from '@/components/ui/Spinner'
 import Link from 'next/link'
 import { DevisPreview } from '@/components/devis/DevisPreview'
@@ -57,7 +57,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
   const [lignes,      setLignes]      = useState<DevisLigne[]>(
     initialData?.lignes?.length ? initialData.lignes : [newLigne()]
   )
-  const [relanceActive, setRelanceActive] = useState(initialData?.relance_active ?? false)
+  const [relanceActive, setRelanceActive] = useState(profile.plan === 'pro' && (initialData?.relance_active ?? false))
   const [loading, setLoading] = useState<'draft' | 'send' | null>(null)
   const [showPreview, setShowPreview] = useState(true)
 
@@ -361,31 +361,45 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
           </div>
 
           {/* ── Relances automatiques ── */}
-          <div className="bg-white/[0.04] rounded-2xl border border-white/8 p-5">
+          <div className={`rounded-2xl border p-5 ${profile.plan === 'pro' ? 'bg-white/[0.04] border-white/8' : 'bg-white/[0.02] border-white/6'}`}>
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <BellRing size={14} className="text-brand/60" />
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${profile.plan === 'pro' ? 'bg-brand/10 border border-brand/20' : 'bg-white/5 border border-white/10'}`}>
+                  {profile.plan === 'pro'
+                    ? <BellRing size={14} className="text-brand/60" />
+                    : <Lock size={14} className="text-white/30" />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white/80">Relances automatiques</p>
-                  <p className="text-xs text-white/35 mt-0.5 max-w-sm">
-                    Deux rappels automatiques sont envoyés au client : à J+3 puis J+7 après l&apos;envoi du devis.
-                  </p>
+                  <p className={`text-sm font-medium ${profile.plan === 'pro' ? 'text-white/80' : 'text-white/40'}`}>Relances automatiques</p>
+                  {profile.plan === 'pro' ? (
+                    <p className="text-xs text-white/35 mt-0.5 max-w-sm">
+                      Deux rappels automatiques sont envoyés au client : à J+3 puis J+7 après l&apos;envoi du devis.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-white/30 mt-0.5 max-w-sm">
+                      Fonctionnalité réservée au plan Pro.{' '}
+                      <Link href="/parametres/facturation" className="inline-flex items-center gap-1 text-brand hover:text-brand-dark transition-colors">
+                        <Zap size={10} />Passer Pro
+                      </Link>
+                    </p>
+                  )}
                 </div>
               </div>
               <button
                 type="button"
                 role="switch"
                 aria-checked={relanceActive}
+                disabled={profile.plan !== 'pro'}
                 onClick={() => setRelanceActive((v) => !v)}
-                className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer focus:outline-none ${
-                  relanceActive ? 'bg-brand' : 'bg-white/15'
+                className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+                  profile.plan !== 'pro'
+                    ? 'bg-white/8 cursor-not-allowed opacity-50'
+                    : relanceActive ? 'bg-brand cursor-pointer' : 'bg-white/15 cursor-pointer'
                 }`}
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                    relanceActive ? 'translate-x-6' : 'translate-x-1'
+                    relanceActive && profile.plan === 'pro' ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
               </button>

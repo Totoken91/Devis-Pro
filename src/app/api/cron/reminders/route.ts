@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
 
   const [{ data: clients }, { data: profiles }] = await Promise.all([
     admin.from('clients').select('id, name, company, email').in('id', clientIds),
-    admin.from('profiles').select('id, full_name, company_name, email, brand_color').in('id', userIds),
+    admin.from('profiles').select('id, full_name, company_name, email, brand_color, plan').in('id', userIds),
   ])
 
   const clientMap  = Object.fromEntries((clients  ?? []).map((c) => [c.id, c]))
@@ -92,6 +92,11 @@ export async function GET(req: NextRequest) {
 
     if (!client?.email || !profile) {
       errors.push(`Devis ${devis.numero} : client sans email ou profil manquant`)
+      continue
+    }
+
+    // Relances réservées aux utilisateurs Pro
+    if (profile.plan !== 'pro') {
       continue
     }
 
