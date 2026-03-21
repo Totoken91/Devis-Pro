@@ -139,13 +139,12 @@ export function DevisList({ initialDevis, hasClients }: { initialDevis: DevisWit
                         {(() => {
                           const j = getRelanceJours(d)
                           if (j === null) return null
+                          if (j < 0) return null
                           const { cls, label } = j > 1
-                            ? { cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20',     label: `J-${j}` }
+                            ? { cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20',       label: `J-${j}` }
                             : j === 1
-                            ? { cls: 'bg-amber-500/10 text-amber-400 border-amber-500/20',  label: 'Demain' }
-                            : j === 0
-                            ? { cls: 'bg-orange-500/10 text-orange-400 border-orange-500/20', label: "Auj." }
-                            : { cls: 'bg-red-500/10 text-red-400 border-red-500/20',         label: 'En retard' }
+                            ? { cls: 'bg-amber-500/10 text-amber-400 border-amber-500/20',    label: 'Demain' }
+                            : { cls: 'bg-orange-500/10 text-orange-400 border-orange-500/20', label: "Auj." }
                           return (
                             <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium border ${cls}`}>
                               <Bell size={9} />
