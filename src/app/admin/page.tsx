@@ -31,7 +31,7 @@ export default async function AdminPage() {
     { data: devisCA },
     { data: recentUsers },
     { count: devisThisMonth },
-    { data: devisOuverts },
+    { count: uniqueVisitors },
   ] = await Promise.all([
     admin.from('profiles').select('*', { count: 'exact', head: true }),
     admin.from('profiles').select('*', { count: 'exact', head: true }).eq('plan', 'pro'),
@@ -39,10 +39,8 @@ export default async function AdminPage() {
     admin.from('devis').select('montant_ttc').eq('statut', 'accepte'),
     admin.from('profiles').select('id, email, full_name, company_name, plan, created_at').order('created_at', { ascending: false }).limit(10),
     admin.from('devis').select('*', { count: 'exact', head: true }).gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
-    admin.from('devis').select('client_id').not('ouvert_le', 'is', null),
+    admin.from('visitors').select('*', { count: 'exact', head: true }),
   ])
-
-  const uniqueVisitors = new Set(devisOuverts?.map(d => d.client_id)).size
 
   const caTotal = devisCA?.reduce((sum, d) => sum + (d.montant_ttc ?? 0), 0) ?? 0
   const freeUsers = (totalUsers ?? 0) - (proUsers ?? 0)
@@ -96,7 +94,7 @@ export default async function AdminPage() {
             label="Visiteurs uniques"
             value={String(uniqueVisitors)}
             icon={<Eye size={14} />}
-            sub="clients ayant ouvert un devis"
+            sub="navigateurs distincts"
           />
         </div>
 

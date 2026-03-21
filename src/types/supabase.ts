@@ -4,6 +4,24 @@
 export type Database = {
   public: {
     Tables: {
+      visitors: {
+        Row: {
+          visitor_id: string
+          first_seen: string
+          last_seen: string
+        }
+        Insert: {
+          visitor_id: string
+          first_seen?: string
+          last_seen?: string
+        }
+        Update: {
+          visitor_id?: string
+          first_seen?: string
+          last_seen?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           id: string
@@ -203,6 +221,7 @@ export type Database = {
     Functions: Record<string, never>
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>
+    PostgrestVersion: "12"
   }
 }
 

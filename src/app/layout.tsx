@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Sora, DM_Sans } from 'next/font/google'
 import Script from 'next/script'
+import { VisitorTracker } from '@/components/shared/VisitorTracker'
 import './globals.css'
 
 const sora = Sora({
@@ -32,7 +33,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${sora.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <VisitorTracker />
+      </body>
       <Script id="meta-pixel" strategy="afterInteractive">
         {`!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
