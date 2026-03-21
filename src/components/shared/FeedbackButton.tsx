@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { MessageSquarePlus, Send, X, CheckCircle } from 'lucide-react'
 import { Spinner } from '@/components/ui/Spinner'
 
@@ -35,8 +36,8 @@ export function FeedbackButton() {
         Feedback
       </button>
 
-      {open && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      {open && createPortal(
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
           <div className="bg-[#0D1320] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 w-full max-w-sm overflow-hidden">
 
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
@@ -92,7 +93,8 @@ export function FeedbackButton() {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )
