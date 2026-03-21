@@ -8,13 +8,15 @@ import { NextRequest, NextResponse } from 'next/server'
 // En local, appeler manuellement : curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/reminders
 
 export async function GET(req: NextRequest) {
-  // ── Auth ────────────────────────────────────────────────────
+  // ── Auth (obligatoire) ──────────────────────────────────────
   const cronSecret = process.env.CRON_SECRET
-  if (cronSecret) {
-    const auth = req.headers.get('authorization')
-    if (auth !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-    }
+  if (!cronSecret) {
+    console.error('[cron/reminders] CRON_SECRET non configuré')
+    return NextResponse.json({ error: 'Configuration manquante' }, { status: 500 })
+  }
+  const auth = req.headers.get('authorization')
+  if (auth !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
   const admin = createAdminClient()

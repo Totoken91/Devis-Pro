@@ -8,7 +8,7 @@ const actionSchema = z.object({
   nom_signataire: z.string().min(1).max(200).trim().optional(),
 })
 
-const TOKEN_RE = /^[a-z0-9]{12,32}$/
+const TOKEN_RE = /^[a-z0-9]{12,64}$/
 
 export async function POST(
   req: NextRequest,
@@ -54,7 +54,8 @@ export async function POST(
   const { error } = await admin.from('devis').update(update).eq('id', devis.id)
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[devis/action]', error.message)
+    return NextResponse.json({ error: 'Erreur interne' }, { status: 500 })
   }
 
   // Notifier le freelancer (await pour éviter la terminaison serverless avant envoi)

@@ -21,8 +21,8 @@ export function formatDate(date: string | Date): string {
 }
 
 export function generateToken(): string {
-  // 8 bytes = 64 bits d'entropie cryptographique (Web Crypto API — dispo navigateur + Node 18+)
-  const bytes = new Uint8Array(8)
+  // 16 bytes = 128 bits d'entropie cryptographique (Web Crypto API — dispo navigateur + Node 18+)
+  const bytes = new Uint8Array(16)
   globalThis.crypto.getRandomValues(bytes)
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')
 }

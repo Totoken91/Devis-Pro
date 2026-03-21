@@ -8,7 +8,7 @@ const TRANSPARENT_GIF = Buffer.from(
   'base64'
 )
 
-const TOKEN_RE = /^[a-z0-9]{12,32}$/
+const TOKEN_RE = /^[a-z0-9]{12,64}$/
 
 export async function GET(
   _req: NextRequest,
@@ -35,7 +35,7 @@ export async function GET(
       .update({ statut: 'ouvert', ouvert_le: new Date().toISOString() })
       .eq('id', devis.id)
 
-    sendOwnerNotification(params.token, 'ouvert').catch(() => {})
+    await sendOwnerNotification(params.token, 'ouvert').catch(() => {})
   }
 
   return new NextResponse(TRANSPARENT_GIF, {

@@ -18,8 +18,6 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: 'Paramètres invalides' }, { status: 400 })
 
   const { interval } = parsed.data
-  console.log('[checkout] env monthly:', process.env.STRIPE_PRO_MONTHLY_PRICE_ID ? 'SET' : 'EMPTY')
-  console.log('[checkout] env yearly:', process.env.STRIPE_PRO_YEARLY_PRICE_ID ? 'SET' : 'EMPTY')
   let priceId: string
   try { priceId = getPriceId(interval) }
   catch { return NextResponse.json({ error: `Price ID ${interval} non configuré` }, { status: 500 }) }

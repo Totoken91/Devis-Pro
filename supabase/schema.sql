@@ -49,9 +49,12 @@ CREATE POLICY "profiles_insert_own"
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
+-- Les users peuvent mettre à jour leur profil SAUF le champ plan
+-- (le plan est géré uniquement via le webhook Stripe avec le service role)
 CREATE POLICY "profiles_update_own"
   ON public.profiles FOR UPDATE
-  USING (auth.uid() = id);
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id AND plan = (SELECT plan FROM public.profiles WHERE id = auth.uid()));
 
 -- ============================================================
 -- RLS: clients
@@ -117,10 +120,19 @@ CREATE POLICY "devis_all_own"
   WITH CHECK (auth.uid() = user_id);
 
 -- Lecture anonyme via token public (page /q/[token])
-CREATE POLICY "devis_anon_read_by_token"
-  ON public.devis FOR SELECT
-  TO anon
-  USING (statut IN ('envoye', 'ouvert', 'accepte'));
+-- NOTE: La lecture anonyme passe par l'admin client (service role) dans /q/[token]/page.tsx.
+-- Cette policy est un fallback : on ne la rend pas permissive sans filtrage sur token.
+-- Supprimée car non utilisée — le server component utilise createAdminClient().
+-- Si besoin, utiliser une policy basée sur une variable de session :
+--   USING (token_public = current_setting('app.devis_token', true))
+
+-- ── Indexes pour performances ──
+CREATE INDEX IF NOT EXISTS idx_devis_user_id       ON public.devis(user_id);
+CREATE INDEX IF NOT EXISTS idx_devis_token_public   ON public.devis(token_public);
+CREATE INDEX IF NOT EXISTS idx_devis_client_id      ON public.devis(client_id);
+CREATE INDEX IF NOT EXISTS idx_clients_user_id      ON public.clients(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON public.notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_devis_modeles_user_id ON public.devis_modeles(user_id);
 
 CREATE OR REPLACE TRIGGER devis_set_updated_at
   BEFORE UPDATE ON public.devis
@@ -150,9 +162,11 @@ CREATE POLICY "notifications_update_own"
   ON public.notifications FOR UPDATE
   USING (auth.uid() = user_id);
 
-CREATE POLICY "notifications_insert_service"
+-- INSERT uniquement via service role (admin client) — pas d'insert direct par les users
+-- Le service role bypasse les RLS, donc cette policy bloque seulement les appels client.
+CREATE POLICY "notifications_insert_own"
   ON public.notifications FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (auth.uid() = user_id);
 
 -- NOTE: Pour activer le Realtime, aller dans Supabase Dashboard
 -- → Database → Replication → cocher "notifications" dans Source Tables
@@ -182,6 +196,10 @@ CREATE POLICY "devis_modeles_select_own"
 CREATE POLICY "devis_modeles_insert_own"
   ON public.devis_modeles FOR INSERT
   WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "devis_modeles_update_own"
+  ON public.devis_modeles FOR UPDATE
+  USING (auth.uid() = user_id);
 
 CREATE POLICY "devis_modeles_delete_own"
   ON public.devis_modeles FOR DELETE

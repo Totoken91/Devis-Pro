@@ -1,3 +1,4 @@
+import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { z } from 'zod'
@@ -12,18 +13,30 @@ const sendDevisSchema = z.object({
   numero:        z.string().min(1).max(50).trim(),
   titre:         z.string().min(1).max(300).trim(),
   montantTTC:    z.number().min(0).max(10_000_000),
-  token:         z.string().regex(/^[a-z0-9]{12,32}$/),
+  token:         z.string().regex(/^[a-z0-9]{12,64}$/),
   logoUrl:       z.string().url().max(500).optional(),
   brandColor:    z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 })
 
 export async function POST(req: NextRequest) {
+  // Auth obligatoire
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+
   const raw = await req.json().catch(() => null)
   const parsed = sendDevisSchema.safeParse(raw)
   if (!parsed.success) {
     return NextResponse.json({ error: 'Paramètres invalides' }, { status: 400 })
   }
   const body = parsed.data
+
+  // Échapper les champs texte pour éviter l'injection HTML dans l'email
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  body.clientName   = esc(body.clientName)
+  body.emetteurName = esc(body.emetteurName)
+  body.numero       = esc(body.numero)
+  body.titre        = esc(body.titre)
 
   if (!resend) {
     console.warn('[send-devis] RESEND_API_KEY non configurée, email non envoyé.')
@@ -146,8 +159,8 @@ export async function POST(req: NextRequest) {
   })
 
   if (error) {
-    console.error('[send-devis] Erreur Resend:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[send-devis] Erreur Resend:', error.message)
+    return NextResponse.json({ error: "Erreur lors de l'envoi de l'email" }, { status: 500 })
   }
 
   return NextResponse.json({ success: true })

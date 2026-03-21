@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
           updated_at:              new Date().toISOString(),
         }).eq('id', userId)
 
-        console.log('[webhook] checkout.session.completed → pro pour', userId)
+        console.log('[webhook] checkout.session.completed → pro')
         break
       }
 
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
             updated_at:             new Date().toISOString(),
           }).eq('id', userId)
         }
-        console.log('[webhook] subscription.updated → status:', sub.status, 'pour', userId)
+        console.log('[webhook] subscription.updated → status:', sub.status)
         break
       }
 
@@ -81,13 +81,13 @@ export async function POST(req: NextRequest) {
           updated_at:             new Date().toISOString(),
         }).eq('id', userId)
 
-        console.log('[webhook] subscription.deleted → free pour', userId)
+        console.log('[webhook] subscription.deleted → free')
         break
       }
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
-        console.warn('[webhook] Paiement échoué pour customer:', invoice.customer)
+        console.warn('[webhook] Paiement échoué')
 
         const email = invoice.customer_email
         if (email && resend) {
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
             subject: 'Échec du paiement — Mettez à jour votre moyen de paiement',
             html,
           })
-          console.log('[webhook] Email paiement échoué envoyé à', email)
+          console.log('[webhook] Email paiement échoué envoyé')
         }
         break
       }

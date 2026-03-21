@@ -3,6 +3,11 @@ import { createAdminClient } from '@/lib/supabase/admin'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
+/** Échappe les caractères dangereux pour injection HTML dans les emails */
+function escHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 export type NotifyEvent = 'ouvert' | 'accepte' | 'refuse'
 
 const EVENT_CONFIG: Record<NotifyEvent, { subject: (n: string, t: string) => string; headerBg: string; badge: string; message: string }> = {
@@ -64,7 +69,8 @@ export async function sendOwnerNotification(
     return
   }
 
-  const clientName = devisRow.clients?.company || devisRow.clients?.name || 'Votre client'
+  const clientNameRaw = devisRow.clients?.company || devisRow.clients?.name || 'Votre client'
+  const clientName = escHtml(clientNameRaw)
 
   // ── Notif en base (avec déduplication) ──
   const { data: existing } = await admin
@@ -72,8 +78,7 @@ export async function sendOwnerNotification(
     .select('id')
     .eq('devis_id', devisRow.id)
     .eq('event', event)
-    .limit(1)
-    .single()
+    .maybeSingle()
 
   if (existing) {
     // Notification déjà créée pour cet événement, on skip
@@ -85,7 +90,7 @@ export async function sendOwnerNotification(
     devis_id:     devisRow.id,
     event,
     devis_numero: devisRow.numero,
-    client_name:  clientName,
+    client_name:  clientNameRaw,
   })
 
   if (!resend) {
@@ -103,7 +108,7 @@ export async function sendOwnerNotification(
   }).format(devisRow.montant_ttc)
 
   const signataireLine = nomSignataire
-    ? `<p style="margin:0 0 8px;color:#6b7280;font-size:13px;">Signé par : <strong>${nomSignataire}</strong></p>`
+    ? `<p style="margin:0 0 8px;color:#6b7280;font-size:13px;">Signé par : <strong>${escHtml(nomSignataire)}</strong></p>`
     : ''
 
   const html = `
@@ -128,7 +133,7 @@ export async function sendOwnerNotification(
           <tr>
             <td style="padding:32px 40px;">
               <p style="margin:0 0 20px;color:#374151;font-size:15px;">
-                Bonjour <strong>${profile.company_name || profile.full_name || 'vous'}</strong>,
+                Bonjour <strong>${escHtml(profile.company_name || profile.full_name || 'vous')}</strong>,
               </p>
               <p style="margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.7;">
                 <strong>${clientName}</strong> ${config.message}
@@ -229,8 +234,8 @@ export async function sendClientConfirmation(
 
   const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const lienDevis    = `${appUrl}/q/${token}`
-  const emetteurName = profile?.company_name || profile?.full_name || 'Votre prestataire'
-  const clientName   = devis.clients?.company || devis.clients?.name || 'Client'
+  const emetteurName = escHtml(profile?.company_name || profile?.full_name || 'Votre prestataire')
+  const clientName   = escHtml(devis.clients?.company || devis.clients?.name || 'Client')
   const accentColor  = profile?.brand_color || '#6CC531'
   const signedAt     = devis.signe_le
     ? new Date(devis.signe_le).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -298,7 +303,7 @@ export async function sendClientConfirmation(
                   <td style="padding:20px 24px;">
                     <p style="margin:0 0 4px;color:#9ca3af;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Montant TTC</p>
                     <p style="margin:0 0 16px;color:#111827;font-size:28px;font-weight:700;letter-spacing:-0.5px;">${montantFormate}</p>
-                    <p style="margin:0 0 4px;color:#6b7280;font-size:13px;">Signé par : <strong style="color:#374151;">${nomSignataire}</strong></p>
+                    <p style="margin:0 0 4px;color:#6b7280;font-size:13px;">Signé par : <strong style="color:#374151;">${escHtml(nomSignataire)}</strong></p>
                     <p style="margin:0 0 4px;color:#6b7280;font-size:13px;">Date : <strong style="color:#374151;">${signedAt}</strong></p>
                     <p style="margin:0;color:#6b7280;font-size:13px;">Émetteur : <strong style="color:#374151;">${emetteurName}</strong></p>
                   </td>
@@ -397,8 +402,8 @@ export async function sendRelanceEmail({ devis, client, profile }: RelanceData):
 
   const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const lienDevis    = `${appUrl}/q/${devis.token_public}`
-  const emetteurName = profile.company_name || profile.full_name || 'Votre prestataire'
-  const clientName   = client.company || client.name
+  const emetteurName = escHtml(profile.company_name || profile.full_name || 'Votre prestataire')
+  const clientName   = escHtml(client.company || client.name)
   const accentColor  = profile.brand_color || '#6CC531'
 
   const montantFormate = new Intl.NumberFormat('fr-FR', {
