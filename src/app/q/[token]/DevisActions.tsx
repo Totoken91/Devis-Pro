@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { CheckCircle2, XCircle, PenLine, X } from 'lucide-react'
+import { Spinner } from '@/components/ui/Spinner'
 
 export function DevisActions({ token, statut, signeL, brandColor = '#6CC531' }: { token: string; statut: string; signeL: string | null; brandColor?: string }) {
   const [modal,         setModal]         = useState<'accepter' | 'refuser' | null>(null)
@@ -148,7 +149,7 @@ export function DevisActions({ token, statut, signeL, brandColor = '#6CC531' }: 
                   className="flex-1 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors cursor-pointer disabled:opacity-50"
                   style={{ backgroundColor: brandColor }}
                 >
-                  {loading ? 'Envoi…' : 'Confirmer & signer'}
+                  {loading ? <><Spinner />Envoi…</> : 'Confirmer & signer'}
                 </button>
               </div>
             </div>
@@ -172,7 +173,7 @@ export function DevisActions({ token, statut, signeL, brandColor = '#6CC531' }: 
                   Annuler
                 </button>
                 <button onClick={() => handleAction('refuse')} disabled={loading} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors cursor-pointer disabled:opacity-50">
-                  {loading ? 'Envoi…' : 'Confirmer le refus'}
+                  {loading ? <><Spinner />Envoi…</> : 'Confirmer le refus'}
                 </button>
               </div>
             </div>

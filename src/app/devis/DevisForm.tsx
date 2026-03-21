@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, generateToken } from '@/lib/utils'
 import type { Client, Devis, DevisLigne, DevisTemplate, Profile, DevisStatut } from '@/types/supabase'
 import { Plus, Trash2, ArrowLeft, Save, Send, Eye, EyeOff, BellRing } from 'lucide-react'
+import { Spinner } from '@/components/ui/Spinner'
 import Link from 'next/link'
 import { DevisPreview } from '@/components/devis/DevisPreview'
 
@@ -168,7 +169,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             className="flex items-center gap-2 border border-white/10 text-white/60 font-medium rounded-lg px-4 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save size={14} />
-            {loading === 'draft' ? 'Sauvegarde…' : 'Brouillon'}
+            {loading === 'draft' ? <><Spinner />Sauvegarde…</> : 'Brouillon'}
           </button>
           <button
             onClick={() => handleSave('envoye')}
@@ -176,7 +177,7 @@ export function DevisForm({ mode, clients, profile, nextNumero, initialData }: D
             className="flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-4 py-2 text-sm transition-all shadow-sm shadow-brand/25 hover:shadow-brand/40 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send size={14} />
-            {loading === 'send' ? 'Envoi…' : 'Finaliser & envoyer'}
+            {loading === 'send' ? <><Spinner />Envoi…</> : 'Finaliser & envoyer'}
           </button>
         </div>
       </div>

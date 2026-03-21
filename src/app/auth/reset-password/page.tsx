@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CheckCircle } from 'lucide-react'
+import { Spinner } from '@/components/ui/Spinner'
 
 const inputCls = 'w-full border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 bg-white/5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand/50 transition-all'
 
@@ -103,7 +104,7 @@ export default function ResetPasswordPage() {
                   disabled={loading}
                   className="w-full bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 text-sm transition-all shadow-sm shadow-brand/25 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {loading ? 'Mise à jour…' : 'Mettre à jour le mot de passe'}
+                  {loading ? <><Spinner />Mise à jour…</> : 'Mettre à jour le mot de passe'}
                 </button>
               </form>
 

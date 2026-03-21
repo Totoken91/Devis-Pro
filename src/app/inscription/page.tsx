@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowRight, CheckCircle2, Mail } from 'lucide-react'
+import { Spinner } from '@/components/ui/Spinner'
 
 const inputCls = 'w-full border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 bg-white/5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand/50 transition-all'
 
@@ -153,7 +154,7 @@ export default function InscriptionPage() {
                   disabled={loading}
                   className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl py-2.5 text-sm transition-all shadow-sm shadow-brand/25 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Création…' : <>Créer mon compte <ArrowRight size={14} /></>}
+                  {loading ? <><Spinner />Création…</> : <>Créer mon compte <ArrowRight size={14} /></>}
                 </button>
               </form>
 
