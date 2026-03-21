@@ -63,6 +63,14 @@
   }
 }
 
+/* ── Spinner ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 0.7s linear infinite;
+}
+
 /* ── Landing page animations ── */
 
 @keyframes gradient-orbit {
