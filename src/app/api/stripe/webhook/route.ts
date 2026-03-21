@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { Resend } from 'resend'
+import { sendProWelcomeEmail } from '@/lib/notify'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://deviso.app'
@@ -47,6 +48,16 @@ export async function POST(req: NextRequest) {
           stripe_subscription_id:  subscriptionId ?? null,
           updated_at:              new Date().toISOString(),
         }).eq('id', userId)
+
+        const { data: profile } = await admin
+          .from('profiles')
+          .select('email, full_name, company_name')
+          .eq('id', userId)
+          .single()
+
+        if (profile?.email) {
+          await sendProWelcomeEmail(profile.email, profile.company_name || profile.full_name)
+        }
 
         console.log('[webhook] checkout.session.completed → pro')
         break

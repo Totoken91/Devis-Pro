@@ -374,6 +374,109 @@ export async function sendClientConfirmation(
    Relance automatique — email envoyé AU CLIENT
 ──────────────────────────────────────────────────────────────── */
 
+/* ────────────────────────────────────────────────────────────────
+   Bienvenue Pro — email envoyé à l'utilisateur après achat
+──────────────────────────────────────────────────────────────── */
+
+export async function sendProWelcomeEmail(email: string, name?: string | null): Promise<void> {
+  if (!resend) {
+    console.warn('[pro-welcome] RESEND_API_KEY non configurée, email ignoré.')
+    return
+  }
+
+  const appUrl      = process.env.NEXT_PUBLIC_APP_URL ?? 'https://deviso.app'
+  const billingUrl  = `${appUrl}/parametres/facturation`
+  const displayName = escHtml(name || 'vous')
+
+  const html = `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head>
+<body style="margin:0;padding:0;background:#F3F4F1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F1;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="580" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e8ece7;">
+          <tr><td style="background:#111827;height:4px;font-size:0;">&nbsp;</td></tr>
+          <tr>
+            <td style="padding:36px 40px 28px;">
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+                <tr>
+                  <td style="background:#111827;border-radius:8px;width:28px;height:28px;text-align:center;vertical-align:middle;">
+                    <span style="color:#ffffff;font-weight:700;font-size:14px;line-height:28px;">D</span>
+                  </td>
+                  <td style="padding-left:8px;font-weight:700;font-size:16px;color:#1a1e17;vertical-align:middle;">Deviso</td>
+                </tr>
+              </table>
+              <p style="margin:0 0 4px;color:#059669;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;">Abonnement activé</p>
+              <h1 style="margin:0 0 4px;color:#111827;font-size:26px;font-weight:700;letter-spacing:-0.5px;">Bienvenue dans Deviso Pro 🎉</h1>
+            </td>
+          </tr>
+          <tr><td style="border-top:1px solid #f3f4f6;"></td></tr>
+          <tr>
+            <td style="padding:28px 40px;">
+              <p style="margin:0 0 16px;color:#374151;font-size:15px;">
+                Bonjour <strong>${displayName}</strong>,
+              </p>
+              <p style="margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.7;">
+                Votre abonnement <strong style="color:#111827;">Deviso Pro</strong> est maintenant actif.
+                Vous avez accès à toutes les fonctionnalités premium.
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;margin-bottom:28px;">
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <p style="margin:0 0 12px;color:#15803d;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Inclus dans votre abonnement</p>
+                    <p style="margin:0 0 8px;color:#166534;font-size:14px;">✅ Devis illimités</p>
+                    <p style="margin:0 0 8px;color:#166534;font-size:14px;">✅ Relances automatiques</p>
+                    <p style="margin:0 0 8px;color:#166534;font-size:14px;">✅ Personnalisation de la marque</p>
+                    <p style="margin:0;color:#166534;font-size:14px;">✅ Support prioritaire</p>
+                  </td>
+                </tr>
+              </table>
+
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr>
+                  <td style="background:#111827;border-radius:12px;">
+                    <a href="${appUrl}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;">
+                      Accéder à mon espace →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0;color:#9ca3af;font-size:12px;line-height:1.7;">
+                Gérez votre abonnement depuis
+                <a href="${billingUrl}" style="color:#6b7280;">vos paramètres de facturation</a>.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 40px;border-top:1px solid #f3f4f6;background:#fafaf9;">
+              <p style="margin:0;color:#d1d5db;font-size:11px;line-height:1.6;">
+                Vous recevez cet email car vous venez de souscrire à <strong style="color:#9ca3af;">Deviso Pro</strong>.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+
+  const { error } = await resend.emails.send({
+    from:    'Deviso <notifications@deviso.app>',
+    to:      email,
+    subject: '🎉 Bienvenue dans Deviso Pro — votre abonnement est actif',
+    html,
+  })
+
+  if (error) {
+    console.error('[pro-welcome] Erreur Resend:', error)
+  }
+}
+
 type RelanceData = {
   devis: {
     token_public: string
